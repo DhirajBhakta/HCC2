@@ -5,6 +5,10 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config
+from flaskext.mysql import MySQL 
+
+mysql = MySQL()
+
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -20,6 +24,12 @@ def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+
+    app.config['MYSQL_DATABASE_USER'] = 'root'
+    app.config['MYSQL_DATABASE_PASSWORD'] = 'student'
+    app.config['MYSQL_DATABASE_DB'] = 'HCCdb'
+    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+    mysql.init_app(app)
 
     bootstrap.init_app(app)
     mail.init_app(app)
