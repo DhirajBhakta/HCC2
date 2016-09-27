@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-from app import create_app, db
+from app import create_app
 from app.models import StudentUser
 #from flask_script import Manager, Shell
 #from flask_migrate import Migrate, MigrateCommand
@@ -8,7 +8,7 @@ from app.models import StudentUser
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 #manager = Manager(app)
 #migrate = Migrate(app, db)
-
+	
 
 
 """def make_shell_context():

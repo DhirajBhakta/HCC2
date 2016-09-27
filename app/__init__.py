@@ -8,12 +8,9 @@ from config import config
 from flaskext.mysql import MySQL 
 
 mysql = MySQL()
-
-
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
-db = SQLAlchemy()
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -25,16 +22,11 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
-    app.config['MYSQL_DATABASE_USER'] = 'root'
-    app.config['MYSQL_DATABASE_PASSWORD'] = 'student'
-    app.config['MYSQL_DATABASE_DB'] = 'HCCdb'
-    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+   
     mysql.init_app(app)
-
     bootstrap.init_app(app)
     mail.init_app(app)
     moment.init_app(app)
-    db.init_app(app)
     login_manager.init_app(app)
 
     from .main import main as main_blueprint

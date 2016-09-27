@@ -3,6 +3,7 @@ from wtforms import StringField,PasswordField,SubmitField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from ..models import StudentUser
+from .. import mysql
 
 
 class LoginForm(Form):
@@ -21,11 +22,13 @@ class RegistrationForm(Form):
 	submit = SubmitField('Register')
 
 	def validate_email(self,field):
-		if StudentUser.query.filter_by(email=field.data).first():
+		cursor = mysql.connect().cursor()
+		if StudentUser.checkIfEmailExists(cursor,field.data):
 			raise ValidationError('Email already registered.')
 
 	def validate_rollno(self,field):
-		if StudentUser.query.filter_by(rollno=field.data).first():
+		cursor = mysql.connect().cursor()
+		if StudentUser.checkIfRollnoExists(cursor,field.data):
 			raise ValidationError('RollNumber already registered.')
 
 			
