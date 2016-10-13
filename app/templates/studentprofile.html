@@ -5,17 +5,17 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>{{ stu[1]}}'s Profile!</h1>
+    <h1>{{ stu.name}}'s Profile!</h1>
 </div>
 <div class="col-md-4">
     <br>
-    <p><b>Roll Number :</b> {{stu[0]}}</p>
-	<p><b>Blood group :</b> {{stu[9]}}</p>
-	<p><b>Phone Number :</b> {{stu[3]}}</p>
-	<p><b>Local Address :</b> {{stu[4]}}</p>
-	<p><b>Permanent Address:</b> {{stu[5]}}</p>
-	<p><b>Allergic to :</b> {{stu[7]}}</p>
-	<p><b>Guardian Phno:</b> {{stu[8]}}</p>
+    <p><b>Roll Number :</b> {{stu.rollno}}</p>
+	<p><b>Blood group :</b> {{stu.blood}}</p>
+	<p><b>Phone Number :</b> {{stu.phno}}</p>
+	<p><b>Local Address :</b> {{stu.locAddr}}</p>
+	<p><b>Permanent Address:</b> {{stu.permAddr}}</p>
+	<p><b>Allergic to :</b> </p>
+	<p><b>Guardian Phno:</b> {{stu.guardianPhno}}</p>
 	
 </div>
 {% endblock %}
