@@ -1,0 +1,87 @@
+{% extends "base2.html" %}
+
+{% block profilename %}
+{{stu.name}}
+{%  endblock %}
+
+{% block pageheader %}
+<h1>{{stu.name}}</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+Profile
+{% endblock %}
+
+
+
+{% block emptyspace %}
+<div class="jumbotron">
+<table cellpadding="10pt">
+	<tr>
+		<td><b>Roll number </b></td>
+		<td>:</td>
+		<td>{{stu.rollno}}</td>
+	</tr>
+	<tr>
+		<td><b>Date of Birth </b></td>
+		<td>:</td>
+		<td>{{stu.DOB.strftime("%d %B %Y")}}</td>
+	</tr>
+	<tr>
+		<td><b>Sex </b></td>
+		<td>:</td>
+		<td>{{stu.sex}}</td>
+	</tr>
+ 	<tr>
+		<td><b>Department </b></td>
+		<td>:</td>
+		<td>{{stu.dept}}</td>
+	</tr>
+	<tr>
+		<td><b>Course </b></td>
+		<td>:</td>
+		<td>{{stu.course}}</td>
+	</tr>
+	<tr>
+		<td><b>Contact number </b></td>
+		<td>:</td>
+		<td>{{stu.phno}}</td>
+	</tr>
+	<tr>
+		<td><b>Email </b></td>
+		<td>:</td>
+		<td>{{stu.email}}</td>
+	</tr>
+	<tr>
+		<td><b>Local Address </b></td>
+		<td>:</td>
+		<td>{{stu.locAddr}}</td>
+	</tr>
+	<tr>
+		<td><b>Permanent Address </b></td>
+		<td>:</td>
+		<td>{{stu.permAddr}}</td>
+	</tr>
+	<tr>
+		<td><b>Guardian Ph.no </b></td>
+		<td>:</td>
+		<td>{{stu.gaurdianPhno}}</td>
+	</tr>
+	<tr>
+		<td><b>Blood Group </b></td>
+		<td>:</td>
+		<td>{{stu.blood}}</td>
+	</tr>
+
+	<tr>
+		<td><b>Allergic to</b> </td>
+		<td>:</td>
+		<td></td>
+	</tr>
+
+
+</table>
+</div>
+
+
+{% endblock %}

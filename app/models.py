@@ -3,6 +3,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import UserMixin
 from . import login_manager 
 from flask import current_app
+from . import mysql
 
 
 import datetime
@@ -106,6 +107,15 @@ class STUDENT(UserMixin):
 
 	def get_id(self):
 		return str(self.patientID)
+
+	def get(patientID):
+		cursor = mysql.connect().cursor()
+		cursor.execute("SELECT rollno FROM Student WHERE patient_id='"+str(patientID)+"'")
+		tuple = cursor.fetchone()
+		loggedinStudent = STUDENT()
+		loggedinStudent.storeTuple(cursor,tuple[0])
+		return loggedinStudent
+
 
 	#Database to object
 	def storeTuple(self,cursor,rollno):
