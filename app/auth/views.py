@@ -21,7 +21,7 @@ def login():
                     studentUser = STUDENT()
                     studentUser.storeTuple(cursor,user.ID)
                     login_user(studentUser)
-                    return  render_template('student/studentprofile.html',stu=studentUser)
+                    return  render_template('student/studentprofile.html')
 				
 				#do this after Employee model is finalized
             else:

@@ -1,11 +1,11 @@
 {% extends "base2.html" %}
 
 {% block profilename %}
-{{stu.name}}
+{{current_user.name}}
 {%  endblock %}
 
 {% block pageheader %}
-<h1>{{stu.name}}</h1>
+<h1>{{current_user.name}}</h1>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -20,57 +20,57 @@ Profile
 	<tr>
 		<td><b>Roll number </b></td>
 		<td>:</td>
-		<td>{{stu.rollno}}</td>
+		<td>{{current_user.rollno}}</td>
 	</tr>
 	<tr>
 		<td><b>Date of Birth </b></td>
 		<td>:</td>
-		<td>{{stu.DOB.strftime("%d %B %Y")}}</td>
+		<td>{{current_user.DOB.strftime("%d %B %Y")}}</td>
 	</tr>
 	<tr>
 		<td><b>Sex </b></td>
 		<td>:</td>
-		<td>{{stu.sex}}</td>
+		<td>{{current_user.sex}}</td>
 	</tr>
  	<tr>
 		<td><b>Department </b></td>
 		<td>:</td>
-		<td>{{stu.dept}}</td>
+		<td>{{current_user.dept}}</td>
 	</tr>
 	<tr>
 		<td><b>Course </b></td>
 		<td>:</td>
-		<td>{{stu.course}}</td>
+		<td>{{current_user.course}}</td>
 	</tr>
 	<tr>
 		<td><b>Contact number </b></td>
 		<td>:</td>
-		<td>{{stu.phno}}</td>
+		<td>{{current_user.phno}}</td>
 	</tr>
 	<tr>
 		<td><b>Email </b></td>
 		<td>:</td>
-		<td>{{stu.email}}</td>
+		<td>{{current_user.email}}</td>
 	</tr>
 	<tr>
 		<td><b>Local Address </b></td>
 		<td>:</td>
-		<td>{{stu.locAddr}}</td>
+		<td>{{current_user.locAddr}}</td>
 	</tr>
 	<tr>
 		<td><b>Permanent Address </b></td>
 		<td>:</td>
-		<td>{{stu.permAddr}}</td>
+		<td>{{current_user.permAddr}}</td>
 	</tr>
 	<tr>
 		<td><b>Guardian Ph.no </b></td>
 		<td>:</td>
-		<td>{{stu.gaurdianPhno}}</td>
+		<td>{{current_user.gaurdianPhno}}</td>
 	</tr>
 	<tr>
 		<td><b>Blood Group </b></td>
 		<td>:</td>
-		<td>{{stu.blood}}</td>
+		<td>{{current_user.blood}}</td>
 	</tr>
 
 	<tr>
