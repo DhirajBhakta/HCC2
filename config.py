@@ -9,11 +9,11 @@ class Config:
     MAIL_PORT = 465
     MAIL_USE_SSL = True
     MAIL_USE_TLS = False
-    MAIL_USERNAME = 'dhirajbhakta110@gmail.com'
-    MAIL_PASSWORD = 'CSRFattack'
+    MAIL_USERNAME = 'nitkhcc@gmail.com'
+    MAIL_PASSWORD = 'nitkhccnitkhcc'
     
-    HCC_MAIL_SUBJECT_PREFIX = '[_H_C_C_]'
-    HCC_MAIL_SENDER = 'dhirajbhakta110@gmail.com'
+    HCC_MAIL_SUBJECT_PREFIX = '[NITK-Health Care Center]'
+    HCC_MAIL_SENDER = 'nitkhcc@gmail.com'
     HCC_ADMIN = "fill this shit later"
     
     MYSQL_DATABASE_USER = 'root'
