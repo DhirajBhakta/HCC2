@@ -1,11 +1,11 @@
 {% extends "base2.html" %}
 
 {% block profilename %}
-{{current_user.name}}
+{{studentUser.name}}
 {%  endblock %}
 
 {% block pageheader %}
-<h1>{{current_user.name}}</h1>
+<h1>{{studentUser.name}}</h1>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -20,57 +20,57 @@ Profile
 	<tr>
 		<td><b><i class="fa fa-slack"></i> &nbsp;Roll number </b></td>
 		<td>:</td>
-		<td>{{current_user.rollno}}</td>
+		<td>{{studentUser.rollno}}</td>
 	</tr>
 	<tr>
 		<td><b>Date of Birth </b></td>
 		<td>:</td>
-		<td>{{current_user.DOB.strftime("%d %B %Y")}}</td>
+		<td>{{studentUser.DOB.strftime("%d %B %Y")}}</td>
 	</tr>
 	<tr>
 		<td><b>Sex </b></td>
 		<td>:</td>
-		<td>{{current_user.sex}}</td>
+		<td>{{studentUser.sex}}</td>
 	</tr>
  	<tr>
 		<td><b>Department </b></td>
 		<td>:</td>
-		<td>{{current_user.dept}}</td>
+		<td>{{studentUser.dept}}</td>
 	</tr>
 	<tr>
 		<td><b>Course </b></td>
 		<td>:</td>
-		<td>{{current_user.course}}</td>
+		<td>{{studentUser.course}}</td>
 	</tr>
 	<tr>
 		<td><b><i class="fa fa-phone"></i> &nbsp;Contact number </b></td>
 		<td>:</td>
-		<td>{{current_user.phno}}</td>
+		<td>{{studentUser.phno}}</td>
 	</tr>
 	<tr>
 		<td><b><span class="glyphicon glyphicon-envelope"></span> &nbsp;Email </b></td>
 		<td>:</td>
-		<td>{{current_user.email}}</td>
+		<td>{{studentUser.email}}</td>
 	</tr>
 	<tr>
 		<td><b><span class="glyphicon glyphicon-home"></span> &nbsp;Local Address </b></td>
 		<td>:</td>
-		<td>{{current_user.locAddr}}</td>
+		<td>{{studentUser.locAddr}}</td>
 	</tr>
 	<tr>
 		<td><b><span class="glyphicon glyphicon-home"></span> &nbsp;Permanent Address </b></td>
 		<td>:</td>
-		<td>{{current_user.permAddr}}</td>
+		<td>{{studentUser.permAddr}}</td>
 	</tr>
 	<tr>
 		<td><b><i class="fa fa-phone"></i> &nbsp;Guardian Ph.no </b></td>
 		<td>:</td>
-		<td>{{current_user.gaurdianPhno}}</td>
+		<td>{{studentUser.gaurdianPhno}}</td>
 	</tr>
 	<tr>
 		<td><b><span class="glyphicon glyphicon-tint" style="color:red"></span> &nbsp;Blood Group </b></td>
 		<td>:</td>
-		<td>{{current_user.blood}}</td>
+		<td>{{studentUser.blood}}</td>
 	</tr>
 
 	<tr>

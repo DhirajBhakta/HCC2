@@ -23,18 +23,22 @@ class RegistrationForm(Form):
 	password2	= PasswordField('Confirm Password',validators=[Required(),EqualTo('password',message='Password mismatch!')])
 	submit   	= SubmitField('Register')
 
-	'''def validate_email(self,field):
+	def validate_email(self,field):
 		cursor = mysql.connect().cursor()
-		if USER.checkIfEmailExists(cursor,field.data):
+		thisUser = USER()
+		thisUser = USER.checkIfEmailExists(cursor,field.data)
+		if (thisUser is not None) and (thisUser.isConfirmed(cursor)):
 			raise ValidationError('Email already registered.')
 
 	def validate_ID(self,field):
 		cursor = mysql.connect().cursor()
-		if USER.checkIfIDExists(cursor,field.data):
+		thisUser = USER()
+		thisUser = USER.checkIfIDExists(cursor,field.data)
+		if (thisUser is not None) and (thisUser.isConfirmed(cursor)):
 			raise ValidationError('ID already registered.')
 		tuple = USER.checkIfExistsInDB(cursor, self.patientType.data, field.data, self.email.data)
 		if tuple is None:
 			raise ValidationError('ID not recognized . probably this ID isnt present in College Database')
-'''
+
 
 			

@@ -1,0 +1,570 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pa",
+				"padding"
+			],
+			[
+				"colo",
+				"background-color"
+			],
+			[
+				"ti",
+				"title\tTag"
+			],
+			[
+				"stu",
+				"student_blueprint"
+			],
+			[
+				"re",
+				"render_template"
+			],
+			[
+				"Ba",
+				"background-color"
+			],
+			[
+				"cell",
+				"cellspacing\tAttr"
+			],
+			[
+				"s",
+				"storeTuple"
+			],
+			[
+				"S",
+				"STUDENT"
+			],
+			[
+				"M",
+				"MAIL_USE_SSL"
+			],
+			[
+				"sen",
+				"send_email"
+			],
+			[
+				"login",
+				"login_required"
+			],
+			[
+				"curre",
+				"current_user"
+			],
+			[
+				"st",
+				"studentUser"
+			],
+			[
+				"user",
+				"userTuple"
+			],
+			[
+				"tu",
+				"tuple"
+			],
+			[
+				"tuple",
+				"tupledept"
+			],
+			[
+				"p",
+				"patientID"
+			],
+			[
+				"se",
+				"sex"
+			],
+			[
+				"pat",
+				"patientID"
+			],
+			[
+				"patien",
+				"patient_id"
+			],
+			[
+				"pas",
+				"password"
+			],
+			[
+				"emi",
+				"emailerr"
+			],
+			[
+				"ema",
+				"email"
+			],
+			[
+				"filter",
+				"filter_var"
+			],
+			[
+				"phno",
+				"phnoerr"
+			],
+			[
+				"uname",
+				"unameerr"
+			],
+			[
+				"preg_",
+				"preg_match"
+			],
+			[
+				"email",
+				"emailerr"
+			],
+			[
+				"una",
+				"unameerr"
+			],
+			[
+				"name",
+				"nameerr"
+			],
+			[
+				"check",
+				"check_basic"
+			],
+			[
+				"chec",
+				"check_basic"
+			],
+			[
+				"che",
+				"check_basic"
+			],
+			[
+				"sp",
+				"split_array"
+			],
+			[
+				"va",
+				"var_dump"
+			],
+			[
+				"ma",
+				"match"
+			],
+			[
+				"matc",
+				"match_array"
+			],
+			[
+				"pre",
+				"preg_split"
+			],
+			[
+				"array_k",
+				"array_key_exists"
+			],
+			[
+				"arra",
+				"array_search"
+			],
+			[
+				"array_",
+				"array_flip"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"P",
+				"_POST"
+			],
+			[
+				"cou",
+				"course"
+			],
+			[
+				"de",
+				"dept"
+			],
+			[
+				"dept",
+				"deptID"
+			],
+			[
+				"User",
+				"UserMixin"
+			],
+			[
+				"pate",
+				"patientProfile"
+			],
+			[
+				"patie",
+				"patientProfile"
+			],
+			[
+				"St",
+				"StudentUser"
+			],
+			[
+				"pass",
+				"passwordhash"
+			],
+			[
+				"passw",
+				"passwordhash"
+			],
+			[
+				"m",
+				"mysql"
+			],
+			[
+				"stud",
+				"student_this"
+			],
+			[
+				"Col",
+				"Column"
+			],
+			[
+				"Pass",
+				"PasswordField"
+			],
+			[
+				"Sr",
+				"StudentUser"
+			],
+			[
+				"fra",
+				"frameset\tTag"
+			],
+			[
+				"opt",
+				"option\tTag"
+			],
+			[
+				"op",
+				"option\tTag"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"odd",
+				"oddeven"
+			],
+			[
+				"oddeven",
+				"oddeven_button"
+			],
+			[
+				"idx",
+				"idx1"
+			],
+			[
+				"vol",
+				"volback"
+			],
+			[
+				"Ma",
+				"MAX_HEIGHT_PREV"
+			],
+			[
+				"MA",
+				"MAX_HEIGHT"
+			],
+			[
+				"I",
+				"IDX"
+			],
+			[
+				"IDX",
+				"IDX_PREV"
+			],
+			[
+				"rightID",
+				"rightIdx"
+			],
+			[
+				"max",
+				"maxright"
+			],
+			[
+				"min",
+				"minHeight"
+			],
+			[
+				"c",
+				"country"
+			],
+			[
+				"b",
+				"byte_to_binary"
+			],
+			[
+				"siz",
+				"sizeY"
+			],
+			[
+				"size",
+				"sizeX"
+			],
+			[
+				"str",
+				"strings"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 369.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"install",
+			"exit()",
+			"pwd"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/dhiraj/BOOTSTRAP_practise/try_1.html",
+		"/home/dhiraj/.config/sublime-text-3/Packages/Default/Default (Linux).sublime-keymap",
+		"/var/www/HCC2/app/templates/base.html",
+		"/var/www/HCC2/app/__init__.py",
+		"/var/www/HCC2/app/student/views.py",
+		"/var/www/HCC2/app/student/__init__.py",
+		"/var/www/HCC2/app/models.py",
+		"/var/www/HCC2/app/main/views.py",
+		"/var/www/HCC2/app/auth/views.py",
+		"/var/www/HCC2/app/templates/student/studentprofile.html",
+		"/home/dhiraj/Downloads/startbootstrap-sb-admin-gh-pages/index.html",
+		"/var/www/HCC2/config.py",
+		"/var/www/HCC2/manage.py",
+		"/var/www/HCC2/app/auth/forms.py",
+		"/var/www/HCC2/app/templates/studentprofile.html",
+		"/var/www/HCC2/app/auth/__init__.py",
+		"/home/dhiraj/Documents/HCC_shit/dbimporter.py",
+		"/home/dhiraj/Documents/HCC_shit/BTECH_IT_2018.csv",
+		"/var/www/FlaskApp/FlaskApp/templates/index.html",
+		"/home/dhiraj/Downloads/bootstrap-3.3.7-dist/css/bootstrap.css",
+		"/var/www/FlaskApp/FlaskApp/__init__.py",
+		"/var/www/HCC2/terminal.glue",
+		"/var/www/HCC2/app/terminal.glue",
+		"/var/www/HCC2/app/auth/terminal.glue",
+		"/home/dhiraj/newww",
+		"/home/dhiraj/new",
+		"/var/www/FlaskApp/FlaskApp/new",
+		"/opt/lampp/htdocs/formxhtml.php",
+		"/opt/lampp/htdocs/welcome.php",
+		"/opt/lampp/htdocs/random.php",
+		"/opt/lampp/htdocs/first.php",
+		"/opt/lampp/phpmyadmin/import.php",
+		"/home/dhiraj/Documents/FLASK TUTS/intro",
+		"/home/dhiraj/Documents/style.css",
+		"/var/www/HCC2/app/main/__init__.py",
+		"/var/www/HCC2/mysql_db_commands.sql",
+		"/var/www/HCC2/app/templates/auth/login.html",
+		"/var/www/HCC2/app/auth/login.html",
+		"/var/www/HCC2/app/auth/lo",
+		"/var/www/HCC2/app/templates/index.html",
+		"/var/www/HCC2/templates/ind",
+		"/var/www/HCC/HCC/__init__.py",
+		"/var/www/HCC2/app/templates/auth/register.html",
+		"/var/www/HCC2/models.py",
+		"/home/dhiraj/intro>DCS_DME",
+		"/home/dhiraj/Documents/BOOKS/WTA/LAB/tables.html",
+		"/home/dhiraj/Documents/BOOKS/WTA/LAB/feedback.html",
+		"/home/dhiraj/Documents/BOOKS/WTA/LAB/frames.html",
+		"/home/dhiraj/Downloads/first.xhtml",
+		"/home/dhiraj/Documents/BOOKS/WTA/LAB/try.html",
+		"/home/dhiraj/openmp/first.c",
+		"/home/dhiraj/Documents/C programs/MS_permutations_of_string.c",
+		"/home/dhiraj/h.c",
+		"/home/dhiraj/h.c.",
+		"/home/dhiraj/Documents/C programs/MorganStanley_Q_countries.c",
+		"/home/dhiraj/Documents/C programs/MorganStanley_Cube.c",
+		"/home/dhiraj/hhhh.c",
+		"/home/dhiraj/Documents/C programs/Ranganath_internship_Water.c",
+		"/home/dhiraj/Documents/C programs/sqrt_wo_sqrt.c",
+		"/home/dhiraj/Documents/C programs/sqrt_fn.c",
+		"/home/dhiraj/hh.c",
+		"/home/dhiraj/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/dhiraj/.config/sublime-text-3/Packages/User/Distraction Free.sublime-settings",
+		"/root/AndroidStudioProjects/BunkRegister/.git/COMMIT_EDITMSG",
+		"/home/dhiraj/OS/q's",
+		"/home/dhiraj/clipgrab-3.5.6/clipgrab",
+		"/home/dhiraj/Downloads/repeaters",
+		"/home/dhiraj/POP/LISP",
+		"/home/dhiraj/ll2.py",
+		"/home/dhiraj/fibo.lisp",
+		"/home/dhiraj/qp.pl",
+		"/home/dhiraj/POP/POP_II/pre_mid_sem/DETAILS/COMPILATION",
+		"/home/dhiraj/POP/POP_II/pre_mid_sem/DETAILS/INTERPRETING",
+		"/home/dhiraj/POP/POP_II/pre_mid_sem/DETAILS/HYBRID",
+		"/home/dhiraj/POP/POP_II/pre_mid_sem/DETAILS/Untitled Document",
+		"/home/dhiraj/DAA/DIjkstras",
+		"/home/dhiraj/DAA/DAG-Topologicalsort",
+		"/etc/services"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"stu",
+			"th>",
+			"usertype",
+			"moment",
+			"navbar-collapse",
+			"navbar",
+			"min"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"current_user",
+			"td>"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "models.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 289.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -10,7 +10,7 @@ import datetime
 
 
 
-class USER():
+class USER(UserMixin):
 	#this name attribute shall not be put into DB.!!
 	name = None
 
@@ -19,11 +19,32 @@ class USER():
 	passwordHash = None
 	usertype = {1:"Student",2:"Employee"}
 	idtype   = {1:"rollno" ,3:"emp_id"}
-	
 
+
+	def get_id(self):
+		return str(self.ID)
+
+	def get(ID):
+		cursor = mysql.connect().cursor()
+		loggedInUser = USER()
+		loggedInUser.storeTuple(cursor,"id",ID)
+		return loggedInUser
+	
+    #----token related--------------------------------------------------
 	def generate_confirmation_token(self, expiration=3600):
 		s = Serializer(current_app.config['SECRET_KEY'], expiration)
 		return s.dumps({'confirm': self.ID})
+
+	def confirm(self, token,cursor):
+		s = Serializer(current_app.config['SECRET_KEY'])
+		data = s.loads(token)
+		USER.confirmUser(self,cursor) 
+
+	def getUserIDFromToken(token):
+		s = Serializer(current_app.config['SECRET_KEY'])
+		data = s.loads(token)
+		return data.get('confirm')
+	#-------------------------------------------------------------------	
 
 	#data stored into object to be later put into Database
 	def storeData(self,name,id,email,password):
@@ -34,19 +55,15 @@ class USER():
 	    
 
 	#Database to object
-	def storeTuple(self,cursor,id):
-		cursor.execute("SELECT * FROM User WHERE id='"+id+"'")
+	def storeTuple(self,cursor,column,value):
+		cursor.execute("SELECT * FROM User WHERE "+column+" = %s",(value,))
 		tuple = cursor.fetchone()
+		if tuple is None:
+			return False
 		self.ID = tuple[0]
-		self.emailID = tuple[1]
-		self.passwordHash = tuple[2]
-
-	#overloaded
-	def storeTuple(self,tuple):
-		self.ID = tuple[0]
-		self.emailID = tuple[1]
-		self.passwordHash = tuple[2]
-
+		self.passwordHash = tuple[1]
+		self.emailID = tuple[2]
+		return True
 
 	def checkIfExistsInDB(cursor,patientType,id,email):
 		cursor.execute("SELECT * FROM Student WHERE rollno=%s AND email_id=%s",(id,email))
@@ -54,26 +71,40 @@ class USER():
 
 
 	def insertIntoDB(self,cursor):
-		cursor.execute("INSERT INTO User VALUES('"+self.ID+"','"+self.emailID+"','"+self.passwordHash+"')")
+		userIfPresent = USER.checkIfIDExists(cursor,self.ID)
+		if (userIfPresent is not None) and (not userIfPresent.isConfirmed(cursor)):
+			cursor.execute("DELETE FROM User WHERE id=%s",(userIfPresent.ID,))
+		cursor.execute("INSERT INTO User VALUES(%s,%s,%s,%s)",(self.ID,self.passwordHash,self.emailID,"NO"))
 	
 	def checkIfIDExists(cursor,id):
-		cursor.execute("SELECT * FROM User WHERE id='"+id+"'")
-		tuple = cursor.fetchone()
-		if tuple is None:
-			return None
 		user = USER()
-		user.storeTuple(tuple)
-		return user
-
-		
+		if user.storeTuple(cursor,"id",id):
+			return user
+		else:
+			return None
 
 	def checkIfEmailExists(cursor,email):
-		cursor.execute("SELECT * FROM User WHERE email_id='"+email+"'")
-		return cursor.fetchone()
+		user = USER()
+		if user.storeTuple(cursor,"email_id",email):
+			return user
+		else:
+			return None
 
 
 	def verify_password(self,password):
 		return check_password_hash(self.passwordHash,password)
+
+	def isConfirmed(self,cursor):
+		cursor.execute("SELECT confirmed from User WHERE id=%s",(self.ID,))
+		tuple = cursor.fetchone()
+		if tuple[0] == "NO":
+			return 0
+		else:
+			return 1
+
+	def confirmUser(self,cursor):
+		cursor.execute("UPDATE User SET confirmed='YES' WHERE id=%s",(self.ID,))
+
 
 
 	def __repr__(self):
@@ -90,7 +121,7 @@ class USER():
 
 
 
-class STUDENT(UserMixin):
+class STUDENT():
 	rollno = None
 	name = None
 	DOB = None
@@ -105,16 +136,7 @@ class STUDENT(UserMixin):
 	course = None
 	blood = None
 
-	def get_id(self):
-		return str(self.patientID)
 
-	def get(patientID):
-		cursor = mysql.connect().cursor()
-		cursor.execute("SELECT rollno FROM Student WHERE patient_id='"+str(patientID)+"'")
-		tuple = cursor.fetchone()
-		loggedinStudent = STUDENT()
-		loggedinStudent.storeTuple(cursor,tuple[0])
-		return loggedinStudent
 
 
 	#Database to object
@@ -151,6 +173,6 @@ class STUDENT(UserMixin):
 
 
 @login_manager.user_loader
-def load_user(patientID):
-    return STUDENT.get(patientID)
+def load_user(ID):
+    return USER.get(ID)
 

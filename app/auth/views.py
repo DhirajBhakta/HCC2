@@ -15,17 +15,19 @@ def login():
         cursor = mysql.connect().cursor()
         user   = USER.checkIfIDExists(cursor,form.ID.data)
         if user is not None:
+            if not user.isConfirmed(cursor):
+                flash('Email ID not confirmed! Please click on the link given to you via email', 'danger')
+                return render_template('auth/login.html',form=form)
+            
             if user.verify_password(form.password.data):
+                login_user(user)
                 type = form.patientType.data
                 if (type=='1'):
-                    studentUser = STUDENT()
-                    studentUser.storeTuple(cursor,user.ID)
-                    login_user(studentUser)
-                    return  render_template('student/studentprofile.html')
+                    return  redirect(url_for('student.showStudentProfile'))
 				
 				#do this after Employee model is finalized
             else:
-                flash('Invalid UserName or Password.')
+                flash('Invalid UserName or Password......................')
         else:
             flash('Invalid UserName or Password. user object is None')
     return render_template('auth/login.html',form=form)
@@ -60,12 +62,18 @@ def register():
 
 
 @auth.route('/confirm/<token>')
-@login_required
 def confirm(token):
-    if current_user.confirmed:
-        return redirect(url_for('main.index'))
-    if current_user.confirm(token):
+    ID = USER.getUserIDFromToken(token)
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    
+    user = USER()
+    user = USER.checkIfIDExists(cursor,ID)
+
+    if user is not None:    
+        user.confirm(token,cursor)
         flash('You have confirmed your account. Thanks!')
+        conn.commit()
     else:
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('main.index'))
