@@ -29,6 +29,9 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    {% block head %}
+    {% endblock %}
+
 
 </head>
 
@@ -57,7 +60,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {%block profilename %}  {% endblock %}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="{{ url_for('student.showStudentProfile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+                           {% block showprofilebutton %} {% endblock%}
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -73,6 +76,7 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
+                  {% block sidenavbar %} 
                     <li class="active">
                         <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
                     </li>
@@ -82,7 +86,7 @@
                     <li class="active">
                         <a href="index.html"><i class="fa fa-fw fa-plus-square"></i> Appointments</a>
                     </li>
-                   
+                  {% endblock %} 
                 </ul>
             </div>
             <!-- /.navbar-collapse -->

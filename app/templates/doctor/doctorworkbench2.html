@@ -1,0 +1,103 @@
+{% extends "doctor/baseDoctorTemplate.html" %}
+
+
+{% block head %}
+
+<style type="text/css">
+	tr.tablehead{
+		background-color: gray;
+		color:white;
+		font-family: courier;
+		font-size: 18px
+
+	}
+
+	tr th{
+		padding-left:20px;
+		font-family: monospace;
+
+	}
+
+	.small {
+		width:45px
+	}
+	.large{
+		width:200px;
+	}
+</style>
+
+
+{% endblock %}
+
+
+
+{% block emptyspace %}
+
+<div class="jumbotron">
+<table cellpadding="10pt">
+	<tr>
+		<td><b><i class="fa fa-slack"></i> &nbsp;Name </b></td>
+		<td>:</td>
+		<td style="color:red"> <b><i>{{patient.name}}</i></b></td>
+	</tr>
+	<tr>
+		<td><b>Sex </b></td>
+		<td>:</td>
+		<td>{{patient.sex}}</td>
+	</tr>
+ 	<tr>
+		<td><b>Department </b></td>
+		<td>:</td>
+		<td>{{patient.dept}}</td>
+	</tr>
+	<tr>
+		<td><b>Course </b></td>
+		<td>:</td>
+		<td>{{patient.course}}</td>
+	</tr>
+	<tr>
+		<td><b><span class="glyphicon glyphicon-tint" style="color:red"></span> &nbsp;Blood Group </b></td>
+		<td>:</td>
+		<td>{{patient.blood}}</td>
+	</tr>
+
+	<tr>
+		<td><b>Allergic to</b> </td>
+		<td>:</td>
+		<td></td>
+	</tr>
+
+
+</table>
+</div>
+
+
+<p id="jobless"></p>
+
+<!-- DOCTOR enters PRESCRIPTION DETAILS!! here on -->
+<form action="{{ url_for('doctor.addPrescription') }}"  method="post">
+	<input type="hidden" name="PATIENTID" value="{{ patient.patientID }}" />
+	<input type="hidden" name="DOCTORID" value="{{ doctor.doctorID }}" />
+	
+	<div class="jumbotron" >
+	<table class="table table-condensed" >
+	<tr class="tablehead">
+	   <th>DRUG NAME </th>
+	   <th >QTY</th>
+	   <th>SCHEDULE</th>
+	   <th>COMMENTS</th>  
+	</tr>
+	{% for row in range(5) %}
+     		<tr>
+	   			<td><input type="text" name='DRUG_NAME{{row}}' /></td>
+	   			<td ><input type="text" class="small" name='DRUG_QTY{{row}}' /></td>
+	   			<td><input type="text"  class="large" name='DRUG_SCHEDULE{{row}}' /></td>
+	   			<td style="width:200px"><input type="text" class="large" name='DRUG_COMMENTS{{row}}' /></td>
+	   		</tr>
+    {% endfor %}
+	</table>
+	</div>
+
+    <input class="btn btn-success" style="width:20%; float:right" type="submit" value="Done" /> 
+</form>
+{% endblock %}

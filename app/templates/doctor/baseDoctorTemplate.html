@@ -1,0 +1,29 @@
+{% extends "base2.html" %}
+
+
+
+
+{% block showprofilebutton %}
+   <a href="{{ url_for('doctor.showDoctorProfile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+{% endblock %}
+  
+
+
+
+
+ {% block sidenavbar %}
+ <li class="active">
+      <a  href="{{ url_for('doctor.showWorkbench') }}"><i class="fa fa-fw fa-dashboard"></i> Workbench</a>
+ </li>
+ <li class="active">
+      <a href="index.html"><i class="fa fa-fw fa-history"></i> History</a>
+ </li> 
+ <li class="active">
+      <a href="index.html"><i class="fa fa-fw fa-plus-square"></i>Upcoming Appointments</a>
+ </li>
+ {% endblock %}   
+
+
+
+
+

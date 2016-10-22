@@ -1,8 +1,8 @@
 from flask import render_template, redirect ,request,url_for ,flash, current_app,jsonify
 from flask_login import login_user , logout_user, current_user,login_required
 from . import auth
-from ..models import USER,STUDENT
-from .forms import LoginForm ,RegistrationForm
+from ..models import USER,STUDENT,DOCTOR
+from .forms import LoginForm ,RegistrationForm ,DoctorLoginForm
 from .. import mysql,mail
 from ..email import send_email
 from flask_mail import Message
@@ -78,6 +78,24 @@ def confirm(token):
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('main.index'))
 
+
+
+@auth.route('/login/doctor',methods=['GET','POST'])
+def loginDoctor():
+    form = DoctorLoginForm()
+    if form.validate_on_submit():
+        cursor = mysql.connect().cursor()
+        thisDoctor = DOCTOR()
+        flash("hahha")
+        thisDoctor.storeTuple(cursor,"doctor_id",form.doctorID.data)
+        thisUser = USER()
+        thisUser = USER.checkIfIDExists(cursor,thisDoctor.doctorEmployeeID)
+        if thisUser.verify_password(form.password.data):
+            login_user(thisUser)
+            return redirect(url_for('doctor.showWorkbench'))
+        else:
+            flash('Invalid doctorID or password.')
+    return render_template('auth/doctorlogin.html',form=form)
 
 
 

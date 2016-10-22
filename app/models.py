@@ -4,6 +4,7 @@ from flask_login import UserMixin
 from . import login_manager 
 from flask import current_app
 from . import mysql
+import datetime
 
 
 import datetime
@@ -66,7 +67,10 @@ class USER(UserMixin):
 		return True
 
 	def checkIfExistsInDB(cursor,patientType,id,email):
-		cursor.execute("SELECT * FROM Student WHERE rollno=%s AND email_id=%s",(id,email))
+		if(patientType=='1'):
+			cursor.execute("SELECT * FROM Student WHERE rollno=%s AND email_id=%s",(id,email))
+		else:
+			cursor.execute("SELECT * FROM Employee WHERE emp_id=%s AND email_id=%s",(id,email))	
 		return cursor.fetchone()
 
 
@@ -113,6 +117,10 @@ class USER(UserMixin):
 
 
 
+
+@login_manager.user_loader
+def load_user(ID):
+    return USER.get(ID)
 
 
 
@@ -164,6 +172,54 @@ class STUDENT():
 		self.course = tuplecourse[0]
 		self.blood  = tuple[12]
 
+	def checkIfExistsInDB(cursor,rollno):
+		cursor.execute("SELECT * FROM Student WHERE rollno=%s",(rollno,))
+		return cursor.fetchone()
+
+
+
+class EMPLOYEE():
+	empID = None
+	name = None
+	DOB = None
+	sex = None
+	phno = None
+	email = None
+	locAddr = None
+	permAddr = None
+	workStatus = None
+	designation = None
+	patientID = None
+	dept = None
+	blood = None
+
+
+	#Database to object
+	def storeTuple(self,cursor,empID):
+		cursor.execute("SELECT * FROM Employee WHERE emp_id='"+empID+"'")
+		tuple = cursor.fetchone()
+		
+		self.empID 	      = tuple[0]
+		self.name   	  = tuple[1]
+		self.DOB		  = tuple[2]
+		self.sex 		  = tuple[3]
+		self.phno   	  = tuple[4]
+		self.email  	  = tuple[5]
+		self.locAddr      = str(tuple[6])
+		self.permAddr	  = str(tuple[7])
+		self.workStatus   = tuple[8]
+		self.designation  = tuple[9]
+		self.patientID    = tuple[9]
+		
+		cursor.execute("SELECT dept_name FROM Department WHERE dept_id='"+str(tuple[10])+"'")
+		tupledept   = cursor.fetchone()
+
+		self.dept   = tupledept[0]
+		self.blood  = tuple[12]
+
+	def checkIfExistsInDB(cursor,rollno):
+		cursor.execute("SELECT * FROM Student WHERE rollno=%s",(rollno,))
+		return cursor.fetchone()
 
 
 
@@ -172,7 +228,94 @@ class STUDENT():
 
 
 
-@login_manager.user_loader
-def load_user(ID):
-    return USER.get(ID)
+class DOCTOR():
+	doctorID = None
+	doctorName = None
+	doctorSpecialization = None
+	doctorEmployeeID = None
+	treatmentCount = 0
+
+    #Database to object
+	def storeTuple(self,cursor,colName,value):
+		cursor.execute("SELECT * FROM Doctor WHERE "+colName+" = %s",(value,))
+		tuple = cursor.fetchone()
+		if tuple is None:
+			return False
+		self.doctorID = tuple[0]
+		self.doctorName = tuple[1]
+		self.doctorSpecialization = tuple[2]
+		self.doctorEmployeeID = tuple[3]
+		DOCTOR.updateTreatmentCount(self,cursor)
+		return True
+
+
+	def checkIfExistsInDB(cursor,docID):
+		cursor.execute("SELECT * FROM Doctor WHERE doctor_id = %s",(docID,))
+		return cursor.fetchone()
+
+	def updateTreatmentCount(self,cursor):
+		cursor.execute("SELECT COUNT(*) FROM Prescription WHERE doctor_id=%s",(self.doctorID,))
+		self.treatmentCount = cursor.fetchone()[0] 
+
+
+
+
+
+
+
+
+class PrescriptionDrug():
+	drugName = None
+	drugQty  = None
+	drugSchedule = None
+	drugComments = None
+
+	def storeData(self,drugName,drugQty,drugSchedule,drugComments):
+		self.drugName 	  = drugName
+		self.drugQty  	  = drugQty
+		self.drugSchedule = drugSchedule
+		self.drugComments = drugComments
+
+
+
+class PRESCRIPTION():
+	prescriptionID = None
+	prescriptionDrugs = []
+	PrescriptionDateTime = datetime.datetime.now()
+	doctorID = None
+	patientID = None
+
+	def addDrug(self,drug):
+		self.prescriptionDrugs.append(drug)
+
+	def insertIntoDB(self,conn,docID,patientID):
+		cursor = conn.cursor()
+		self.doctorID = docID
+		self.patientID = patientID
+		cursor.execute("INSERT INTO Prescription (date_time,doctor_id,patient_id) VALUES (%s,%s,%s)",(self.PrescriptionDateTime,docID,self.patientID))
+		cursor.execute("SELECT MAX(prescription_id) from Prescription")
+		tuple = cursor.fetchone()
+		self.prescriptionID = tuple[0]
+		print(self.prescriptionID)
+		for drug in self.prescriptionDrugs:
+			cursor.execute("SELECT drug_id FROM Drug WHERE generic_name=%s",(drug.drugName,))
+			tuple = cursor.fetchone()
+			drugID = tuple[0]
+			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugSchedule,drug.drugComments))
+		conn.commit()		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
