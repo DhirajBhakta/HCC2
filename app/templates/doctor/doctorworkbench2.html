@@ -78,6 +78,11 @@
 <form action="{{ url_for('doctor.addPrescription') }}"  method="post">
 	<input type="hidden" name="PATIENTID" value="{{ patient.patientID }}" />
 	<input type="hidden" name="DOCTORID" value="{{ doctor.doctorID }}" />
+
+	<div class="form-group">
+  		<label for="indcn">Indication:</label>
+  		<input type="text" name="INDICATION" class="form-control" id="indcn">
+	</div>
 	
 	<div class="jumbotron" >
 	<table class="table table-condensed" >

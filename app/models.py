@@ -7,8 +7,6 @@ from . import mysql
 import datetime
 
 
-import datetime
-
 
 
 class USER(UserMixin):
@@ -280,28 +278,55 @@ class PrescriptionDrug():
 
 class PRESCRIPTION():
 	prescriptionID = None
-	prescriptionDrugs = []
-	PrescriptionDateTime = datetime.datetime.now()
-	doctorID = None
+	prescriptionDrugs = None
+	prescriptionDateTime = datetime.datetime.now()
+	doctor = DOCTOR()
 	patientID = None
+	indication = None
+
+	def __init__(self):
+		self.prescriptionDrugs = list()
+
 
 	def addDrug(self,drug):
 		self.prescriptionDrugs.append(drug)
 
-	def insertIntoDB(self,conn,docID,patientID):
+	#Database to object	
+	def storeTuple(self,cursor,prescID):
+		cursor.execute("SELECT * FROM Prescription WHERE prescription_id=%s ",(prescID,))
+		tuple = cursor.fetchone()
+		self.prescriptionID = tuple[0]
+		self.prescriptionDateTime = tuple[1]
+		#self.doctorID = tuple[2]
+		self.patientID = tuple[3]
+		self.indication = tuple[4]
+		self.doctor.storeTuple(cursor,"doctor_id",tuple[2])
+
+		cursor.execute("SELECT * FROM Prescription_drug_map WHERE prescription_id=%s",(self.prescriptionID,))
+		drugtuples = cursor.fetchall()
+		for drugtuple in drugtuples:
+			cursor.execute("SELECT generic_name FROM Drug WHERE drug_id=%s",(drugtuple[1]))
+			drugName = cursor.fetchone()[0]
+
+			prescriptionDrug = PrescriptionDrug()
+			prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4])
+			self.prescriptionDrugs.append(prescriptionDrug)
+
+
+	def insertIntoDB(self,conn,docID,patientID,indication):
 		cursor = conn.cursor()
-		self.doctorID = docID
+		self.doctor.storeTuple(cursor,"doctor_id",docID)
 		self.patientID = patientID
-		cursor.execute("INSERT INTO Prescription (date_time,doctor_id,patient_id) VALUES (%s,%s,%s)",(self.PrescriptionDateTime,docID,self.patientID))
+		self.indication = indication
+		cursor.execute("INSERT INTO Prescription (date_time,doctor_id,patient_id,indication) VALUES (%s,%s,%s,%s)",(self.prescriptionDateTime,self.doctor.doctorID,self.patientID,self.indication))
 		cursor.execute("SELECT MAX(prescription_id) from Prescription")
 		tuple = cursor.fetchone()
 		self.prescriptionID = tuple[0]
-		print(self.prescriptionID)
 		for drug in self.prescriptionDrugs:
 			cursor.execute("SELECT drug_id FROM Drug WHERE generic_name=%s",(drug.drugName,))
 			tuple = cursor.fetchone()
 			drugID = tuple[0]
-			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugSchedule,drug.drugComments))
+			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments,self.indication))
 		conn.commit()		
 
 

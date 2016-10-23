@@ -22,8 +22,8 @@ def showWorkbench():
 		if (patientType == '1'):
 			studentPatient = STUDENT()
 			studentPatient.storeTuple(cursor,ID)
-			return render_template('doctor/doctorworkbench2.html',patient=studentPatient,doctor=doctor)
-	return render_template('doctor/doctorworkbench1.html',form=form)
+			return render_template('doctor/doctorworkbench2.html',patient=studentPatient,doctor=doctor,doctorUser=doctor)
+	return render_template('doctor/doctorworkbench1.html',form=form,doctorUser=doctor)
 
 
 
@@ -36,6 +36,8 @@ def addPrescription():
 	doctorID  = request.form.get('DOCTORID')
 
 	patientID = request.form.get('PATIENTID')
+
+	indication = request.form.get('INDICATION')
 	
 
 
@@ -55,7 +57,7 @@ def addPrescription():
 		thisDrug = PrescriptionDrug() 
 		thisDrug.storeData(drugName,drugQty,drugSchedule,drugComments)
 		prescription.addDrug(thisDrug)
-	prescription.insertIntoDB(conn,doctorID,patientID)
+	prescription.insertIntoDB(conn,doctorID,patientID,indication)
 	conn.commit()
 
 	return redirect(url_for('doctor.success'))
@@ -76,7 +78,11 @@ def showDoctorProfile():
 
 @doctor.route('/success')
 def success():
-	return render_template("doctor/success.html")
+	cursor = mysql.connect().cursor()
+	empID = current_user.ID
+	doctor = DOCTOR()
+	doctor.storeTuple(cursor,"emp_id",empID)
+	return render_template("doctor/success.html",doctorUser=doctor)
 
 
 

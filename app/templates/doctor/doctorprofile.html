@@ -16,7 +16,8 @@ Profile
 
 
 {% block emptyspace %}
-<div class="jumbotron">
+<div class="row">
+<div class="jumbotron col-md-6">
 <table cellpadding="10pt">
 	<tr>
 		<td><b><i class="fa fa-slack"></i> &nbsp;Doctor ID </b></td>
@@ -30,13 +31,14 @@ Profile
 		<td>{{doctorUser.treatmentCount}}</td>
 	</tr>
 	
- 	
-	
-
-	
-
-
 </table>
+</div>
+
+
+<div class="col-md-6">
+<button type="button" class="btn btn-success" style="padding:75px;border-radius:50px"><span style="color:white;font-size:65px">{{doctorUser.treatmentCount}}</span></button>
+</div>
+
 </div>
 
 
