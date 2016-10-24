@@ -1,16 +1,41 @@
-{% extends "base.html" %}
+    {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}NITK HCC - Login{% endblock %}
+{% block head %}
+{{super()}}
+{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Login</h1>
-</div>
-<div class="col-md-4">
-    {{ wtf.quick_form(form) }}
-    <br>
-    <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
+<div class="row">
+    <div class="col-md-4 hidden-md hidden-lg "> <h1> NITK HCC </h1> </div>
+</div> 
+<div class="row" >
+    <div class="col-md-8 hidden-sm hidden-xs">
+        <div class="jumbotron" style="height:500px;background-color: #eeeeee;
+        background-image: url({{ url_for('static',filename='background.jpg') }});
+        background-repeat: no-repeat;
+        background-size: 100%;
+        margin-right:20px;">
+        	
+        	    <h1 style="color:white;text-shadow: 2px 2px 5px #000;">NITK - HCC</h1>
+                <p style="color:white;padding-left:20px;text-shadow: 2px 2px 2px #000;">Patient Portal</p>
+        </div>
+     </div> 
+   
+    <div class="col-md-4 ">
+        <div class="lightercolor" style="margin-left:10px;height:500px;padding:10px;border-radius:5px;">
+			 <p class="lightestcolor" style="color:black;padding:15px;border-radius:5px;font-size:35px;">Login</p>
+             
+             <hr style="border-color:white;">
+             
+             <div class="lightestcolor" style="color:black;padding:15px;border-radius:5px;">
+		      {{ wtf.quick_form(form) }}
+		      <br>
+		      <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>.
+            </div>
+        </div>
+	</div>
 
 </div>
 {% endblock %}

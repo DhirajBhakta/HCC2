@@ -16,8 +16,7 @@ class USER(UserMixin):
 	ID = None
 	emailID = None
 	passwordHash = None
-	usertype = {1:"Student",2:"Employee"}
-	idtype   = {1:"rollno" ,3:"emp_id"}
+	userType = None
 
 
 	def get_id(self):
@@ -46,10 +45,11 @@ class USER(UserMixin):
 	#-------------------------------------------------------------------	
 
 	#data stored into object to be later put into Database
-	def storeData(self,name,id,email,password):
+	def storeData(self,name,id,email,password,usertype):
 		self.name = name
 		self.ID = id
 		self.emailID = email
+		self.userType = usertype
 		self.passwordHash =  generate_password_hash(password)
 	    
 
@@ -62,6 +62,7 @@ class USER(UserMixin):
 		self.ID = tuple[0]
 		self.passwordHash = tuple[1]
 		self.emailID = tuple[2]
+		self.userType = tuple[4]
 		return True
 
 	def checkIfExistsInDB(cursor,patientType,id,email):
@@ -76,7 +77,7 @@ class USER(UserMixin):
 		userIfPresent = USER.checkIfIDExists(cursor,self.ID)
 		if (userIfPresent is not None) and (not userIfPresent.isConfirmed(cursor)):
 			cursor.execute("DELETE FROM User WHERE id=%s",(userIfPresent.ID,))
-		cursor.execute("INSERT INTO User VALUES(%s,%s,%s,%s)",(self.ID,self.passwordHash,self.emailID,"NO"))
+		cursor.execute("INSERT INTO User VALUES(%s,%s,%s,%s,%s)",(self.ID,self.passwordHash,self.emailID,"NO",self.userType))
 	
 	def checkIfIDExists(cursor,id):
 		user = USER()
@@ -255,6 +256,13 @@ class DOCTOR():
 		cursor.execute("SELECT COUNT(*) FROM Prescription WHERE doctor_id=%s",(self.doctorID,))
 		self.treatmentCount = cursor.fetchone()[0] 
 
+	def retrievePatientDetails(cursor,patientID):
+		studentPatient = STUDENT()
+		cursor.execute("SELECT rollno FROM Student WHERE patient_id=%s",patientID)
+		rollno = cursor.fetchone()[0]
+		studentPatient.storeTuple(cursor,rollno)
+		return studentPatient
+
 
 
 
@@ -328,6 +336,19 @@ class PRESCRIPTION():
 			drugID = tuple[0]
 			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments,self.indication))
 		conn.commit()		
+
+	def getPrescriptionList(cursor,date):
+		prescriptionList = list()
+		cursor.execute("SELECT prescription_id FROM Prescription WHERE DATE(date_time)=%s",(date,))
+		prescIDtuples = cursor.fetchall()
+		for prescIDtuple in prescIDtuples:
+			prescription = PRESCRIPTION()
+			prescription.storeTuple(cursor,prescIDtuple[0])
+			prescriptionList.append(prescription)
+		return prescriptionList
+
+
+
 
 
 

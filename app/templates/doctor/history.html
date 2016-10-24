@@ -1,0 +1,69 @@
+{% extends "doctor/baseDoctorTemplate.html" %}
+
+{% block emptyspace %}
+<form id="eventForm" method="post" action="{{url_for('doctor.showHistory')}}" class="form-horizontal">
+    <div class="form-group">
+        <div class="row well">
+            <label class="col-xs-3 control-label">Select Date</label>
+            <input type="date"  name="DATE" />
+            <button type="submit" class="btn btn-default">Check</button>
+        </div>
+    </div>
+</form>
+
+
+{% if prescriptionList is not none %}
+
+    	{% for prescription in prescriptionList %}
+          <div class="row" >
+             <div class="visit col-md-12 ">
+                 <div class="visit-title lightestcolor2" style="border-radius:5px">
+                      <p class="visit-date pull-right"> {{ prescription.prescriptionDateTime.strftime(" %d %B %Y") }} <i class="fa fa-angle-down" aria-hidden="true"></i></p>
+                      <p class="ailment"> <a href="{{url_for('doctor.viewPatientProfile',patientID=prescription.patientID ) }}" target="_blank">Patient ID :{{ prescription.patientID }} </a></p>
+                 </div>
+             <div class="visit-desc lightestcolor pad">
+                <p class="pres-id pull-right"> Presc.ID : {{  prescription.prescriptionID }}</p>
+                <p class="doctor-name">{{ prescription.indication}} </p>
+
+                <table class="table greentable lightestcolor2"> 
+                      <tr class="tableheading darkestcolor">
+                           <th>Medicine Name</th>
+                           <th>Schedule</th>
+                           <th>Comments</th> 
+                      </tr>
+                      {%for drug in prescription.prescriptionDrugs %}
+                      <tr>
+                          <td>{{drug.drugName}}</td>
+                          <td>{{drug.drugSchedule}}</td>
+                          <td>{{drug.drugComments}}</td>
+                      </tr>
+                      {% endfor %}
+                </table>
+     
+
+               </div>
+             </div>
+          </div>
+    	{% endfor %}
+
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+{% block extrascripts %}
+
+
+<script type="text/javascript" >
+$(".visit-title").click(function(){
+  heading = $(this);
+  content = heading.next();
+  content.slideToggle(500);
+});
+</script>
+
+
+{% endblock %}

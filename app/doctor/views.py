@@ -4,6 +4,7 @@ from ..models import DOCTOR , PrescriptionDrug, PRESCRIPTION, STUDENT
 from . import doctor
 from .forms import WorkbenchForm1
 from flask_login import current_user, login_required
+import datetime
 
 
 @doctor.route('/',methods=['GET','POST'] )
@@ -65,6 +66,26 @@ def addPrescription():
 
 
 
+
+
+@doctor.route('/viewPatientProfile/<patientID>')
+def viewPatientProfile(patientID):
+	cursor = mysql.connect().cursor()
+	patient = DOCTOR.retrievePatientDetails(cursor,patientID)
+	prescriptionList = []
+	cursor.execute("SELECT prescription_id FROM Prescription WHERE patient_id =%s",(patientID,))
+	prescList = cursor.fetchall()
+	for prescriptionID in prescList:
+		prescription = PRESCRIPTION()
+		prescription.storeTuple(cursor,prescriptionID)
+		prescriptionList.append(prescription)
+	
+	empID = current_user.ID
+	doctor = DOCTOR()
+	doctor.storeTuple(cursor,"emp_id",empID)
+	return render_template("doctor/patientprofile.html",patient=patient,prescriptionList=prescriptionList,doctorUser=doctor)
+
+
 @doctor.route('/profile')
 @login_required
 def showDoctorProfile():
@@ -74,6 +95,28 @@ def showDoctorProfile():
 	doctor.storeTuple(cursor,"emp_id",empID)
 
 	return render_template('doctor/doctorprofile.html',doctorUser=doctor)
+
+
+
+@doctor.route('/viewHistory',methods=['GET','POST'])
+def showHistory():
+	cursor = mysql.connect().cursor()
+	empID = current_user.ID
+	doctor = DOCTOR()
+	doctor.storeTuple(cursor,"emp_id",empID)
+	if request.method == 'GET':
+		return render_template('doctor/history.html',doctorUser=doctor)
+	else:
+		date = request.form.get('DATE')
+		if date is not None:
+			date = datetime.datetime.strptime(date,"%Y-%m-%d").date()
+			print(date)
+			prescriptionList = PRESCRIPTION.getPrescriptionList(cursor,date)
+			return render_template('doctor/history.html',doctorUser=doctor,prescriptionList=prescriptionList)
+
+			
+		return render_template('doctor/history.html',doctorUser=doctor)
+
 
 
 @doctor.route('/success')

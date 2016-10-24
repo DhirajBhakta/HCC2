@@ -3,9 +3,13 @@
 {% block title %}NITK-HCC{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
+<div class="jumbotron">
     <h1>
-    Hello, {% if current_user.is_authenticated %}{{ current_user.name }}{% else %}Welcome to HCC Student Portal{% endif %}!
+    Welcome
+    	{% if current_user.is_authenticated %}
+    		{{ current_user.name }}
+    	{% endif %}
     </h1>
+    <p> HCC Student Portal</p>
 </div>
 {% endblock %}

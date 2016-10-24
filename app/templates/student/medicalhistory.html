@@ -1,18 +1,16 @@
 {% extends "student/baseStudentTemplate.html" %}
 
 {% block head %}
+{{super()}}
 <style>
 
 
 .tableheading{
-  background-color:rgb(100,100,100);
   color:white;
   border:2px solid gray;
   border-radius:20px;
 }
-.greentable{
-  background-color:white
-}
+
   .container{
     background-color:#ccc;
   }
@@ -21,16 +19,12 @@
     text-align:center;
     padding-bottom:30px;
   }
-  body{
-    
-    background-color:black;
-  }
+  
   .center{
     margin:auto;
     float:none;
   }
   .visit{
-    background-color:#ddd;
     padding:0px;
     margin-bottom:15px;
     margin-top:15px;
@@ -39,7 +33,6 @@
     padding:10px;
   }
   .visit-title{
-    background-color:#eee;
     padding:10px;  
   }
   .visit-title:hover{
@@ -57,6 +50,9 @@
   .ailment{
       font-size:20px;
 
+  }
+  .pad{
+    padding:10px;
   }
 </style>
 
@@ -77,16 +73,16 @@
   {%for prescription in prescriptionList %}
   <div class="row" >
     <div class="visit col-md-12 ">
-      <div class="visit-title">
+      <div class="visit-title lightestcolor2" style="border-radius:5px">
         <p class="visit-date pull-right"> {{ prescription.prescriptionDateTime.strftime(" %d %B %Y") }} <i class="fa fa-angle-down" aria-hidden="true"></i></p>
-              <p class="ailment"> {{ prescription.indication }} </p>
+        <p class="ailment"> {{ prescription.indication }} </p>
       </div>
-      <div class="visit-desc">
+      <div class="visit-desc lightestcolor pad">
         <p class="pres-id pull-right"> Presc.ID : {{  prescription.prescriptionID }}</p>
         <p class="doctor-name"> Dr. {{ prescription.doctor.doctorName}} </p>
 
-      <table class="table greentable"> 
-        <tr class="tableheading">
+      <table class="table greentable lightestcolor2"> 
+        <tr class="tableheading darkestcolor">
              <th>Medicine Name</th>
              <th>Schedule</th>
              <th>Comments</th> 

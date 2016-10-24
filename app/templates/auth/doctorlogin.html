@@ -3,14 +3,21 @@
 
 {% block title %}NITK HCC - Doctor Login{% endblock %}
 
-{% block page_content %}
-<div class="page-header">
-    <h1>Login as Doctor</h1>
-</div>
-<div class="col-md-4">
-    {{ wtf.quick_form(form) }}
-    <br>
-    <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
+{%block head%}
+{{super()}}
+{% endblock %}
 
+{% block page_content %}
+<div class="col-md-4 lightercolor roundedborder">
+	<div class="lightestcolor roundedborder">
+	    <h1 >Login <small>as Doctor</small></h1>
+	 </div>
+	 <hr />
+     <div class = "lightestcolor roundedborder">
+	    {{ wtf.quick_form(form) }}
+	    <br>
+	    <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>
+
+    </div>
 </div>
 {% endblock %}

@@ -7,7 +7,7 @@ from .. import mysql
 
 
 class LoginForm(Form):
-	patientType = RadioField('Status :',choices=[('1','Student'),('2','Employee')])
+	patientType = RadioField('Status :',choices=[('STUDENT','Student'),('EMPLOYEE','Employee')])
 	ID 		 = StringField("ID ",validators=[Required()])
 	password = PasswordField("Password",validators=[Required()])
 	submit   = SubmitField("Log in")
@@ -16,7 +16,7 @@ class LoginForm(Form):
 
 class RegistrationForm(Form):
 	ID 		 	= StringField('ID',validators=[Required()])
-	patientType = RadioField('Status :',choices=[('1','Student'),('2','Employee')])
+	patientType = RadioField('Status :',choices=[('STUDENT','Student'),('EMPLOYEE','Employee')])
 	name 	 	= StringField('Full Name',validators=[Required()])
 	email 	 	= StringField('Email',validators=[Required(),Email()])
 	password 	= PasswordField('Password',validators=[Required()])

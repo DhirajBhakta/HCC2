@@ -1,6 +1,8 @@
 {% extends "student/baseStudentTemplate.html" %}
 
-
+{% block head %}
+{{super()}}
+{% endblock %}
 
 
 {% block pageheader %}
@@ -14,7 +16,7 @@ Profile
 
 
 {% block emptyspace %}
-<div class="jumbotron">
+<div class="jumbotron lightestcolor">
 <table cellpadding="10pt">
 	<tr>
 		<td><b><i class="fa fa-slack"></i> &nbsp;Roll number </b></td>

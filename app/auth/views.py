@@ -22,7 +22,7 @@ def login():
             if user.verify_password(form.password.data):
                 login_user(user)
                 type = form.patientType.data
-                if (type=='1'):
+                if (type=='STUDENT'):
                     return  redirect(url_for('student.showStudentProfile'))
 				
 				#do this after Employee model is finalized
@@ -45,7 +45,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         newUser = USER()
-        newUser.storeData(form.name.data,form.ID.data,form.email.data,form.password.data)
+        newUser.storeData(form.name.data,form.ID.data,form.email.data,form.password.data,form.patientType.data)
         conn = mysql.connect()
         cursor = conn.cursor()
         newUser.insertIntoDB(cursor)

@@ -5,6 +5,9 @@
 {{studentUser.name}}
 {%  endblock %}
 
+{% block head%}
+{{super()}}
+{% endblock %}
 
 
 {% block showprofilebutton %}
@@ -16,13 +19,13 @@
 
 
  {% block sidenavbar %}
- <li class="active">
+ <li class="darkercolor sidebarlistitem">
       <a  href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
  </li>
- <li class="active">
+ <li class="darkercolor sidebarlistitem">
       <a href="{{url_for('student.showMedicalHistory')}}"><i class="fa fa-fw fa-history"></i> Medical History</a>
  </li> 
- <li class="active">
+ <li class="darkercolor sidebarlistitem">
       <a href="index.html"><i class="fa fa-fw fa-plus-square"></i> Appointments</a>
  </li>
  {% endblock %}   
