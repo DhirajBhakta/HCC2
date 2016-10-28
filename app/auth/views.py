@@ -86,7 +86,6 @@ def loginDoctor():
     if form.validate_on_submit():
         cursor = mysql.connect().cursor()
         thisDoctor = DOCTOR()
-        flash("hahha")
         thisDoctor.storeTuple(cursor,"doctor_id",form.doctorID.data)
         thisUser = USER()
         thisUser = USER.checkIfIDExists(cursor,thisDoctor.doctorEmployeeID)

@@ -66,7 +66,7 @@ class USER(UserMixin):
 		return True
 
 	def checkIfExistsInDB(cursor,patientType,id,email):
-		if(patientType=='1'):
+		if(patientType=='STUDENT'):
 			cursor.execute("SELECT * FROM Student WHERE rollno=%s AND email_id=%s",(id,email))
 		else:
 			cursor.execute("SELECT * FROM Employee WHERE emp_id=%s AND email_id=%s",(id,email))	
@@ -148,8 +148,9 @@ class STUDENT():
 
 	#Database to object
 	def storeTuple(self,cursor,rollno):
-		cursor.execute("SELECT * FROM Student WHERE rollno='"+rollno+"'")
+		cursor.execute("SELECT * FROM Student WHERE rollno=%s",rollno)
 		tuple = cursor.fetchone()
+		print(tuple[2])
 		
 		self.rollno 	  = tuple[0]
 		self.name   	  = tuple[1]
@@ -334,7 +335,7 @@ class PRESCRIPTION():
 			cursor.execute("SELECT drug_id FROM Drug WHERE generic_name=%s",(drug.drugName,))
 			tuple = cursor.fetchone()
 			drugID = tuple[0]
-			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments,self.indication))
+			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments))
 		conn.commit()		
 
 	def getPrescriptionList(cursor,date):

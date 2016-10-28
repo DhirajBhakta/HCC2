@@ -1,11 +1,13 @@
  {% extends "doctor/baseDoctorTemplate.html" %}
 
 
+
+
 {% block head %}
+{{super()}}
 
 <style type="text/css">
 	tr.tablehead{
-		background-color: gray;
 		color:white;
 		font-family: courier;
 		font-size: 18px
@@ -33,12 +35,12 @@
 
 {% block emptyspace %}
 
-<div class="jumbotron">
+<div class="jumbotron lightestcolor">
 <table cellpadding="10pt">
 	<tr>
 		<td><b><i class="fa fa-slack"></i> &nbsp;Name </b></td>
 		<td>:</td>
-		<td style="color:red"> <b><i>{{patient.name}}</i></b></td>
+		<td style="color:red"> <a href="{{url_for('doctor.viewPatientProfile',patientID=patient.patientID)}}" target="_blank"><b><i>{{patient.name}}</i></b></a></td>
 	</tr>
 	<tr>
 		<td><b>Sex </b></td>
@@ -72,7 +74,7 @@
 </div>
 
 
-<p id="jobless"></p>
+
 
 <!-- DOCTOR enters PRESCRIPTION DETAILS!! here on -->
 <form action="{{ url_for('doctor.addPrescription') }}"  method="post">
@@ -84,9 +86,9 @@
   		<input type="text" name="INDICATION" class="form-control" id="indcn">
 	</div>
 	
-	<div class="jumbotron" >
+	<div class="jumbotron lightestcolor" >
 	<table class="table table-condensed" >
-	<tr class="tablehead">
+	<tr class="tablehead lightercolor">
 	   <th>DRUG NAME </th>
 	   <th >QTY</th>
 	   <th>SCHEDULE</th>

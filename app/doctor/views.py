@@ -83,6 +83,7 @@ def viewPatientProfile(patientID):
 	empID = current_user.ID
 	doctor = DOCTOR()
 	doctor.storeTuple(cursor,"emp_id",empID)
+	print(patient)
 	return render_template("doctor/patientprofile.html",patient=patient,prescriptionList=prescriptionList,doctorUser=doctor)
 
 
