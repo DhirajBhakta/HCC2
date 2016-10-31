@@ -150,7 +150,6 @@ class STUDENT():
 	def storeTuple(self,cursor,rollno):
 		cursor.execute("SELECT * FROM Student WHERE rollno=%s",rollno)
 		tuple = cursor.fetchone()
-		print(tuple[2])
 		
 		self.rollno 	  = tuple[0]
 		self.name   	  = tuple[1]
@@ -347,6 +346,44 @@ class PRESCRIPTION():
 			prescription.storeTuple(cursor,prescIDtuple[0])
 			prescriptionList.append(prescription)
 		return prescriptionList
+
+
+
+
+class Appointment():
+	calendarID = None
+	date = None
+	doctorName = None
+	startTime = None
+	endTime = None
+
+
+	def getViableDatesForCategory(cursor,specialization):
+		appointmentDates = list()
+		cursor.execute("SELECT * from Appointment_calendar JOIN Doctor ON Appointment_calendar.doctor_id = Doctor.doctor_id AND Doctor.specialization = %s AND Appointment_calendar.session_limit>0",specialization)
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			print(tuple)
+			appointmentDate = Appointment()
+			appointmentDate.calendarID = tuple[0]
+			date = tuple[1]
+			appointmentDate.date = str(date)
+			appointmentDate.doctorName = tuple[7]
+			time = tuple[3]
+			appointmentDate.startTime = str(time)
+			time = tuple[4]
+			appointmentDate.endTime = str(time)
+			appointmentDates.append(appointmentDate)
+		return appointmentDates
+
+	def commitSubmittedAppointmentIntoDB(cursor,calendarID,patientID):
+		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES (%s,%s)",(patientID,calendarID))
+		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
+
+
+
+
+
 
 
 

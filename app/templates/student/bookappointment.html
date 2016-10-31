@@ -1,0 +1,217 @@
+{% extends "student/baseStudentTemplate.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<style type="text/css">
+	.category{
+		border-left-style: solid;
+		border-left-color: #cce6ff;
+		border-left-width:10px;
+	}
+	.category:hover{
+		background-color: white !important;
+		color:black;
+	}
+	.response-box{
+		visibility: hidden;
+    }
+	#datepicker{
+		width:230px;
+	}
+	#response{
+		text-transform: lowercase;
+		font-weight: bold;
+		font-family: sans-serif;
+		color:rgb(4,67,78);
+		background-color: #cde9fe;
+		padding:5px;
+		border-radius: 5px;
+		text-shadow: 4px;
+		text-align: center
+	}
+	#response:first-letter {
+		text-transform: uppercase;
+	}
+
+	.lvl2{
+		font-family:sans-serif;
+		font-size:20px;
+		color:#042d70;
+		margin:0px;
+
+
+	}
+	.lvl1{
+        font-family:sans-serif;
+		font-size:30px;
+		color:#042d70;
+		margin: 0px;
+		padding:0px;
+
+	}
+	.details-wrap{
+        background-color: #7ec6ea;
+        padding-left:10px;
+        padding-top:0px;
+        border-top-right-radius:15px 30px;
+        border-left: 10px solid #042d70;
+        visibility: hidden;
+	}
+	.heading{
+		font-family: sans-serif;
+		font-size:33px;
+		color:#02608e;
+		font-weight: bolder;
+		text-align: center;
+		background-color: white;
+		border-top:8px solid #037dba;
+
+	}
+	.confirm-btn{
+		visibility: hidden;
+		margin:10px;
+		float:right;
+	}
+	.white-bold{
+		color:white;
+		font-weight: bold;
+
+	}
+
+</style>
+{% endblock %}
+
+
+  {% block pageheader %}
+  Book an Appointment
+  {% endblock %}
+
+  {% block emptyspace %}
+
+   <div class="row lightestcolor" id="mainrow">
+  	<div class="btn-group-vertical btn-group-lg col-xs-3">
+  	  <button type="button" class="category btn btn-info" name="PAEDIATRICS">Paediatrician</button>
+  	  <button type="button" class="category  btn btn-info" name="OPTHALMOLOGY"> Opthalmologist</button>
+  	  <button type="button" class="category btn btn-info" name="ENT">ENT </button>
+  	  <button type="button" class="category btn btn-info" name="GYNAECOLOGY"> Gynaecologist</button>
+  	  <button type="button" class="category btn btn-info" name="DERMATOLOGY">Dermatologist </button>
+  	  <button type="button" class="category btn btn-info" name="ORTHOPAEDICS">Orthopaedics </button>
+  	  <button type="button" class="category btn btn-info" name="HOMEOPATHY">Homeopathy </button>
+  	  <button type="button" class="category btn btn-info" name="AYURVEDA">Ayurveda </button>
+  	  <button type="button" class="category btn btn-info" name="DENTISTRY"> Dentist</button>
+  	  <button type="button" id="aaa" class="category btn btn-info" name="PSYCHIATRY"> Psychiatrist</button>
+	</div>
+  	
+   <div class="col-md-8">
+  	<h1 id="response">Select a Category</h1>
+  	<div class="response-box" id="response-box"><p>Date: <input type="text" class="form-control" id="datepicker" /></p></div>
+	
+
+	<div class = "details-wrap">
+	 <h2 class="heading">Your Appointment</h2>
+	 <p id="doctor-name" class="lvl1"></p>
+	 <p id="date-details" class="lvl2"></p>
+	 <p id="time-details" class="lvl2"></p>
+
+	</div>
+         <button type="button" class="btn btn-success confirm-btn" id="confirm-btn">Confirm</button>
+	</div>
+  </div>
+
+
+
+
+  {% endblock %}
+
+
+  {% block extrascripts %}
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>	
+  <script type="text/javascript">
+    var selectedCalendarID;
+
+  	$(".category").click(function(){
+	    var btnname = this.name
+	  	$.get("/student/bookAppointment",{ CATEGORY:btnname } ,function(data){
+	  		data = $.parseJSON(data);
+	  		$("#response").html(btnname);
+	  		
+
+
+	  		$('.response-box').css('visibility','visible');
+	  		$('.details-wrap').css('visibility','hidden');
+	  		$('.confirm-btn').css('visibility','hidden');
+
+
+	    	$("#datepicker").remove();
+	    	var t_datepicker = $("<input type=\"text\" class=\"form-control\" id=\"datepicker\" />");
+	    	$( "#response-box" ).append(t_datepicker);
+	    	
+	    	$( "#datepicker" ).datepicker({
+			    dateFormat: "dd-mm-yy",
+			    beforeShowDay: function(date) {
+			    	for( var i=0;i<data.length;i++)
+			    	{
+			    		var t_date = new Date(data[i].date);
+			    		if( cmpDates(t_date,date))
+			    		   return [true];
+			    	}
+			        return [false];
+			    },
+			    onSelect: function(date){
+			       $('.details-wrap').css('visibility','visible');
+			       $('#confirm-btn').css('visibility','visible');
+
+                    var selectedDate = $(this).datepicker('getDate');
+			    	var selectedStartTime;
+			    	var selectedEndTime;
+			    	for( var i=0;i<data.length;i++)
+			    	{
+			    		var t_date = new Date(data[i].date);
+			    		if( cmpDates(t_date,selectedDate))
+			    		{
+			    			selectedCalendarID = data[i].calendarID;
+			    			doctorName = data[i].doctorName;
+			    		    selectedStartTime = data[i].startTime;
+			    		    selectedEndTime = data[i].endTime;
+			    		    break;
+			    		}    
+			    	}
+			    	displayString = selectedDate.toDateString() ;
+			    	$('#date-details').html("<span class=\"white-bold\">Date: </span> "+displayString);
+			    	$('#doctor-name').html("<span class=\"white-bold\">Dr."+doctorName+ "</span> ");
+			    	$('#time-details').html("<span class=\"white-bold\">Time: </span>  "+selectedStartTime +" to "+selectedEndTime);
+
+			    }
+			});//end of datepicker
+
+	  	});//end of $.get callback functiom
+    }); //endof click event
+
+
+    $("#confirm-btn").click(function(){
+   		$.post("/student/submitAppointment",{CALENDARID:selectedCalendarID},function(data){
+   			$("#mainrow").html("<button type='button' class='btn btn-success' style='padding:60px;border-radius:100px'><i  style='font-size:75px;color:black' class='fa fa-check'></i></button> <span style='font-size: 50px'> Success!</span>");
+   		});
+    });
+    
+
+
+
+
+    function cmpDates(d1,d2)
+    {
+    	if(d1.getDate() == d2.getDate() &&
+    		d1.getMonth() == d2.getMonth() &&
+    		d1.getYear() == d2.getYear())
+    		return true;
+    	else
+    		return false;
+    }
+
+ 
+  </script>
+ 
+  {% endblock %}
+
