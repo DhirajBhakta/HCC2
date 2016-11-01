@@ -68,6 +68,18 @@ def submitAppointment():
 	conn.commit()
 	return render_template('student/success.html',studentUser=studentUser)
 
+@student.route('/retrieveBookedAppointments',methods=['GET'])
+def retrieveBookedAppointments():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	id = current_user.get_id()
+	studentUser = STUDENT()
+	studentUser.storeTuple(cursor,id)
+	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,studentUser.patientID)
+	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments])
+	return json_string
+
+
 
 	
 

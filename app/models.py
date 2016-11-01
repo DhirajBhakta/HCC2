@@ -352,8 +352,10 @@ class PRESCRIPTION():
 
 class Appointment():
 	calendarID = None
+	slotID = None
 	date = None
 	doctorName = None
+	category = None
 	startTime = None
 	endTime = None
 
@@ -379,6 +381,23 @@ class Appointment():
 	def commitSubmittedAppointmentIntoDB(cursor,calendarID,patientID):
 		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES (%s,%s)",(patientID,calendarID))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
+
+	def retrieveBookedAppointments(cursor,patientID):
+		appointments = list()
+		cursor.execute("SELECT * FROM View_patient_appointment WHERE patient_id=%s",patientID)
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			appointment = Appointment()
+			appointment.slotID = tuple[0]
+			appointment.doctorName = tuple[1]
+			appointment.date = str(tuple[2])
+			appointment.startTime = str(tuple[3])
+			appointment.endTime = str(tuple[4])
+			appointment.category = tuple[6]
+			appointments.append(appointment)
+		return appointments
+
+
 
 
 
