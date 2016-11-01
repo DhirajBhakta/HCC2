@@ -79,6 +79,17 @@ def retrieveBookedAppointments():
 	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments])
 	return json_string
 
+@student.route('/deleteBookedAppointment',methods=['POST'])
+def deleteBookedAppointment():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	slotID = request.form.get('SLOTID')
+	print(slotID)
+	Appointment.deleteBookedAppointment(cursor,slotID)
+	conn.commit()
+	return "true"
+
+
 
 
 	

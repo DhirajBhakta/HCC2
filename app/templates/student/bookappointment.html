@@ -95,6 +95,9 @@
 		margin:10px;
 		padding-bottom: 20px;
 	}
+	.cancel-btn{
+		margin-top:5px;
+	}
 
 </style>
 {% endblock %}
@@ -158,7 +161,7 @@
   	$(document).ready(function(){
   		$.get("/student/retrieveBookedAppointments",function(data){
   			if(data && data!="")
-  			{	
+  			{	console.log(data);
   			   $("#booked-appointments").css('visibility','visible');	
   			   data = $.parseJSON(data);
   			   for(var i=0;i<data.length;i++)
@@ -169,16 +172,34 @@
   			   	 var startTime = data[i].startTime;
   			   	 var endTime = data[i].endTime;
 
-  			   	 dispStr = date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span>";
-  			   	 $("#booked-appointments-list").append("<li class=\"item\">"+dispStr+"</li>");
+  			   	 dispStr = date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span><br> <button type='button' name='SLOTID' onclick='deleteAppointment(this);' value='"+data[i].slotID+"' class='btn btn-danger cancel-btn'>Cancel Appointment</button>";
+  			   	 $("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
+  			   	  
   			   }
 
 
             }
-  		})
+  		});
+  			
+  		});
 
-  	});
+         function deleteAppointment(btn){
+  			slotID = btn.value;
+  			btn = $(btn);
+  			$.post('/student/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
+  				if(boolData == "true")
+  				{
+  					li_item = btn.parent();
+  					li_item.remove()
+  				}
 
+  			});
+  		}
+
+
+  	
+  	
+  	
   	$(".category").click(function(){
 	    var btnname = this.name
 	  	$.get("/student/bookAppointment",{ CATEGORY:btnname } ,function(data){

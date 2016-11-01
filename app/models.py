@@ -397,6 +397,13 @@ class Appointment():
 			appointments.append(appointment)
 		return appointments
 
+	def deleteBookedAppointment(cursor,slotID):
+		cursor.execute("SELECT calendar_id FROM Appointment_slot WHERE slot_id=%s",(slotID,))
+		calendarID = cursor.fetchone()[0]
+		cursor.execute("DELETE FROM Appointment_slot WHERE slot_id=%s",(slotID,))
+		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit +1 WHERE calendar_id=%s",calendarID)
+
+
 
 
 
