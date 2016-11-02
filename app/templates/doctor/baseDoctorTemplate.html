@@ -79,7 +79,7 @@ Dr.{{doctorUser.doctorName}}
       <a href="{{ url_for('doctor.showHistory') }}"><i class="fa fa-fw fa-history"></i> History</a>
  </li> 
  <li class="darkercolor sidebarlistitem">
-      <a href="index.html"><i class="fa fa-fw fa-plus-square"></i>Upcoming Appointments</a>
+      <a href="{{ url_for('doctor.showUpcomingAppointments') }}"><i class="fa fa-fw fa-plus-square"></i>Upcoming Appointments</a>
  </li>
  {% endblock %}   
 

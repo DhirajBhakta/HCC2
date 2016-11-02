@@ -1,0 +1,76 @@
+{% extends "doctor/baseDoctorTemplate.html" %}
+
+{% block head %}
+{{super()}}
+<style>
+
+.app-item{
+	border-radius:5px;
+	list-style-type:none;
+	font-size:23px;
+	color:white;
+	padding:10px;
+	margin-top: 3px;
+	border-top:5px solid #33E3FF;
+}
+
+.line{
+	color:white;
+	background-color: white;
+	height: 2px;
+}
+.block{
+	padding:15px;
+	margin:10px;
+	border-radius:7px;
+	border-left:10px solid WHITE;
+
+}
+
+
+
+
+a.moredetails-link:hover{
+	color:white;
+	text-decoration:none;
+}
+
+
+
+
+  
+  
+</style>
+{% endblock %}
+
+{% block pageheader %}
+Upcoming Appointments
+{% endblock %}
+
+
+{% block emptyspace %}
+
+	
+	{% set THIS_DATE = "0000-00-00" %}
+	{% for app in bookedAppointments%}
+		{% if THIS_DATE != app.date.strftime("%Y-%m-%d") %}
+				{% if THIS_DATE != "0000-00-00"%}
+				     </div>
+				{% endif %}
+				{% set THIS_DATE = app.date.strftime("%Y-%m-%d") %}
+				<div class="lightestcolor2 block col-md-10">
+			    <ul>
+			 	<h3>{{app.date.strftime("%B %d %Y")}}</h3>
+				<hr class="line" />
+		{% endif %}
+		<li class="app-item lightercolor2">
+			<a class="moredetails-link" href={{url_for('doctor.viewPatientProfile',patientID=app.patientID)}} >
+				{{app.patientName}}
+			</a>
+				<span style="float:right">({{app.courseName}})</span>
+		</li>
+	{% endfor %}
+	</ul>
+	</div>
+
+{% endblock %}

@@ -75,7 +75,7 @@ def retrieveBookedAppointments():
 	id = current_user.get_id()
 	studentUser = STUDENT()
 	studentUser.storeTuple(cursor,id)
-	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,studentUser.patientID)
+	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,studentUser.patientID,"PATIENT")
 	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments])
 	return json_string
 

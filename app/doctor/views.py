@@ -1,6 +1,6 @@
 from flask import render_template ,request ,redirect ,url_for
 from .. import mysql
-from ..models import DOCTOR , PrescriptionDrug, PRESCRIPTION, STUDENT
+from ..models import DOCTOR , PrescriptionDrug, PRESCRIPTION, STUDENT, Appointment
 from . import doctor
 from .forms import WorkbenchForm1
 from flask_login import current_user, login_required
@@ -94,9 +94,11 @@ def showDoctorProfile():
 	empID = current_user.ID
 	doctor = DOCTOR()
 	doctor.storeTuple(cursor,"emp_id",empID)
+	return render_template("doctor/doctorprofile.html",doctorUser=doctor)
 
-	return render_template('doctor/doctorprofile.html',doctorUser=doctor)
 
+
+	
 
 
 @doctor.route('/viewHistory',methods=['GET','POST'])
@@ -118,6 +120,20 @@ def showHistory():
 			
 		return render_template('doctor/history.html',doctorUser=doctor)
 
+
+
+
+@doctor.route('/showUpcomingAppointments')
+def showUpcomingAppointments():
+	cursor = mysql.connect().cursor()
+	empID = current_user.ID
+	doctor = DOCTOR()
+	doctor.storeTuple(cursor,"emp_id",empID)
+	
+	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,doctor.doctorID,"DOCTOR")
+	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppointments=bookedAppointments)
+
+	
 
 
 @doctor.route('/success')

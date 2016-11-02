@@ -382,19 +382,42 @@ class Appointment():
 		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES (%s,%s)",(patientID,calendarID))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
 
-	def retrieveBookedAppointments(cursor,patientID):
+	def retrieveBookedAppointments(cursor,ID,forWHOM):
 		appointments = list()
-		cursor.execute("SELECT * FROM View_patient_appointment WHERE patient_id=%s",patientID)
-		tuples = cursor.fetchall()
-		for tuple in tuples:
-			appointment = Appointment()
-			appointment.slotID = tuple[0]
-			appointment.doctorName = tuple[1]
-			appointment.date = str(tuple[2])
-			appointment.startTime = str(tuple[3])
-			appointment.endTime = str(tuple[4])
-			appointment.category = tuple[6]
-			appointments.append(appointment)
+		print("\n\n\n"+str(ID)+"\n\n\n")
+		if forWHOM == "PATIENT":
+			cursor.execute("SELECT * FROM View_patient_appointment WHERE patient_id=%s",ID)
+			tuples = cursor.fetchall()
+			for tuple in tuples:
+				appointment = Appointment()
+				appointment.slotID = tuple[0]
+				appointment.doctorName = tuple[1]
+				appointment.date = str(tuple[2])
+				appointment.startTime = str(tuple[3])
+				appointment.endTime = str(tuple[4])
+				appointment.category = tuple[6]
+				appointments.append(appointment)
+		elif forWHOM == "DOCTOR":
+			cursor.execute("SELECT date,patient_id,patient_type FROM View_appointment_patient_ref_map WHERE doctor_id=%s ORDER BY date",ID)
+			tuples = cursor.fetchall()
+			for tuple in tuples:
+				appointment = Appointment()
+				appointment.date = tuple[0]
+				appointment.patientID = tuple[1]
+				patientType = tuple[2]
+				if(patientType == "STUDENT"):
+					cursor.execute("SELECT name,rollno,Course.course_name  FROM Student JOIN Course ON Student.course_id=Course.course_id AND patient_id=%s",(appointment.patientID,))
+					stu = cursor.fetchone()
+					print("\n\n\n")
+					print(stu)
+					print("\n\n\n")
+					appointment.patientName = stu[0]
+					appointment.rollno = stu[1]
+					appointment.courseName = stu[2]
+				appointments.append(appointment)
+
+
+			
 		return appointments
 
 	def deleteBookedAppointment(cursor,slotID):
@@ -402,6 +425,10 @@ class Appointment():
 		calendarID = cursor.fetchone()[0]
 		cursor.execute("DELETE FROM Appointment_slot WHERE slot_id=%s",(slotID,))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit +1 WHERE calendar_id=%s",calendarID)
+
+	def removeOldAppointmentSlots(cursor):
+		todaysDate = datetime.date.today()
+		cursor.execute("DELETE FROM Appointment_calendar WHERE DATE(date)<%s",todaysDate.strftime("%Y-%m-%d"))
 
 
 

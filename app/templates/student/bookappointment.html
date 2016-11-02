@@ -62,7 +62,6 @@
 	}
 	.heading{
 		font-family: sans-serif;
-		font-size:33px;
 		color:#02608e;
 		font-weight: bolder;
 		text-align: center;
@@ -84,16 +83,19 @@
 
 	}
 	li.item{
-		background-color: #037dba;
-		color:white;
-		font-family:serif;
+		background-color: white;
+		color:black;
+		font-family:sans-serif;
 		font-size: 18px;
 		list-style-type: none;
-		padding-left:5px;
-		border-radius:10px;
-		border-left:20px solid #bfedfc;
+		padding:15px;
+		border-radius:2px;
+		border:1px solid #51A3F4;
+		border-left:15px solid #51A3F4;
+		border-bottom:1px solid white;
+		box-shadow: 3px 3px #BBBEC2 ;
+		
 		margin:10px;
-		padding-bottom: 20px;
 	}
 	.cancel-btn{
 		margin-top:5px;
@@ -166,7 +168,9 @@
   			   data = $.parseJSON(data);
   			   for(var i=0;i<data.length;i++)
   			   {
-  			   	 var docName = "Dr."+data[i].doctorName +'('+data[i].category+')';
+  			   	 var category = (data[i].category).toLowerCase();
+  			   	 category = capitalize(category);
+  			   	 var docName = "Dr."+data[i].doctorName +' ('+category+')';
   			   	 var date = new Date(data[i].date);
   			   	 date = "Date:"+date.toDateString();
   			   	 var startTime = data[i].startTime;
@@ -278,6 +282,11 @@
     		return true;
     	else
     		return false;
+    }
+
+    function capitalize(string)
+    {
+    	return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
  
