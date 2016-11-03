@@ -8,8 +8,8 @@ from .. import mysql
 
 class LoginForm(Form):
 	patientType = RadioField('Status :',choices=[('STUDENT','Student'),('EMPLOYEE','Employee')])
-	ID 		 = StringField("ID ",validators=[Required()])
-	password = PasswordField("Password",validators=[Required()])
+	ID 		 = StringField("",validators=[Required()], render_kw={"placeholder": "Enter your ID"})
+	password = PasswordField("",validators=[Required()], render_kw={"placeholder": "Enter your password"})
 	submit   = SubmitField("Log in")
 
 

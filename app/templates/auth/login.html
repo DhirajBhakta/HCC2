@@ -1,44 +1,147 @@
-    {% extends "base.html" %}
+{% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}NITK HCC - Login{% endblock %}
 {% block head %}
 {{super()}}
+<style>
+.login-button{
+
+}
+  .login-button > .radio > label{
+    font-size:18px;
+  }
+  .login-button > .form-group{
+    margin:0px;
+    padding:0px;
+    padding-right:50px;
+    text-align:center;
+  }
+  .login-button > .form-group > input {
+    color:white;
+    background-color:rgba(0,0,0,0.8);
+    box-shadow: 0px 0px 4px #000;
+    border:0px;
+    border-radius :3px;
+    font-size:20px;
+    height:40px;
+    transition: box-shadow 0.45s ease;
+  }
+  .login-button > .form-group > input:focus {
+    box-shadow: 0px 0px  4px #fff;
+    border:0px;
+  }
+  #submit{
+    margin-top:10px;
+    color:#ddd;
+    background-color:rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 3px #ddd;
+    text-transform: uppercase;
+    border: 0px;
+    padding:10px 15px;
+    transition: box-shadow 0.45s ease;
+    transition: background-color 0.45s ease;
+    font-size:20px;
+  }
+  #submit:focus{
+    box-shadow: 0px 0px  #fff;
+  }
+  #submit:hover{
+    background-color:rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 4px #ddd;
+  }
+ ::-webkit-input-placeholder {
+    font-style: italic;
+    font-size: 15px;
+ }
+ :-moz-placeholder {
+    font-style: italic;  
+    font-size: 15px;
+ }
+ ::-moz-placeholder {
+    font-style: italic;  
+    font-size: 15px;
+ }
+ :-ms-input-placeholder {  
+    font-style: italic; 
+    font-size: 15px;
+ } 
+ .nitk-logo{
+    margin:auto;
+    margin-top: 10px;
+    display:block;
+ }
+ .nitk-heading{
+  color:white;
+  padding:10px;
+  padding-bottom:0px;
+  margin-bottom:0px;
+  text-shadow: 2px 2px 10px #000;
+  font-size:100px;
+  font-weight: bold;
+  text-align:center;
+ }
+.nitk-heading-s{
+  color:white;
+  padding:10px;
+  padding-bottom:0px;
+  margin-bottom:0px;
+  text-shadow: 2px 2px 10px #000;
+  font-size:50px;
+  font-weight: bold;
+  text-align:center;
+ }
+
+
+ .nitk-subheading{
+  color:white;
+  padding-top:0px;
+  margin-top:0px;
+  text-shadow: 2px 2px 2px #000;
+  font-size:40px;
+  text-align:center;
+ }
+ .login-bar{
+  background-color:rgba(0,0,0,0.6);
+ }
+ .blank-bar{ 
+  margin-top: 120px;
+ } 
+
+</style>
 {% endblock %}
 
 {% block page_content %}
 
 
 
-<div class="row">
-    <div class="col-md-4 hidden-md hidden-lg "> <h1> NITK HCC </h1> </div>
-</div> 
-<div class="row" >
-    <div class="col-md-8 hidden-sm hidden-xs">
-        <div class="jumbotron" style="height:500px;background-color: #eeeeee;
-        background-image: url({{ url_for('static',filename='background.jpg') }});
-        background-repeat: no-repeat;
-        background-size: 100%;
-        margin-right:20px;">
-        	
-        	    <h1 style="color:white;text-shadow: 2px 2px 5px #000;">NITK - HCC</h1>
-                <p style="color:white;padding-left:20px;text-shadow: 2px 2px 2px #000;">Patient Portal</p>
-        </div>
-     </div> 
-   
-    <div class="col-md-4 ">
-        <div class="lightercolor" style="margin-left:10px;height:500px;padding:10px;border-radius:5px;">
-			 <p class="lightestcolor" style="color:black;padding:15px;border-radius:5px;font-size:35px;">Login</p>
-             
-             <hr style="border-color:white;">
-             
-             <div class="lightestcolor" style="color:black;padding:15px;border-radius:5px;">
-		      {{ wtf.quick_form(form) }}
-		      <br>
-		      <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>.
-            </div>
-        </div>
-	</div>
+<div  style="margin-top:0px !important;">
+  <div class="container-fluid">
+  <div class="row blank-bar hidden-xs hidden-sm"></div>
+  <div class="row login-bar">
+    <div class="col-md-8">
+      <img class="nitk-logo" src="{{ url_for('static',filename='nitk-logo.gif') }} " width=100px; />
+      <h1 class="nitk-heading hidden-xs">NITK - HCC</h1>
+      <h1 class="nitk-heading-s hidden-lg hidden-md hidden-sm">NITK - HCC</h1>
+      <p class="nitk-subheading">Healthcare Portal</p>
+    </div>
+    <div class="col-md-4" >
+      <div style="background-color:rgba(0,0,0,0.5);height:500px;padding:10px;">
+       <p class="hidden-xs hidden-sm"  style="color:white;padding:15px;font-size:35px;text-transform: uppercase;">Login</p>
 
+       <hr class="hidden-xs hidden-sm"style="border-color:white;">
+
+       <div style="color:white;padding:15px;border-radius:5px;">
+        {{ wtf.quick_form(form, extra_classes="login-button") }}
+        <br>
+        <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>.
+      </div>
+    </div>
+  </div>
 </div>
+</div>
+</div>
+
+   
+
 {% endblock %}
