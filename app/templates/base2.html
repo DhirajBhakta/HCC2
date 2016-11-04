@@ -33,8 +33,51 @@
 
     {% block head %}
     <style>
+        @font-face {
+            font-family: "My Custom Font";
+            src: url({{url_for('static',filename="Exo2-Italic.ttf")}}) format("truetype");
+        }
+        @font-face {
+            font-family: "My Title Font";
+            src: url({{url_for('static',filename="Exo2-BlackItalic.ttf")}}) format("truetype");
+        }
+         @font-face {
+            font-family: "My Roboto Font";
+            src: url({{url_for('static',filename="Roboto-Light.ttf")}}) format("truetype");
+        }
+        @font-face {
+            font-family: "My Custom Font2";
+            src: url({{url_for('static',filename="Exo2-SemiBold.ttf")}}) format("truetype");
+        }
+        .titlefont{
+            font-family: "My Title Font", Verdana, Tahoma;
+        }
+
+        .customfont { 
+            font-family: "My Custom Font", Verdana, Tahoma;
+        }
+        .robotofont { 
+            font-family: "My Roboto Font", Verdana, Tahoma;
+        }
+
+        .semibold{ 
+            font-family: "My Custom Font2", Verdana, Tahoma;
+        }
+        
+        
     .newcolor{
     background-color:rgb(20,200,100)
+    }
+    
+    .first-navbar{
+        border-color: rgb(15,62,115);
+    }
+    .second-navbar{
+        border-radius: 0px;
+        margin:0px;
+        height:100px;
+        border-color:rgb(47, 102, 163);
+
     }
     .darkestcolor{
     background-color:rgb(15,62,115);
@@ -50,7 +93,7 @@
 
 
      
-     .lightercolor{
+    .lightercolor{
     background-color:rgb(92, 142, 197);
     }
     .lightercolor2{
@@ -63,9 +106,33 @@
      .lightestcolor2{
         background-color: #cde9fe;
      }
+     ul.darkestcolor > li > a{
+        border-bottom:0px solid rgb(15,62,115);
+        transition: border-bottom 0.3s ease ;
+        background-color:rgb(15,62,115);
+        color:white;
+        font-weight: bold;
+        font-size:20px;
+        text-transform: uppercase;
+        margin-left:30px;
+        text-align: center;
+        padding-bottom:10px;
+     }
 
-    li.sidebarlistitem > a:hover,a:active{
-        background-color: rgb(51,168,255) !important;
+     ul.darkestcolor > li>a:visited{
+        background-color:rgb(15,62,115);
+        color:white;
+        font-weight: bold;
+        font-size:20px;
+        text-transform: uppercase;
+        
+    }
+    ul.darkestcolor > li> a:hover{
+        background-color:rgb(25,72,125);
+        border-bottom:1px solid white;
+    }
+    ul.darkestcolor{
+        float:right;
     }
     
     .roundedborder{
@@ -74,6 +141,36 @@
     .pad-down{
         padding-bottom: 400px;
     }
+    .whitecolor{
+        color:white;
+    }
+    .responsive-menu:link{
+        color:white;
+        font-size: 30px;
+                text-decoration:none;
+
+
+    }
+      .responsive-menu:visited{
+        color:white;
+        font-size: 30px;
+        text-decoration:none;
+
+    }
+      .responsive-menu:active{
+        color:white;
+        font-size: 30px;
+        text-decoration:none;
+
+    }
+    .navbar-header >button > a.responsive-menu{
+        font-size:20px;
+    }
+    .mytoggle:hover, .mytoggle:visited{
+        background-color: rgb(15,62,115) !important;
+    }
+   
+  
 
     </style>
     {% endblock %}
@@ -81,32 +178,36 @@
 
 </head>
 
-<body>
+<body class="customfont">
 
-    <div id="wrapper">
-    <div class="container">
+    
+    <div class="lightestcolor">
+      
 
         <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top darkestcolor" role="navigation"  >
+        <nav class="navbar navbar-inverse navbar-fixed-top darkestcolor first-navbar " role="navigation"  >
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">NITK - HCC </a>
+                <h2 class="titlefont whitecolor" style="vertical-align: center" ><button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">  <a class="responsive-menu" href="#" ></a>
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button><h2 class="hidden-md hidden-lg">&nbsp;&nbsp;NITK-HCC</h2>
+                
             </div>
+            
+            
+       
            
 
             <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
+            <ul class="nav navbar-right top-nav customfont">
                 <!-- DHIRAJ BHAKTA part    top menu bar (nav bar)-->
                 <li class="dropdown sidebarlistitem">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {%block profilename %}  {% endblock %}<b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle mytoggle" data-toggle="dropdown"><i class="fa fa-user"></i> {%block profilename %}  {% endblock %}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li >
+                        <li>
                            {% block showprofilebutton %} {% endblock%}
                         </li>
                         <li class="divider"></li>
@@ -118,11 +219,12 @@
             </ul>
             
 
+       </nav>
 
-
+       <nav class="navbar navbar-inverse  darkestcolor second-navbar" role="navigation"  >
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse" >
-                <ul class="darkestcolor nav navbar-nav side-nav ">
+                <ul class="darkestcolor nav navbar-nav  ">
                   {% block sidenavbar %} 
                    
                   {% endblock %} 
@@ -131,7 +233,6 @@
             <!-- /.navbar-collapse -->
         </nav>
 
-        <div id="page-wrapper">
 
 
                 <!-- Page Heading -->
@@ -146,16 +247,17 @@
                 </div>
                 <!-- /.row -->
 
-                <div class="col-lg-12 pad-down">
                 
-                {% block emptyspace %}
-                {% endblock %}
+                  <div class="pad-down container">
+                    {% block emptyspace %}
 
-                </div>
+
+                    {% endblock %}
+                  </div>
+                
                 
             <!-- /.container-fluid -->
 
-        </div>
         <!-- /#page-wrapper -->
         </div>
 

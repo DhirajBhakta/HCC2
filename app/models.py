@@ -148,7 +148,7 @@ class STUDENT():
 
 	#Database to object
 	def storeTuple(self,cursor,rollno):
-		cursor.execute("SELECT * FROM Student WHERE rollno=%s",rollno)
+		cursor.execute("SELECT * FROM Student WHERE rollno=%s",(rollno,))
 		tuple = cursor.fetchone()
 		
 		self.rollno 	  = tuple[0]

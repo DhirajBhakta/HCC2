@@ -2,12 +2,45 @@
 
 {% block head %}
 {{super()}}
+<style>
+.profile-header{
+	 padding: 20px; 
+ margin-left:20px;
+ color:white;	
+ box-shadow:2px 0px 4px black;
+ margin-top:0px;
+ margin-bottom:0px;
+}
+.profile-block{
+ padding: 20px; 
+ margin-left:20px;
+ color:black;	
+ box-shadow:2px 2px 4px black;
+ margin-top:0px;
+ margin-bottom:0px;
+}
+
+tr.row-style-1{  font-size: 14px;}
+	
+
+tr.row-style-2{
+	background-color: rgba(255,255,255,0.1);
+	border-radius: 10px;
+	font-size: 14px;
+}
+
+tr>td{
+	padding:10px;
+}
+
+.zero-margin{
+	margin-bottom:0px !important; 
+	margin-top:0px !important;
+}
+</style>
 {% endblock %}
 
 
-{% block pageheader %}
-<h1>{{studentUser.name}}</h1>
-{% endblock %}
 
 {% block breadcrumb %}
 Profile
@@ -16,72 +49,81 @@ Profile
 
 
 {% block emptyspace %}
-<div class="jumbotron lightestcolor">
-<table cellpadding="10pt">
-	<tr>
-		<td><b><i class="fa fa-slack"></i> &nbsp;Roll number </b></td>
-		<td>:</td>
-		<td>{{studentUser.rollno}}</td>
-	</tr>
-	<tr>
-		<td><b>Date of Birth </b></td>
-		<td>:</td>
-		<td>{{studentUser.DOB.strftime("%d %B %Y")}}</td>
-	</tr>
-	<tr>
-		<td><b>Sex </b></td>
-		<td>:</td>
-		<td>{{studentUser.sex}}</td>
-	</tr>
- 	<tr>
-		<td><b>Department </b></td>
-		<td>:</td>
-		<td>{{studentUser.dept}}</td>
-	</tr>
-	<tr>
-		<td><b>Course </b></td>
-		<td>:</td>
-		<td>{{studentUser.course}}</td>
-	</tr>
-	<tr>
-		<td><b><i class="fa fa-phone"></i> &nbsp;Contact number </b></td>
-		<td>:</td>
-		<td>{{studentUser.phno}}</td>
-	</tr>
-	<tr>
-		<td><b><span class="glyphicon glyphicon-envelope"></span> &nbsp;Email </b></td>
-		<td>:</td>
-		<td>{{studentUser.email}}</td>
-	</tr>
-	<tr>
-		<td><b><span class="glyphicon glyphicon-home"></span> &nbsp;Local Address </b></td>
-		<td>:</td>
-		<td>{{studentUser.locAddr}}</td>
-	</tr>
-	<tr>
-		<td><b><span class="glyphicon glyphicon-home"></span> &nbsp;Permanent Address </b></td>
-		<td>:</td>
-		<td>{{studentUser.permAddr}}</td>
-	</tr>
-	<tr>
-		<td><b><i class="fa fa-phone"></i> &nbsp;Guardian Ph.no </b></td>
-		<td>:</td>
-		<td>{{studentUser.gaurdianPhno}}</td>
-	</tr>
-	<tr>
-		<td><b><span class="glyphicon glyphicon-tint" style="color:red"></span> &nbsp;Blood Group </b></td>
-		<td>:</td>
-		<td>{{studentUser.blood}}</td>
-	</tr>
+<div class="row zero-margin">
+	<div class="col-md-8 profile-header darkcolor">
+		<h1 style="margin-bottom:70px">{{studentUser.name}}</h1>
+		<hr/>
+	</div>
+</div>
+<div class="row zero-margin">
+	<div class="col-md-8 profile-block">
+	<table cellpadding="10pt">
+		<tr class="row-style-2">
+			<td><b><i class="fa fa-slack"></i> &nbsp;Roll number </b></td>
+			<td>:</td>
+			<td>{{studentUser.rollno}}</td>
+		</tr>
+		<tr class="row-style-1">
+			<td><b>Date of Birth </b></td>
+			<td>:</td>
+			<td>{{studentUser.DOB.strftime("%d %B %Y")}}</td>
+		</tr>
+		<tr class="row-style-2">
+			<td><b>Sex </b></td>
+			<td>:</td>
+			<td>{{studentUser.sex}}</td>
+		</tr>
+	 	<tr class="row-style-1">
+			<td><b>Department </b></td>
+			<td>:</td>
+			<td>{{studentUser.dept}}</td>
+		</tr>
+		<tr class="row-style-2">
+			<td><b>Course </b></td>
+			<td>:</td>
+			<td>{{studentUser.course}}</td>
+		</tr>
+		<tr class="row-style-1">
+			<td><b><i class="fa fa-phone"></i> &nbsp;Contact number </b></td>
+			<td>:</td>
+			<td>{{studentUser.phno}}</td>
+		</tr>
+		<tr class="row-style-2">
+			<td><b><span class="glyphicon glyphicon-envelope"></span> &nbsp;Email </b></td>
+			<td>:</td>
+			<td>{{studentUser.email}}</td>
+		</tr>
+		<tr class="row-style-1">
+			<td><b><span class="glyphicon glyphicon-home"></span> &nbsp;Local Address </b></td>
+			<td>:</td>
+			<td>{{studentUser.locAddr}}</td>
+		</tr>
+		<tr class="row-style-2">
+			<td><b><span class="glyphicon glyphicon-home"></span> &nbsp;Permanent Address </b></td>
+			<td>:</td>
+			<td>{{studentUser.permAddr}}</td>
+		</tr>
+		<tr class="row-style-1">
+			<td><b><i class="fa fa-phone"></i> &nbsp;Guardian Ph.no </b></td>
+			<td>:</td>
+			<td>{{studentUser.gaurdianPhno}}</td>
+		</tr>
+		<tr class="row-style-2">
+			<td><b><span class="glyphicon glyphicon-tint" style="color:red"></span> &nbsp;Blood Group </b></td>
+			<td>:</td>
+			<td>{{studentUser.blood}}</td>
+		</tr>
 
-	<tr>
-		<td><b>Allergic to</b> </td>
-		<td>:</td>
-		<td></td>
-	</tr>
+		<tr class="row-style-1">
+			<td><b>Allergic to</b> </td>
+			<td>:</td>
+			<td></td>
+		</tr>
 
 
 </table>
+</div>
+
 </div>
 
 
