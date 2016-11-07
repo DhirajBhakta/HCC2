@@ -1,4 +1,7 @@
 {% extends "doctor/baseDoctorTemplate.html" %}
+{% block head %}
+{{ super() }}
+{% endblock %}
 
 {% block emptyspace %}
 <form id="eventForm" method="post" action="{{url_for('doctor.showHistory')}}" class="form-horizontal">

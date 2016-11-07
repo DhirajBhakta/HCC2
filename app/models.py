@@ -260,8 +260,20 @@ class DOCTOR():
 		studentPatient = STUDENT()
 		cursor.execute("SELECT rollno FROM Student WHERE patient_id=%s",patientID)
 		rollno = cursor.fetchone()[0]
-		studentPatient.storeTuple(cursor,rollno)
+		studentPatient.storeTuple(cursor,"rollno",rollno)
 		return studentPatient
+
+	def getAllDoctorDetails(cursor):
+		docList =list()
+		cursor.execute("SELECT doctor_id ,name FROM Doctor WHERE doctor_id>0")
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			doc = DOCTOR()
+			doc.doctorID = tuple[0]
+			doc.doctorName = tuple[1]
+			docList.append(doc)
+		return docList
+
 
 
 
@@ -492,6 +504,28 @@ class Appointment():
 	def removeOldAppointmentSlots(cursor):
 		todaysDate = datetime.date.today()
 		cursor.execute("DELETE FROM Appointment_calendar WHERE DATE(date)<%s",todaysDate.strftime("%Y-%m-%d"))
+
+
+
+class Schedule():
+	calendarID = None
+	startTime = None
+	endTime =None
+	date = None
+
+	def getCalendar(cursor,doctorID):
+		schedules = list()
+		cursor.execute("SELECT calendar_id,date,start_time,end_time FROM Appointment_calendar WHERE doctor_id=%s",doctorID)
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			schedule = Schedule()
+			schedule.calendarID = tuple[0]
+			schedule.date = str(tuple[1])
+			schedule.startTime = str(tuple[2])
+			schedule.endTime = str(tuple[3])
+			schedules.append(schedule)
+		return schedules
+
 
 
 

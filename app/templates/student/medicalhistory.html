@@ -11,9 +11,6 @@
   border-radius:20px;
 }
 
-  .container{
-    background-color:#ccc;
-  }
   .title{
     color:#000;
     text-align:center;
@@ -72,12 +69,12 @@
 
   {%for prescription in prescriptionList %}
   <div class="row" >
-    <div class="visit col-md-12 ">
+    <div class="visit col-md-12 lightestcolor">
       <div class="visit-title lightestcolor2" style="border-radius:5px">
         <p class="visit-date pull-right"> {{ prescription.prescriptionDateTime.strftime(" %d %B %Y") }} <i class="fa fa-angle-down" aria-hidden="true"></i></p>
         <p class="ailment"> {{ prescription.indication }} </p>
       </div>
-      <div class="visit-desc lightestcolor pad">
+      <div class="visit-desc lightestcolor ">
         <p class="pres-id pull-right"> Presc.ID : {{  prescription.prescriptionID }}</p>
         <p class="doctor-name"> Dr. {{ prescription.doctor.doctorName}} </p>
 

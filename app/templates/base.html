@@ -188,37 +188,10 @@
 
 
 <body class="lightestcolor">
-<!--
-<div class="navbar navbar-inverse navbar-fixed-top darkestcolor"  role="navigation" style="margin-bottom:0px;">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">NITK -HCC</a>
-        </div>
-        <div class="navbar-collapse collapse">
-             <ul class="nav navbar-nav navbar-right">
-                {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
-                {% if current_user.userType == "STUDENT" %}
-                <li><a href="{{ url_for('student.showStudentProfile') }} ">Dashboard</a></li>
-                {% else %}
-                <li><a href="{{ url_for('doctor.showWorkbench') }} ">Workbench</a></li>
-                {% endif %}
-                {% else %}
-                <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</div>
 
 
-<div >
+
+<div class=" container ">
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     
@@ -231,9 +204,9 @@
 
   {% endif %}
 {% endwith %}
--->
-    {% block page_content %}
 
+
+    {% block page_content %}
 
 
     {% endblock %}

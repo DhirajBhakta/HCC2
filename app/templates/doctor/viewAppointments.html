@@ -28,12 +28,27 @@
 }
 
 
+a.moredetails-link:link{
+	color:rgb(150,150,200);
+	text-decoration:none;
+}
+a.moredetails-link:active{
+	color:rgb(150,150,200);
+	text-decoration:none;
+}
 
+a.moredetails-link:visited{
+	color:rgb(150,150,200);
+	text-decoration:none;
+}
 
 a.moredetails-link:hover{
 	color:white;
 	text-decoration:none;
 }
+
+
+
 
 
 
@@ -63,7 +78,7 @@ Upcoming Appointments
 			 	<h3>{{app.date.strftime("%B %d %Y")}}</h3>
 				<hr class="line" />
 		{% endif %}
-		<li class="app-item lightercolor2">
+		<li class="app-item darkestcolor">
 			<a class="moredetails-link" href={{url_for('doctor.viewPatientProfile',patientID=app.patientID)}} >
 				{{app.patientName}}
 			</a>

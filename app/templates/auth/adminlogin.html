@@ -3,17 +3,45 @@
 
 {% block head %}
 {{super()}}
+<style type="text/css">
+.darktheme{
+	background-color: rgba(0,0,0,0.3);
+	vertical-align: ceyunter;
+}
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+input.pp{
+     color:white;
+     background-color:rgba(0,0,0,0.8);
+     box-shadow: 0px 0px 4px #000;
+     border:0px;
+     border-radius :3px;
+     font-size:20px;
+     height:40px;
+     transition: box-shadow 0.45s ease;
+}
+</style>
+
 {% endblock %}
 
 
 
 {% block page_content %}
-<div class="container">
-
- <form action="" method="POST">
-  <input type="password" name="PASSWORD" placeholder="enter administrator password" />
- </form>
-
+<div class="jumbotron vertical-center" style="background-color: rgba(0,0,0,0.1)">
+   
+	<div class="row">
+		 <div class="col-md-4 roundedborder darktheme">
+				 
+				 <form action="" method="POST">
+				  <input type="password" name="PASSWORD" class="pp" placeholder="enter admin password" />
+				 </form>
+		 </div>
+	</div>
 </div>
 
 {% endblock %}

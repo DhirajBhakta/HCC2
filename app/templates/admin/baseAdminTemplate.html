@@ -11,9 +11,7 @@
   border-radius:20px;
 }
 
-  .container{
-    background-color:#ccc;
-  }
+
   .title{
     color:#000;
     text-align:center;
@@ -68,7 +66,7 @@ Admin
  {% block sidenavbar %}
 
  <li class="semibold">
-      <a href="#"><i class="fa fa-fw fa-history"></i> Reschedule </a>
+      <a href="{{ url_for('admin.reschedule') }}"><i class="fa fa-fw fa-history"></i> Reschedule </a>
  </li> 
  <li class="semibold">
       <a href="{{ url_for('admin.appointments') }}"><i class="fa fa-fw fa-plus-square"></i>Appointments</a>

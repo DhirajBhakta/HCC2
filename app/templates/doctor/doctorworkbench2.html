@@ -13,14 +13,12 @@
 <style type="text/css">
 	tr.tablehead{
 		color:white;
-		font-family: courier;
 		font-size: 18px
 
 	}
 
 	tr th{
 		padding-left:20px;
-		font-family: monospace;
 
 	}
 
@@ -29,6 +27,30 @@
 	}
 	.large{
 		width:200px;
+	}
+	.box{
+		box-shadow: 1px 1px 4px black;
+		background-color:White;
+	}
+	#indication{
+		font-size:30px;
+		padding-left:5%;
+		text-transform: uppercase;
+	}
+	#indcn{
+		width:80%;
+		margin-left:10%;
+	}
+
+	.jumbotron{
+	margin-top:0px;
+	}
+	}
+	.sex{
+		text-transform: lowercase;
+	}
+	.sex::first-letter{
+		text-transform: uppercase;
 	}
 </style>
 
@@ -49,7 +71,7 @@
 	<tr>
 		<td><b>Sex </b></td>
 		<td>:</td>
-		<td>{{patient.sex}}</td>
+		<td id="#sex">{{patient.sex}}</td>
 	</tr>
  	<tr>
 		<td><b>Department </b></td>
@@ -74,6 +96,7 @@
 	</tr>
 
 
+
 </table>
 </div>
 
@@ -81,18 +104,18 @@
 
 
 <!-- DOCTOR enters PRESCRIPTION DETAILS!! here on -->
-<form action="{{ url_for('doctor.addPrescription') }}"  method="post">
+<form class="box" action="{{ url_for('doctor.addPrescription') }}"  method="post">
 	<input type="hidden" name="PATIENTID" value="{{ patient.patientID }}" />
 	<input type="hidden" name="DOCTORID" value="{{ doctor.doctorID }}" />
 
-	<div class="form-group">
-  		<label for="indcn">Indication:</label>
-  		<input type="text" name="INDICATION" class="form-control" id="indcn">
+	<div class="form-group lightestcolor" style="margin-bottom: 0px">
+  		<label  class="tablehead semibold" id="indication" for="indcn">Diagnosis</label>
+  		<input type="text" name="INDICATION" class="form-control" id="indcn" placeholder="Enter indication here ( eg. Fever ) ">
 	</div>
 	
-	<div class="jumbotron lightestcolor" >
+	<div class="jumbotron" >
 	<table class="table table-condensed" >
-	<tr class="tablehead lightercolor">
+	<tr class="tablehead semibold darkercolor">
 	   <th>DRUG NAME </th>
 	   <th >QTY</th>
 	   <th>SCHEDULE</th>

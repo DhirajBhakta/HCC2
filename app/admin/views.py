@@ -1,11 +1,12 @@
 from flask import render_template, redirect ,request,url_for ,flash, current_app,jsonify
 from flask_login import login_user , logout_user, current_user,login_required
 from . import admin
-from ..models import USER,STUDENT,Appointment
+from ..models import STUDENT,DOCTOR,Appointment,Schedule
 from .. import mysql,mail
 from ..email import send_email
 from flask_mail import Message
-import json
+import json 
+import datetime
 
 
 @admin.route('/reschedule',methods=['GET','POST'])
@@ -16,14 +17,37 @@ def reschedule():
 		lastDate = request.form.get('LASTDATE')
 		print(lastDate)
 		if lastDate is not None:
-			datestr = lastDate.split('-')
-			lastDateStr = datestr[2]+"-"+datestr[1]+"-"+datestr[0]
-			cursor.execute("CALL fill_calendar(%s)",(lastDateStr,))
+			cursor.execute("CALL fill_calendar('"+lastDate+"')")
 			conn.commit()
 			flash('Appointment Slots Created! till '+lastDate)
-			return redirect(url_for('auth.reschedule'))
+			return redirect(url_for('admin.reschedule'))
 		#AppointmentDetails =
-	return render_template('admin/reschedule.html') 
+	doclist = DOCTOR.getAllDoctorDetails(cursor)
+	return render_template('admin/reschedule.html',doclist=doclist) 
+
+
+@admin.route('/getAppointmentCalendarForDoctor',methods=['GET'])
+def getAppointmentCalendarForDoctor():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	doctorID = request.args.get('DOCTORID')
+	schedulelist = Schedule.getCalendar(cursor,doctorID)
+	json_string = json.dumps([obj.__dict__ for obj in schedulelist])
+	return json_string
+
+
+@admin.route('/deleteCalendarSchedule',methods=['POST'])
+def deleteCalendarSchedule():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	calendarID = request.form.get('CALENDARID')
+	print("\n\n\n")
+	print(calendarID)
+	print("\n\n\n")
+	cursor.execute("DELETE FROM Appointment_calendar WHERE calendar_id=%s",(calendarID,))
+	conn.commit()
+	return 'true'
+
 
 
 @admin.route('/retrieveBookedAppointments',methods=['GET'])
