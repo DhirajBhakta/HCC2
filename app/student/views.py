@@ -13,7 +13,7 @@ def showStudentProfile():
 	id = current_user.get_id()
 
 	studentUser = STUDENT()
-	studentUser.storeTuple(cursor,id)
+	studentUser.storeTuple(cursor,"rollno",id)
 	return render_template("student/studentprofile.html",studentUser = studentUser)
 
 
@@ -33,7 +33,7 @@ def showMedicalHistory():
 	id = current_user.get_id()
 
 	studentUser = STUDENT()
-	studentUser.storeTuple(cursor,id)
+	studentUser.storeTuple(cursor,"rollno",id)
 
 	return render_template('student/medicalhistory.html',prescriptionList=prescriptionList,studentUser=studentUser)
 
@@ -45,7 +45,7 @@ def bookAppointment():
 	cursor = conn.cursor()
 	id = current_user.get_id()
 	studentUser = STUDENT()
-	studentUser.storeTuple(cursor,id)
+	studentUser.storeTuple(cursor,"rollno",id)
 
 	category = request.args.get('CATEGORY')
 	if category is not None:
@@ -61,7 +61,7 @@ def submitAppointment():
 	cursor = conn.cursor()
 	id = current_user.get_id()
 	studentUser = STUDENT()
-	studentUser.storeTuple(cursor,id)
+	studentUser.storeTuple(cursor,"rollno",id)
 	
 	calendarID = request.form.get('CALENDARID')
 	Appointment.commitSubmittedAppointmentIntoDB(cursor,calendarID,studentUser.patientID)
@@ -74,7 +74,7 @@ def retrieveBookedAppointments():
 	cursor = conn.cursor()
 	id = current_user.get_id()
 	studentUser = STUDENT()
-	studentUser.storeTuple(cursor,id)
+	studentUser.storeTuple(cursor,"rollno",id)
 	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,studentUser.patientID,"PATIENT")
 	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments])
 	return json_string

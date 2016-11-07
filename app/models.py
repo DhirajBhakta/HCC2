@@ -147,8 +147,8 @@ class STUDENT():
 
 
 	#Database to object
-	def storeTuple(self,cursor,rollno):
-		cursor.execute("SELECT * FROM Student WHERE rollno=%s",(rollno,))
+	def storeTuple(self,cursor,colname,value):
+		cursor.execute("SELECT * FROM Student WHERE "+colname+"=%s",(value,))
 		tuple = cursor.fetchone()
 		
 		self.rollno 	  = tuple[0]
@@ -394,9 +394,34 @@ class Appointment():
 			appointmentDates.append(appointmentDate)
 		return appointmentDates
 
+	def getViableDatesForCategory_admin(cursor,specialization):
+		appointmentDates = list()
+		cursor.execute("SELECT * from Appointment_calendar JOIN Doctor ON Appointment_calendar.doctor_id = Doctor.doctor_id AND Doctor.specialization = %s",specialization)
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			print(tuple)
+			appointmentDate = Appointment()
+			appointmentDate.calendarID = tuple[0]
+			date = tuple[1]
+			appointmentDate.date = str(date)
+			appointmentDate.doctorName = tuple[7]
+			time = tuple[3]
+			appointmentDate.startTime = str(time)
+			time = tuple[4]
+			appointmentDate.endTime = str(time)
+			appointmentDates.append(appointmentDate)
+		return appointmentDates
+
 	def commitSubmittedAppointmentIntoDB(cursor,calendarID,patientID):
 		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES (%s,%s)",(patientID,calendarID))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
+
+
+
+	def commitSubmittedAppointmentIntoDB_admin(cursor,calendarID,rollno):
+		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES ((SELECT patient_id FROM Student WHERE rollno=%s),%s)",(rollno,calendarID))
+		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
+
 
 	def retrieveBookedAppointments(cursor,ID,forWHOM):
 		appointments = list()
@@ -434,8 +459,24 @@ class Appointment():
 		elif forWHOM == "ADMIN":
 			date = ID[0]
 			category = ID[1]
-			cursor.execute("SELECT date,")
-
+			cursor.execute("SELECT date,patient_id,patient_type,name,slot_id FROM View_appointment_admin WHERE specialization=%s AND date=%s ORDER BY date",(category,date))
+			tuples = cursor.fetchall()
+			for tuple in tuples:
+				appointment = Appointment()
+				appointment.patientID = tuple[1]
+				patientType = tuple[2]
+				appointment.doctorName = tuple[3]
+				appointment.slotID = tuple[4]
+				if(patientType == "STUDENT"):
+					cursor.execute("SELECT name,rollno,Course.course_name  FROM Student JOIN Course ON Student.course_id=Course.course_id AND patient_id=%s",(appointment.patientID,))
+					stu = cursor.fetchone()
+					print("\n\n\n")
+					print(stu)
+					print("\n\n\n")
+					appointment.patientName = stu[0]
+					appointment.rollno = stu[1]
+					appointment.courseName = stu[2]
+				appointments.append(appointment)
 
 			
 		return appointments

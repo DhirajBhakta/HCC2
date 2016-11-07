@@ -24,7 +24,7 @@ def showWorkbench():
 		druglist = [""]+druglist
 		if (patientType == '1'):
 			studentPatient = STUDENT()
-			studentPatient.storeTuple(cursor,ID)
+			studentPatient.storeTuple(cursor,"rollno",ID)
 			return render_template('doctor/doctorworkbench2.html',patient=studentPatient,doctor=doctor,doctorUser=doctor,druglist=druglist)
 	return render_template('doctor/doctorworkbench1.html',form=form,doctorUser=doctor)
 

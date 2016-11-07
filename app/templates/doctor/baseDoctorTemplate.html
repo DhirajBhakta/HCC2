@@ -72,13 +72,13 @@ Dr.{{doctorUser.doctorName}}
 
 
  {% block sidenavbar %}
- <li class="darkercolor sidebarlistitem">
+ <li class="semibold">
       <a  href="{{ url_for('doctor.showWorkbench') }}"><i class="fa fa-fw fa-dashboard"></i> Workbench</a>
  </li>
- <li class="darkercolor sidebarlistitem">
+ <li class="semibold">
       <a href="{{ url_for('doctor.showHistory') }}"><i class="fa fa-fw fa-history"></i> History</a>
  </li> 
- <li class="darkercolor sidebarlistitem">
+ <li class="semibold">
       <a href="{{ url_for('doctor.showUpcomingAppointments') }}"><i class="fa fa-fw fa-plus-square"></i>Upcoming Appointments</a>
  </li>
  {% endblock %}   
