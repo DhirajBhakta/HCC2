@@ -15,12 +15,12 @@ class LoginForm(Form):
 
 
 class RegistrationForm(Form):
-	ID 		 	= StringField('ID',validators=[Required()])
-	patientType = RadioField('Status :',choices=[('STUDENT','Student'),('EMPLOYEE','Employee')])
-	name 	 	= StringField('Full Name',validators=[Required()])
-	email 	 	= StringField('Email',validators=[Required(),Email()])
-	password 	= PasswordField('Password',validators=[Required()])
-	password2	= PasswordField('Confirm Password',validators=[Required(),EqualTo('password',message='Password mismatch!')])
+	ID 		 	= StringField('',validators=[Required()],render_kw={"placeholder" : "Your Student/Employee ID"} )
+	patientType = RadioField('',choices=[('STUDENT','Student'),('EMPLOYEE','Employee')])
+	name 	 	= StringField('',validators=[Required()], render_kw={"placeholder": "Enter your full name"})
+	email 	 	= StringField('',validators=[Required(),Email()], render_kw={"placeholder": "Enter your email"})
+	password 	= PasswordField('',validators=[Required()], render_kw={"placeholder": "Enter your password"})
+	password2	= PasswordField('',validators=[Required(),EqualTo('password',message='Password mismatch!')], render_kw={"placeholder": "Enter your password again"})
 	submit   	= SubmitField('Register')
 
 	def validate_email(self,field):
@@ -43,8 +43,8 @@ class RegistrationForm(Form):
 
 			
 class DoctorLoginForm(Form):
-	doctorID = StringField("ID ",validators=[Required()])
-	password = PasswordField("Password",validators=[Required()])
+	doctorID = StringField("",validators=[Required()], render_kw={"placeholder": "Enter your Doctor ID"})
+	password = PasswordField("",validators=[Required()], render_kw={"placeholder": "Enter your Password"})
 	submit   = SubmitField("Log in")
 
 	def validate_doctorID(self,field):

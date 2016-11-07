@@ -34,6 +34,111 @@
 
     {% block head %}
     <style>
+    
+   ::-webkit-input-placeholder {
+    font-style: italic;
+    font-size: 15px;
+ }
+ :-moz-placeholder {
+    font-style: italic;  
+    font-size: 15px;
+ }
+ ::-moz-placeholder {
+    font-style: italic;  
+    font-size: 15px;
+ }
+ :-ms-input-placeholder {  
+    font-style: italic; 
+    font-size: 15px;
+ } 
+ .nitk-logo{
+    margin:auto;
+    margin-top: 10px;
+    display:block;
+ }
+ .nitk-heading{
+  color:white;
+  padding:10px;
+  padding-bottom:0px;
+  margin-bottom:0px;
+  text-shadow: 2px 2px 10px #000;
+  font-size:100px;
+  font-weight: bold;
+  text-align:center;
+ }
+.nitk-heading-s{
+  color:white;
+  padding:10px;
+  padding-bottom:0px;
+  margin-bottom:0px;
+  text-shadow: 2px 2px 10px #000;
+  font-size:50px;
+  font-weight: bold;
+  text-align:center;
+ }
+
+
+ .nitk-subheading{
+  color:white;
+  padding-top:0px;
+  margin-top:0px;
+  text-shadow: 2px 2px 2px #000;
+  font-size:40px;
+  text-align:center;
+ }
+  
+
+  .login-bar{
+    background-color:rgba(0,0,0,0.6);
+   }
+   .blank-bar{ 
+    margin-top: 120px;
+   }
+    #submit{
+      margin-top:10px;
+      color:#ddd;
+      background-color:rgba(0,0,0,0.5);
+      box-shadow: 0px 0px 3px #ddd;
+      text-transform: uppercase;
+      border: 0px;
+      padding:10px 15px;
+      transition: box-shadow 0.45s ease;
+      transition: background-color 0.45s ease;
+      font-size:20px;
+    }
+    #submit:focus{
+      box-shadow: 0px 0px  #fff;
+    }
+    #submit:hover{
+      background-color:rgba(0,0,0,0.75);
+      box-shadow: 0px 0px 4px #ddd;
+    }
+   .login-button{
+
+   }
+   .login-button > .radio > label{
+     font-size:18px;
+   }
+   .login-button > .form-group{
+     margin:0px;
+     padding:0px;
+     padding-right:50px;
+     text-align:center;
+   }
+   .login-button > .form-group > input {
+     color:white;
+     background-color:rgba(0,0,0,0.8);
+     box-shadow: 0px 0px 4px #000;
+     border:0px;
+     border-radius :3px;
+     font-size:20px;
+     height:40px;
+     transition: box-shadow 0.45s ease;
+   }
+   .login-button > .form-group > input:focus {
+     box-shadow: 0px 0px  4px #fff;
+     border:0px;
+   } 
     .darkestcolor{
     background-color:rgb(15,62,115);
     }
