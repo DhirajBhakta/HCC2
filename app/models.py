@@ -313,7 +313,7 @@ class PRESCRIPTION():
 		cursor.execute("SELECT * FROM Prescription_drug_map WHERE prescription_id=%s",(self.prescriptionID,))
 		drugtuples = cursor.fetchall()
 		for drugtuple in drugtuples:
-			cursor.execute("SELECT generic_name FROM Drug WHERE drug_id=%s",(drugtuple[1]))
+			cursor.execute("SELECT trade_name FROM Drug WHERE drug_id=%s",(drugtuple[1]))
 			drugName = cursor.fetchone()[0]
 
 			prescriptionDrug = PrescriptionDrug()
@@ -331,7 +331,7 @@ class PRESCRIPTION():
 		tuple = cursor.fetchone()
 		self.prescriptionID = tuple[0]
 		for drug in self.prescriptionDrugs:
-			cursor.execute("SELECT drug_id FROM Drug WHERE generic_name=%s",(drug.drugName,))
+			cursor.execute("SELECT drug_id FROM Drug WHERE trade_name=%s",(drug.drugName,))
 			tuple = cursor.fetchone()
 			drugID = tuple[0]
 			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments))
@@ -346,6 +346,22 @@ class PRESCRIPTION():
 			prescription.storeTuple(cursor,prescIDtuple[0])
 			prescriptionList.append(prescription)
 		return prescriptionList
+
+
+
+class DRUG():
+
+	def retrieveDBdrugs(cursor):
+		drugNamesList = list()
+		cursor.execute("SELECT DISTINCT trade_name FROM Drug")
+		drugNames = cursor.fetchall()
+		for drugName in drugNames:
+			print(drugName)
+			drugNamesList.append(drugName[0])
+		return drugNamesList
+
+
+
 
 
 
@@ -415,10 +431,16 @@ class Appointment():
 					appointment.rollno = stu[1]
 					appointment.courseName = stu[2]
 				appointments.append(appointment)
+		elif forWHOM == "ADMIN":
+			date = ID[0]
+			category = ID[1]
+			cursor.execute("SELECT date,")
 
 
 			
 		return appointments
+
+
 
 	def deleteBookedAppointment(cursor,slotID):
 		cursor.execute("SELECT calendar_id FROM Appointment_slot WHERE slot_id=%s",(slotID,))

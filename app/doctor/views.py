@@ -1,6 +1,6 @@
 from flask import render_template ,request ,redirect ,url_for
 from .. import mysql
-from ..models import DOCTOR , PrescriptionDrug, PRESCRIPTION, STUDENT, Appointment
+from ..models import DOCTOR , PrescriptionDrug, PRESCRIPTION, STUDENT,DRUG, Appointment
 from . import doctor
 from .forms import WorkbenchForm1
 from flask_login import current_user, login_required
@@ -20,10 +20,12 @@ def showWorkbench():
 	if form.validate_on_submit():
 		patientType = form.patientType.data
 		ID = form.ID.data
+		druglist = DRUG.retrieveDBdrugs(cursor)
+		druglist = [""]+druglist
 		if (patientType == '1'):
 			studentPatient = STUDENT()
 			studentPatient.storeTuple(cursor,ID)
-			return render_template('doctor/doctorworkbench2.html',patient=studentPatient,doctor=doctor,doctorUser=doctor)
+			return render_template('doctor/doctorworkbench2.html',patient=studentPatient,doctor=doctor,doctorUser=doctor,druglist=druglist)
 	return render_template('doctor/doctorworkbench1.html',form=form,doctorUser=doctor)
 
 

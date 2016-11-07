@@ -96,6 +96,21 @@ def loginDoctor():
             flash('Invalid doctorID or password.')
     return render_template('auth/doctorlogin.html',form=form)
 
+@auth.route('/login/admin',methods=['GET','POST'])
+def loginAdmin():
+    if request.method == 'POST':
+        cursor = mysql.connect().cursor()
+        password = request.form.get('PASSWORD')
+        thisUser = USER()
+        thisUser = USER.checkIfIDExists(cursor,"admin")
+        if thisUser.verify_password(password):
+            login_user(thisUser)
+            return redirect(url_for('admin.appointments'))
+        else:
+            flash('Invalid Password')
+    return render_template('auth/adminlogin.html')
+
+
 
 
 

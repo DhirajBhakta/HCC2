@@ -6,6 +6,10 @@
 {% block head %}
 {{super()}}
 
+<link href="{{url_for('static',filename='css/select2.min.css') }}" rel="stylesheet"/>
+<script src="{{ url_for('static',filename='js/select2.full.min.js') }}"></script>
+
+
 <style type="text/css">
 	tr.tablehead{
 		color:white;
@@ -96,7 +100,14 @@
 	</tr>
 	{% for row in range(5) %}
      		<tr>
-	   			<td><input type="text" name='DRUG_NAME{{row}}' /></td>
+	   			<td>
+	   				<select class="js-example-basic-single" name='DRUG_NAME{{row}}'>
+	   				  {% for drug in druglist %} 
+	   				   <option value="{{drug}}">{{drug}}</option>
+	   				   {% endfor %}
+	   				</select>   
+    
+  	   			</td>
 	   			<td ><input type="text" class="small" name='DRUG_QTY{{row}}' /></td>
 	   			<td><input type="text"  class="large" name='DRUG_SCHEDULE{{row}}' /></td>
 	   			<td style="width:200px"><input type="text" class="large" name='DRUG_COMMENTS{{row}}' /></td>
@@ -107,4 +118,13 @@
 
     <input class="btn btn-success" style="width:20%; float:right" type="submit" value="Done" /> 
 </form>
+{% endblock %}
+
+
+{% block extrascripts %}
+<script>
+$(document).ready(function() {
+  $(".js-example-basic-single").select2();
+});
+</script>
 {% endblock %}

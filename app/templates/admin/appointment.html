@@ -1,10 +1,14 @@
-{% extends "student/baseStudentTemplate.html" %}
+{% extends "admin/baseAdminTemplate.html" %}
 
 {% block head %}
 {{super()}}
 <link rel="stylesheet" href="{{url_for('static',filename='css/jquery-ui.min.css')}}">
 
 <style type="text/css">
+
+    .booked-appointments{
+    	visibility: hidden;
+    }
 	 .profile-header-appointment{
      color:white;   
      margin-top:0px;
@@ -117,7 +121,7 @@
 
 
   {% block pageheader %}
-  Book an Appointment
+  Appointment Booking 
   {% endblock %}
 
   {% block emptyspace %}
@@ -140,8 +144,10 @@
   	<p id="response" class="robotofont">Select a Category</p>
   	  	<div class="row response-box" id="response-box">
   			<p>Date: <input type="text" class="form-control" id="datepicker" /></p>
-  	
-  	</div>
+  			<p><input type="radio" name="pType" value="STUDENT">Student</p><br/>
+  			   <input type="radio" name="pType" value="EMPLOYEE">Employee
+  			<p>ID:<input type="text" name="ID" id="ID" />   
+	    </div>
 	
     <div class="row" style="margin-top:20px">
         <div class="col-md-3"></div>
@@ -185,58 +191,11 @@
   <script type="text/javascript">
     var selectedCalendarID;
 
-  	$(document).ready(function(){
-  		$.get("/student/retrieveBookedAppointments",function(data){
-  			if(data && data!="")
-  			{	console.log(data);
-  			   $("#booked-appointments").css('visibility','visible');	
-  			   data = $.parseJSON(data);
-  			   for(var i=0;i<data.length;i++)
-  			   {
-  			   	 var category = (data[i].category).toLowerCase();
-  			   	 category = capitalize(category);
-  			   	 var docName = "Dr."+data[i].doctorName +' ('+category+')';
-  			   	 var date = new Date(data[i].date);
-  			   	 date = "Date: "+date.toDateString();
-  			   	 var startTime = data[i].startTime;
-  			   	 var endTime = data[i].endTime;
-
-  			   	 dispStr = date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span><br> <button type='button' name='SLOTID' onclick='deleteAppointment(this);' value='"+data[i].slotID+"' class='btn btn-danger cancel-btn'>Cancel Appointment</button>";
-  			   	 $("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
-  			   	  
-  			   }
-
-
-            }
-  		});
-  			
-  		});
-
-         function deleteAppointment(btn){
-  			slotID = btn.value;
-  			btn = $(btn);
-  			$.post('/student/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
-  				if(boolData == "true")
-  				{
-  					li_item = btn.parent();
-  					li_item.remove()
-  				}
-
-  			});
-  		}
-
-
-  	
-  	
-  	
   	$(".category").click(function(){
 	    var btnname = this.name
 	  	$.get("/student/bookAppointment",{ CATEGORY:btnname } ,function(data){
 	  		data = $.parseJSON(data);
 	  		$("#response").html(btnname);
-	  		
-
-
 	  		$('#response-box').css('visibility','visible');
 	  		$('.details-wrap').css('visibility','hidden');
 	  		$('.confirm-btn').css('visibility','hidden');
@@ -258,39 +217,67 @@
 			        return [false];
 			    },
 			    onSelect: function(date){
-			       $('.response-box').css('visibility','visible');
+			      /* $('.response-box').css('visibility','visible');
 			       $('.details-wrap').css('visibility','visible');
-			       $('#confirm-btn').css('visibility','visible');
+			       $('#confirm-btn').css('visibility','visible');*/
+			       console.log(date);
+			       $.get("/admin/retrieveBookedAppointments",{DATE:date,CATEGORY:btnname},function(data){
+  						if(data && data!="")
+  							{
+  							 console.log(data);
+  			   				 $("#booked-appointments").css('visibility','visible');	
+  			   				   data = $.parseJSON(data);
+				  			   for(var i=0;i<data.length;i++)
+				  			   {
+				  			   	 var patientName = data[i].patientName
+				  			   	 var category = (data[i].category).toLowerCase();
+				  			   	 category = capitalize(category);
+				  			   	 var docName = "Dr."+data[i].doctorName +' ('+category+')';
+				  			   	 var date = new Date(data[i].date);
+				  			   	 date = "Date: "+date.toDateString();
+				  			   	 var startTime = data[i].startTime;
+				  			   	 var endTime = data[i].endTime;
 
+				  			   	 dispStr = patientName+"---"+date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span><br> <button type='button' name='SLOTID' onclick='deleteAppointment(this);' value='"+data[i].slotID+"' class='btn btn-danger cancel-btn'>Cancel Appointment</button>";
+				  			   	 $("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
+				  			   	  
+  			   					}
+							}
+  		                });
 
-                    var selectedDate = $(this).datepicker('getDate');
-			    	var selectedStartTime;
-			    	var selectedEndTime;
-			    	for( var i=0;i<data.length;i++)
-			    	{
-			    		var t_date = new Date(data[i].date);
-			    		if( cmpDates(t_date,selectedDate))
-			    		{
-			    			selectedCalendarID = data[i].calendarID;
-			    			doctorName = data[i].doctorName;
-			    		    selectedStartTime = data[i].startTime;
-			    		    selectedEndTime = data[i].endTime;
-			    		    break;
-			    		}    
-			    	}
-			    	displayDateString = formatDate(selectedDate) ;
- 					displayTimeStringStart = formatTime(selectedStartTime);
- 					displayTimeStringEnd = formatTime(selectedEndTime);
- 					
-			    	$('#date-details').html("<span><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i> </span> "+displayDateString);
-			    	$('#doctor-name').html("<span class=\"white-bold\">Dr."+doctorName+ "</span> ");
-			    	$('#time-details').html("<span><i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i></span>  "+displayTimeStringStart +" to "+displayTimeStringEnd);
-
-			    }
 			});//end of datepicker
 
 	  	});//end of $.get callback functiom
     }); //endof click event
+
+    $("#make-appointment-btn").click(function(){
+        var selectedDate = $("#datepicker").datepicker('getDate');
+    	var patientID = $("#");
+
+    	var selectedStartTime;
+    	var selectedEndTime;
+    	for( var i=0;i<data.length;i++)
+    	{
+    		var t_date = new Date(data[i].date);
+    		if( cmpDates(t_date,selectedDate))
+    		{
+    			selectedCalendarID = data[i].calendarID;
+    			doctorName = data[i].doctorName;
+    		    selectedStartTime = data[i].startTime;
+    		    selectedEndTime = data[i].endTime;
+    		    break;
+    		}    
+    	}
+    	displayDateString = formatDate(selectedDate) ;
+			displayTimeStringStart = formatTime(selectedStartTime);
+			displayTimeStringEnd = formatTime(selectedEndTime);
+			
+    	$('#date-details').html("<span><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i> </span> "+displayDateString);
+    	$('#doctor-name').html("<span class=\"white-bold\">Dr."+doctorName+ "</span> ");
+    	$('#time-details').html("<span><i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i></span>  "+displayTimeStringStart +" to "+displayTimeStringEnd);
+
+    }
+    })
 
 
     $("#confirm-btn").click(function(){
@@ -329,6 +316,18 @@
 
       	return str[0]+":"+str[1];
     }
+ function deleteAppointment(btn){
+  			slotID = btn.value;
+  			btn = $(btn);
+  			$.post('/student/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
+  				if(boolData == "true")
+  				{
+  					li_item = btn.parent();
+  					li_item.remove()
+  				}
+
+  			});
+  		}
 
  
   </script>
