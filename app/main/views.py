@@ -11,6 +11,7 @@ def index():
 		return redirect(url_for('student.showStudentProfile'))'''
 	conn = mysql.connect()
 	cursor = conn.cursor()
+	Appointment.removeOldAppointmentSlots(cursor)
 	conn.commit()
 	return redirect(url_for("auth.login"))
 
