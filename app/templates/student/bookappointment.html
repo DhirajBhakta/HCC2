@@ -100,6 +100,20 @@
 		
 		margin:10px;
 	}
+	li.reditem{
+		background-color: white;
+		color:black;
+		font-size: 18px;
+		list-style-type: none;
+		padding:15px;
+		border-radius:2px;
+		border:1px solid #51A3F4;
+		border-left:15px solid #ff1e1e;
+		border-bottom:1px solid white;
+		box-shadow: 3px 3px #BBBEC2 ;
+		
+		margin:10px;
+	}
 	.cancel-btn{
 		margin-top:5px;
 	}
@@ -146,7 +160,7 @@
     <div class="row" style="margin-top:20px">
         <div class="col-md-3"></div>
 		<div class = "col-md-5 details-wrap" >
-		     <div class="profile-header-appointment darkcolor">
+		     <div  id="appointment-card" class="profile-header-appointment darkcolor">
 			 	<p class="app-header">Appointment</p>
 			 	<p id="doctor-name" class="lvl1"></p>
 			 	
@@ -184,6 +198,7 @@
   <script src="{{url_for('static',filename='js/jquery-ui.min.js')}}"></script>	
   <script type="text/javascript">
     var selectedCalendarID;
+    var appstatus = "BOOKED";
 
   	$(document).ready(function(){
   		$.get("/student/retrieveBookedAppointments",function(data){
@@ -200,10 +215,17 @@
   			   	 date = "Date: "+date.toDateString();
   			   	 var startTime = data[i].startTime;
   			   	 var endTime = data[i].endTime;
+  			   	 var status = data[i].status;
 
   			   	 dispStr = date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span><br> <button type='button' name='SLOTID' onclick='deleteAppointment(this);' value='"+data[i].slotID+"' class='btn btn-danger cancel-btn'>Cancel Appointment</button>";
-  			   	 $("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
-  			   	  
+  			   	 if (status == "BOOKED")
+  			   	 { 
+  			   	 	$("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
+  			   	 }
+  			   	 else{
+  			   	 	$("#booked-appointments-list").append("<li class=\"reditem\">"+dispStr+" </li>");
+
+  			   	  }
   			   }
 
 
@@ -219,7 +241,8 @@
   				if(boolData == "true")
   				{
   					li_item = btn.parent();
-  					li_item.remove()
+  					li_item.remove();
+  					location.reload();
   				}
 
   			});
@@ -275,12 +298,22 @@
 			    			doctorName = data[i].doctorName;
 			    		    selectedStartTime = data[i].startTime;
 			    		    selectedEndTime = data[i].endTime;
+			    		    sessionLimit = data[i].sessionLimit;
+
 			    		    break;
 			    		}    
 			    	}
 			    	displayDateString = formatDate(selectedDate) ;
  					displayTimeStringStart = formatTime(selectedStartTime);
  					displayTimeStringEnd = formatTime(selectedEndTime);
+
+ 					if(sessionLimit<0)
+ 					{
+ 						$("#appointment-card").css("background-color","red");
+ 						appstatus = "WAITING";
+ 					}
+ 					else
+ 						appstatus = "BOOKED";
  					
 			    	$('#date-details').html("<span><i class=\"fa fa-calendar\" aria-hidden=\"true\"></i> </span> "+displayDateString);
 			    	$('#doctor-name').html("<span class=\"white-bold\">Dr."+doctorName+ "</span> ");
@@ -294,7 +327,7 @@
 
 
     $("#confirm-btn").click(function(){
-   		$.post("/student/submitAppointment",{CALENDARID:selectedCalendarID},function(data){
+   		$.post("/student/submitAppointment",{CALENDARID:selectedCalendarID,APPSTATUS:appstatus},function(data){
    			$("#mainrow").html("<button type='button' class='btn btn-success' style='padding:60px;border-radius:100px'><i  style='font-size:75px;color:black' class='fa fa-check'></i></button> <span style='font-size: 50px'> Success!</span>");
    			$("#booked-appointments").css('visibility','hidden');
    		});

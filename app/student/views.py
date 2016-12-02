@@ -64,7 +64,8 @@ def submitAppointment():
 	studentUser.storeTuple(cursor,"rollno",id)
 	
 	calendarID = request.form.get('CALENDARID')
-	Appointment.commitSubmittedAppointmentIntoDB(cursor,calendarID,studentUser.patientID)
+	appointmentStatus = request.form.get('APPSTATUS')
+	Appointment.commitSubmittedAppointmentIntoDB(cursor,calendarID,studentUser.patientID,appointmentStatus)
 	conn.commit()
 	return render_template('student/success.html',studentUser=studentUser)
 

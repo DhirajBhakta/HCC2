@@ -386,11 +386,13 @@ class Appointment():
 	category = None
 	startTime = None
 	endTime = None
+	sessionLimit = None
+	status = None
 
 
 	def getViableDatesForCategory(cursor,specialization):
 		appointmentDates = list()
-		cursor.execute("SELECT * from Appointment_calendar JOIN Doctor ON Appointment_calendar.doctor_id = Doctor.doctor_id AND Doctor.specialization = %s AND Appointment_calendar.session_limit>0",specialization)
+		cursor.execute("SELECT * from Appointment_calendar JOIN Doctor ON Appointment_calendar.doctor_id = Doctor.doctor_id AND Doctor.specialization = %s ",specialization)
 		tuples = cursor.fetchall()
 		for tuple in tuples:
 			print(tuple)
@@ -403,6 +405,7 @@ class Appointment():
 			appointmentDate.startTime = str(time)
 			time = tuple[4]
 			appointmentDate.endTime = str(time)
+			appointmentDate.sessionLimit = tuple[5];
 			appointmentDates.append(appointmentDate)
 		return appointmentDates
 
@@ -424,8 +427,8 @@ class Appointment():
 			appointmentDates.append(appointmentDate)
 		return appointmentDates
 
-	def commitSubmittedAppointmentIntoDB(cursor,calendarID,patientID):
-		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES (%s,%s)",(patientID,calendarID))
+	def commitSubmittedAppointmentIntoDB(cursor,calendarID,patientID,appStatus):
+		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id,status) VALUES (%s,%s,%s)",(patientID,calendarID,appStatus))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
 
 
@@ -449,6 +452,7 @@ class Appointment():
 				appointment.startTime = str(tuple[3])
 				appointment.endTime = str(tuple[4])
 				appointment.category = tuple[6]
+				appointment.status = tuple[7]
 				appointments.append(appointment)
 		elif forWHOM == "DOCTOR":
 			cursor.execute("SELECT date,patient_id,patient_type FROM View_appointment_patient_ref_map WHERE doctor_id=%s ORDER BY date",ID)
@@ -498,6 +502,10 @@ class Appointment():
 	def deleteBookedAppointment(cursor,slotID):
 		cursor.execute("SELECT calendar_id FROM Appointment_slot WHERE slot_id=%s",(slotID,))
 		calendarID = cursor.fetchone()[0]
+		cursor.execute("SELECT slot_id FROM Appointment_slot WHERE calendar_id=%s AND status='WAITING' LIMIT 1",(calendarID,))
+		slotIDnew = cursor.fetchone()[0]
+		if slotIDnew is not None:
+			cursor.execute("UPDATE Appointment_slot SET status='BOOKED' WHERE slot_id=%s",slotIDnew)
 		cursor.execute("DELETE FROM Appointment_slot WHERE slot_id=%s",(slotID,))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit +1 WHERE calendar_id=%s",calendarID)
 
