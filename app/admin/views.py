@@ -36,6 +36,21 @@ def getAppointmentCalendarForDoctor():
 	return json_string
 
 
+@admin.route('/modifyCalendarSchedule',methods=['POST'])
+def modifyCalendarSchedule():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	calendarID = request.form.get('CALENDARID')
+	date = request.form.get('DATE');
+	stime = request.form.get('STIME');
+	etime = request.form.get('ETIME');
+	Schedule.replace(cursor,calendarID,date,stime,etime)
+	conn.commit()
+	return 'true'
+
+
+
+
 @admin.route('/deleteCalendarSchedule',methods=['POST'])
 def deleteCalendarSchedule():
 	conn = mysql.connect()

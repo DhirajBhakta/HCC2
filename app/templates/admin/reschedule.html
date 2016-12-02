@@ -38,6 +38,21 @@ li.item{
 		
 		margin:10px;
 	}
+li.replacement-item{
+		background-color: #ffd8d8;
+		color:black;
+		font-size: 18px;
+		list-style-type: none;
+		padding:15px;
+		border-radius:2px;
+		border:1px solid #51A3F4;
+		border-left:15px solid #f44242;
+		border-bottom:1px solid white;
+		box-shadow: 3px 3px #BBBEC2 ;
+		
+		margin:10px;
+
+}
 
 </style>
 
@@ -128,24 +143,70 @@ li.item{
 			   	 		   "<span style=\"float:right\">"+t_startTime+"</span><br>"+
 			   	 		   "<span style=\"float:right\">"+t_endTime+"<br></span>"+
 			   	 		   "<button type='button' name='"+calendarID+"' onclick='deleteSchedule(this);' value='"+i+"' class='btn btn-danger cancel-btn'>Delete Schedule</button>"+
-			   	 		   "<button type='button' name='"+calendarID+"' onclick='ModifySchedule(this);' value='"+i+"' class='btn btn-info modify-btn'>Modify Schedule</button>";
+			   	 		   "<button type='button' name='"+calendarID+"' onclick='modifySchedule(this);' value='"+i+"' class='btn btn-info modify-btn'>Modify Schedule</button>";
 			   	 $("#doc-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
 
 			}
 
 
 		});
+		 } );
 
-	});
+
+  			
+  		
+  		 function deleteSchedule(btn){
+				btn = $(btn);
+				calendarID = btn.attr("name");
+				$.post('/admin/deleteCalendarSchedule',{CALENDARID:calendarID},function(boolData){
+					if(boolData == "true")
+					{
+						li_item = btn.parent();
+						li_item.remove()
+					}
+
+				});
+  		}
+  		function modifySchedule(btn){ 
+  			btn = $(btn);
+  			li = btn.parent();
+  			calendarID = btn.attr("name");
+  			dataindex = btn.attr("value");
+  			liStr = 
+  			"<li class='replacement-item'>"+
+	  			"<input type='text' class='form-control' id='replacement-datepicker' placeholder='Choose new Date' />"+
+	  			"<input type='text' class='form-control' id='replacement-startTime' placeholder='New start Time(eg:15:00:00)'/>"+
+	  			"<input type='text' class='form-control' id='replacement-endTime' placeholder='New end Time(eg:17:00:00)'/>"+
+	  			"<button type='button' class='btn btn-danger' onclick='modify(this)'>Done</button>"+
+
+  			"</li>";
+  			             
+  			(btn.parent().parent()).append(liStr);
+            li.replaceWith($(".replacement-item"));
+            $("#replacement-datepicker").datepicker({
+            	dateFormat: "dd-mm-yy",
+			    minDate:0
+            });
+
+        }
+
+            
+
+	    
 
      function formatDate(date) {
     	var str = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
     	return str;
     }
-    function deleteSchedule(btn){
-  			btn = $(btn);
-  			calendarID = btn.attr("name");
-  			$.post('/admin/deleteCalendarSchedule',{CALENDARID:calendarID},function(boolData){
+    function modify(btn){
+            	btn = $(btn);
+            	liNew = btn.parent();
+            	date = liNew.children('#replacement-datepicker').datepicker('getDate');
+            	date = formatDate(date)
+				startTime = liNew.children('#replacement-startTime').attr('value');
+            	endTime = liNew.children('#replacement-endTime').attr('value');
+
+            	$.post('/admin/modifyCalendarSchedule',{CALENDARID:calendarID,DATE:date,STIME:startTime,ETIME:endTime},function(boolData){
   				if(boolData == "true")
   				{
   					li_item = btn.parent();
@@ -153,7 +214,12 @@ li.item{
   				}
 
   			});
-  		}
+
+
+
+            }
+
+  	
 </script>
 
 {% endblock %}

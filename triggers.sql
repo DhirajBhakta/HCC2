@@ -1,0 +1,28 @@
+DELIMITER ##
+CREATE TRIGGER before_insert_into_Student
+BEFORE INSERT
+   ON Student FOR EACH ROW
+
+BEGIN
+   INSERT INTO Patient VALUES (NEW.patient_id,'STUDENT');
+
+END; ##
+
+DELIMITER;
+
+
+
+DELIMITER ##
+CREATE TRIGGER before_insert_into_Employee
+BEFORE INSERT
+   ON Employee FOR EACH ROW
+
+BEGIN
+
+
+   --INSERT INTO PATIENT TABLE FIRST
+   INSERT INTO Patient VALUES (NEW.patient_id,'EMPLOYEE');
+
+END; ##
+
+DELIMITER;
