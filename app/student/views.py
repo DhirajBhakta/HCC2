@@ -4,6 +4,7 @@ from ..models import STUDENT, PRESCRIPTION, Appointment
 from . import student
 from flask_login import current_user, login_required
 import json
+import rdflib
 
 @student.route("/profile")
 @login_required

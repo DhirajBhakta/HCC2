@@ -44,6 +44,9 @@ def create_app(config_name):
     from .doctor import doctor as doctor_blueprint
     app.register_blueprint(doctor_blueprint,url_prefix='/doctor')
 
+    from .pharma import pharma as pharma_blueprint
+    app.register_blueprint(pharma_blueprint,url_prefix='/pharma')
+
     return app
 
 

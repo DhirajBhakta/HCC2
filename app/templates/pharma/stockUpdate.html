@@ -1,0 +1,128 @@
+{% extends "pharma/basePharmaTemplate.html" %}
+
+
+
+{% block emptyspace %}
+
+	<table class="table table-condensed" id="stockTBL" >
+	<tr class="tablehead semibold darkercolor">
+	   <th>DRUG NAME</th>
+	   <th>QTY</th>
+	   <th>BATCH NUMBER</th>
+	   <th>EXPIRY DATE</th>  
+	</tr>
+	{% for row in range(10) %}
+     		<tr>
+	   			<td>
+	   				<select class="js-example-basic-single" name='DRUG_NAME{{row}}'>
+	   				  {% for drug in druglist %} 
+	   				   <option value="{{drug}}">{{drug}}</option>
+	   				   {% endfor %}
+	   				</select>   
+	   			</td>
+	   			<td ><input type="text" class="small" name='DRUG_QTY{{row}}' /></td>
+	   		    <td ><input type="text" class="small" name='BATCH_NO{{row}}' /></td>
+	   			<td ><input type="text" class="small" name='EXP_DATE{{row}}' /></td>
+
+	   		</tr>
+    {% endfor %}
+	</table>
+	<button class="btn btn-success" id="expandBTN">Extend</button>
+    <button class="btn btn-danger" id="submitBTN">Submit</button>
+{% endblock %}
+
+
+
+{% block extrascripts %}
+<script>
+
+
+
+var druglist;
+$(document).ready(function() {
+  $(".js-example-basic-single").select2();
+  $.get("/pharma/getDruglist",function (data){
+  	 druglist = $.parseJSON(data);
+    });
+});
+
+
+document.getElementById("expandBTN").addEventListener("click",function(){
+ addrow();
+});
+
+
+document.getElementById("submitBTN").addEventListener("click",function(){
+  json_data = table_to_JSON(document.getElementById("stockTBL"));
+ $.ajax({
+     url: '/pharma/stockUpdateSubmit',  data: json_data,  
+     contentType:"application/json; charset=utf-8", 
+     type : 'POST', async: "false",  success  : function (serverResponse) {}});
+});
+
+
+
+function addrow(){
+	if (typeof addrow.rows == 'undefined')
+	{
+		addrow.rows = 10;
+	}
+	rownum = addrow.rows;
+	
+	var tbl = document.getElementById("stockTBL");
+     var newrow = document.createElement("tr");
+      var select_td = document.createElement("td");
+        var select = document.createElement("select");
+    
+    var select_name = "DRUG_NAME"+rownum;
+    select.setAttribute("name",select_name);
+    select.setAttribute("class","js-example-basic-single");
+    for (var i=0; i<druglist.length;i++)
+    {
+    	console.log(druglist[i]);
+      select.innerHTML += "<option value="+druglist[i]+"> "+druglist[i]+"</option>";
+    }
+
+    select_td.appendChild(select);
+    newrow.appendChild(select_td);
+    
+    var DRUG_QTY="DRUG_QTY"+rownum;
+    var BATCH_NO="BATCH_NO"+rownum;
+    var EXP_DATE="EXP_DATE"+rownum;
+    newrow.innerHTML += "<td ><input type='text' class='small' name="+DRUG_QTY+"/></td><td ><input type='text' class='small' name="+BATCH_NO+"/></td><td ><input type='text' class='small' name="+EXP_DATE+"/></td>";
+    
+
+    
+    tbl.appendChild(newrow);
+    
+
+}
+
+
+function table_to_JSON (table) {
+  var data = {};
+  var headers = [];
+  for (var i=0; i< table.rows[0].cells.length ;i++)
+  	headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
+  console.log(headers);
+  for (var i=1;i<table.rows.length;i++)
+  {
+  	var rowdata = {};
+  	var tablerow = table.rows[i];
+  	for (var j=0; j<tablerow.cells.length;j++)
+  	{
+  		rowdata[headers[j]] = tablerow.cells[j].children[0].value;
+  	}
+  	data[i] = rowdata;
+  }
+  
+ json = JSON.stringify(data); 
+ console.log(json);
+ return json;
+}
+
+</script>
+
+
+
+{% endblock %}

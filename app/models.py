@@ -503,8 +503,9 @@ class Appointment():
 		cursor.execute("SELECT calendar_id FROM Appointment_slot WHERE slot_id=%s",(slotID,))
 		calendarID = cursor.fetchone()[0]
 		cursor.execute("SELECT slot_id FROM Appointment_slot WHERE calendar_id=%s AND status='WAITING' LIMIT 1",(calendarID,))
-		slotIDnew = cursor.fetchone()[0]
-		if slotIDnew is not None:
+		tuple = cursor.fetchone()
+		if tuple is not None:
+			slotIDnew = tuple[0]
 			cursor.execute("UPDATE Appointment_slot SET status='BOOKED' WHERE slot_id=%s",slotIDnew)
 		cursor.execute("DELETE FROM Appointment_slot WHERE slot_id=%s",(slotID,))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit +1 WHERE calendar_id=%s",calendarID)
