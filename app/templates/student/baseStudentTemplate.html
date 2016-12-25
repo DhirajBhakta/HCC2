@@ -1,0 +1,49 @@
+{% extends "base2.html" %}
+
+
+{% block profilename %}
+{{studentUser.name}}
+{%  endblock %}
+
+{% block head%}
+{{super()}}
+{% endblock %}
+
+
+{% block showprofilebutton %}
+   <a href="{{ url_for('student.showStudentProfile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+{% endblock %}
+    
+ 
+
+
+
+ {% block sidenavbar %}
+  <li class="semibold">
+      <a href="{{url_for('student.showMedicalHistory')}}"><i class="fa fa-fw fa-history"></i> Medical History</a>
+ </li> 
+ <li class="semibold">
+      <a  href="#"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+ </li>
+
+ <li class="semibold">
+      <a href="{{url_for('student.bookAppointment')}}"><i class="fa fa-fw fa-plus-square"></i> Appointments</a>
+ </li>
+ {% endblock %}   
+
+
+
+
+
+
+                     
+                    
+    
+                   
+                   
+
+    
+
+
+
+              

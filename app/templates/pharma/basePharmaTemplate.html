@@ -1,0 +1,30 @@
+{% extends "base2.html" %}
+
+
+{% block profilename %}
+Pharmacist
+{%  endblock %}
+
+{% block head%}
+{{super()}}
+
+<link href="{{url_for('static',filename='css/select2.min.css') }}" rel="stylesheet"/>
+<script src="{{ url_for('static',filename='js/select2.full.min.js') }}"></script>
+{% endblock %}
+
+
+
+ {% block sidenavbar %}
+  <li class="semibold">
+      <a href="{{url_for('pharma.stockUpdate')}}"><i class="fa fa-fw fa-history"></i> Notifications</a>
+ </li> 
+ <li class="semibold">
+      <a  href="{{url_for('pharma.stockUpdate')}}"><i class="fa fa-fw fa-dashboard"></i>History</a>
+ </li>
+
+ <li class="semibold">
+      <a href="{{url_for('pharma.stockUpdate')}}"><i class="fa fa-fw fa-plus-square"></i>Stock update</a>
+ </li>
+ {% endblock %}   
+
+

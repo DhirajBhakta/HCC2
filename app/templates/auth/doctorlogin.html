@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}NITK HCC - Doctor Login{% endblock %}
+
+{%block head%}
+{{super()}}
+{% endblock %}
+
+{% block page_content %}
+
+<div  style="margin-top:0px !important;">
+  <div class="container-fluid">
+  <div class="row blank-bar hidden-xs hidden-sm"></div>
+  <div class="row login-bar">
+    <div class="col-md-8">
+      <img class="nitk-logo" src="{{ url_for('static',filename='nitk-logo.gif') }} " width=100px; />
+      <h1 class="nitk-heading hidden-xs">NITK - HCC</h1>
+      <h1 class="nitk-heading-s hidden-lg hidden-md hidden-sm">NITK - HCC</h1>
+      <p class="nitk-subheading">Healthcare Portal</p>
+    </div>
+    <div class="col-md-4" >
+      <div style="background-color:rgba(0,0,0,0.5);padding:10px;">
+       <p class="hidden-xs hidden-sm"  style="color:white;padding:15px;font-size:35px;text-transform: uppercase;">Login <span style="font-size:15px"> as Doctor </span></p>
+
+       <hr class="hidden-xs hidden-sm"style="border-color:white;">
+
+       <div style="color:white;padding:15px;border-radius:5px;">
+        {{ wtf.quick_form(form, extra_classes="login-button") }}
+        <br>
+        <p>New user? <a href="{{ url_for('auth.register') }}">Click here to register</a>.</p>.
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+{% endblock %}

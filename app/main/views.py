@@ -1,7 +1,22 @@
-from flask import render_template
+from flask import session, render_template, url_for, redirect
 from . import main
+from flask_login import current_user
+from .. import mysql
+from ..models import Appointment
 
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+	'''if current_user.is_authenticated:
+		return redirect(url_for('student.showStudentProfile'))'''
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	Appointment.removeOldAppointmentSlots(cursor)
+	conn.commit()
+	return redirect(url_for("auth.login"))
+
+
+
+
+
+

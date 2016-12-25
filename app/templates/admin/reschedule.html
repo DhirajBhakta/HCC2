@@ -1,0 +1,225 @@
+{% extends 'admin/baseAdminTemplate.html' %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static',filename='css/jquery-ui.min.css')}}">
+
+<style type="text/css">
+#generate-slots-btn{
+	visibility: hidden;
+	vertical-align: bottom;
+}
+div.top-box{
+	padding:20px;
+	margin-bottom:20px;
+
+}	
+.category{
+		border-left-style: solid;
+		border-left-color: #cce6ff;
+		border-left-width:10px;
+		text-align: left;
+	}
+.category:hover{
+		background-color: white !important;
+		color:black;
+	}
+li.item{
+		background-color: white;
+		color:black;
+		font-size: 18px;
+		list-style-type: none;
+		padding:15px;
+		border-radius:2px;
+		border:1px solid #51A3F4;
+		border-left:15px solid #51A3F4;
+		border-bottom:1px solid white;
+		box-shadow: 3px 3px #BBBEC2 ;
+		
+		margin:10px;
+	}
+li.replacement-item{
+		background-color: #ffd8d8;
+		color:black;
+		font-size: 18px;
+		list-style-type: none;
+		padding:15px;
+		border-radius:2px;
+		border:1px solid #51A3F4;
+		border-left:15px solid #f44242;
+		border-bottom:1px solid white;
+		box-shadow: 3px 3px #BBBEC2 ;
+		
+		margin:10px;
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block emptyspace %}
+
+<!--generate SLOTS box  (top box)-->
+<div  class="container top-box lightestcolor2">
+         <h1>Create Appointment Slots </h1>
+		 <div class="row">
+		    <div class="col-md-4">
+		 	  <input type="text" class="form-control" id="datepicker" placeholder="Choose Last Date" />
+		 	</div>
+		 	<div class="col-md-4">
+		 	<button type="button" class="btn btn-success" id="generate-slots-btn">Generate Slots</button>
+		    </div>
+		 </div>
+</div>
+
+
+<!-- reschedule Appointment_calendar table On demand- (bottom box)-->
+<div class="container top-box lightestcolor2">
+		<h1>Reschedule On Demand</h1>
+		<div class="row">
+		  <div class="btn-group-vertical btn-group-lg col-md-3 sidebarfont">
+		      {% for doctor in doclist %}
+		       <button type="button" class="category btn btn-info" name="{{doctor.doctorID}}">Dr.{{doctor.doctorName}}</button>
+		      {% endfor %} 
+		  </div>
+		  <div class="col-md-6" >
+			  <ul id="doc-appointments-list">
+	          </ul>
+		  </div>
+		</div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block extrascripts %}
+<script src="{{url_for('static',filename='js/jquery-ui.min.js')}}"></script>	
+<script type="text/javascript">
+	$("#datepicker").datepicker({
+			    dateFormat: "dd-mm-yy",
+			    minDate:0,
+			    onSelect: function(date){
+			    	$("#generate-slots-btn").css('visibility','visible');
+
+			    }
+
+			    });
+	
+	$("#generate-slots-btn").click(function(){
+		var lastdate = $("#datepicker").datepicker('getDate');
+		lastdate = formatDate(lastdate);
+		console.log(lastdate+"lastdate");
+		$.post('/admin/reschedule',{LASTDATE:lastdate},function(data){
+			window.alert("Slots have been opened till "+lastdate);
+		});
+
+	});
+
+	$(".category").click(function () {
+		var doctorID = this.name;
+		var doctorName = $(this).text().substring(3);
+		
+		$.get("/admin/getAppointmentCalendarForDoctor",{DOCTORID:doctorID},function(data){
+			data = $.parseJSON(data);
+			console.log('aASSSSSSSSS'+data)
+			for(var i=0;i<data.length;i++)
+			{
+				calendarID = data[i].calendarID;
+				t_date = data[i].date;
+				t_startTime = data[i].startTime;
+				t_endTime = data[i].endTime;
+
+			   	 dispStr = doctorName+"---"+
+			   	 		   "<span style=\"float:right\">"+t_date+"</span><br>"+
+			   	 		   "<span style=\"float:right\">"+t_startTime+"</span><br>"+
+			   	 		   "<span style=\"float:right\">"+t_endTime+"<br></span>"+
+			   	 		   "<button type='button' name='"+calendarID+"' onclick='deleteSchedule(this);' value='"+i+"' class='btn btn-danger cancel-btn'>Delete Schedule</button>"+
+			   	 		   "<button type='button' name='"+calendarID+"' onclick='modifySchedule(this);' value='"+i+"' class='btn btn-info modify-btn'>Modify Schedule</button>";
+			   	 $("#doc-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
+
+			}
+
+
+		});
+		 } );
+
+
+  			
+  		
+  		 function deleteSchedule(btn){
+				btn = $(btn);
+				calendarID = btn.attr("name");
+				$.post('/admin/deleteCalendarSchedule',{CALENDARID:calendarID},function(boolData){
+					if(boolData == "true")
+					{
+						li_item = btn.parent();
+						li_item.remove()
+					}
+
+				});
+  		}
+  		function modifySchedule(btn){ 
+  			btn = $(btn);
+  			li = btn.parent();
+  			calendarID = btn.attr("name");
+  			dataindex = btn.attr("value");
+  			liStr = 
+  			"<li class='replacement-item'>"+
+	  			"<input type='text' class='form-control' id='replacement-datepicker' placeholder='Choose new Date' />"+
+	  			"<input type='text' class='form-control' id='replacement-startTime' placeholder='New start Time(eg:15:00:00)'/>"+
+	  			"<input type='text' class='form-control' id='replacement-endTime' placeholder='New end Time(eg:17:00:00)'/>"+
+	  			"<button type='button' class='btn btn-danger' onclick='modify(this)'>Done</button>"+
+
+  			"</li>";
+  			             
+  			(btn.parent().parent()).append(liStr);
+            li.replaceWith($(".replacement-item"));
+            $("#replacement-datepicker").datepicker({
+            	dateFormat: "dd-mm-yy",
+			    minDate:0
+            });
+
+        }
+
+            
+
+	    
+
+     function formatDate(date) {
+    	var str = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    	return str;
+    }
+    function modify(btn){
+            	btn = $(btn);
+            	liNew = btn.parent();
+            	date = liNew.children('#replacement-datepicker').datepicker('getDate');
+            	date = formatDate(date)
+				startTime = liNew.children('#replacement-startTime').attr('value');
+            	endTime = liNew.children('#replacement-endTime').attr('value');
+
+            	$.post('/admin/modifyCalendarSchedule',{CALENDARID:calendarID,DATE:date,STIME:startTime,ETIME:endTime},function(boolData){
+  				if(boolData == "true")
+  				{
+  					li_item = btn.parent();
+  					li_item.remove()
+  				}
+
+  			});
+
+
+
+            }
+
+  	
+</script>
+
+{% endblock %}

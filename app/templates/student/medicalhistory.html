@@ -1,0 +1,125 @@
+{% extends "student/baseStudentTemplate.html" %}
+
+{% block head %}
+{{super()}}
+<style>
+
+
+.tableheading{
+  color:white;
+  border:2px solid gray;
+  border-radius:20px;
+}
+
+  .title{
+    color:#000;
+    text-align:center;
+    padding-bottom:30px;
+  }
+  
+  .center{
+    margin:auto;
+    float:none;
+  }
+  .visit{
+    padding:0px;
+    margin-bottom:15px;
+    margin-top:15px;
+  }
+  .visit-desc{
+    padding:10px;
+  }
+  .visit-title{
+    padding:10px;  
+  }
+  .visit-title:hover{
+    background-color:#fff;
+    cursor:pointer;
+  }
+
+  .doctor-name{
+    font-size:18px;
+    
+  }
+  .visit-date{
+    font-size:16px;
+  }
+  .ailment{
+      font-size:20px;
+
+  }
+  .pad{
+    padding:10px;
+  }
+</style>
+
+{% endblock %}
+
+
+{% block sidenavbar %}
+{{super()}}
+{% endblock %}
+
+  {% block pageheader %}
+  Medical History
+  {% endblock %}
+
+
+{% block emptyspace %}
+
+  {%for prescription in prescriptionList %}
+  <div class="row" >
+    <div class="visit col-md-12 lightestcolor">
+      <div class="visit-title lightestcolor2" style="border-radius:5px">
+        <p class="visit-date pull-right"> {{ prescription.prescriptionDateTime.strftime(" %d %B %Y") }} <i class="fa fa-angle-down" aria-hidden="true"></i></p>
+        <p class="ailment"> {{ prescription.indication }} </p>
+      </div>
+      <div class="visit-desc lightestcolor ">
+        <p class="pres-id pull-right"> Presc.ID : {{  prescription.prescriptionID }}</p>
+        <p class="doctor-name"> Dr. {{ prescription.doctor.doctorName}} </p>
+
+      <table class="table greentable lightestcolor2"> 
+        <tr class="tableheading darkestcolor">
+             <th>Medicine Name</th>
+             <th>Schedule</th>
+             <th>Comments</th> 
+        </tr>
+        {%for drug in prescription.prescriptionDrugs %}
+        <tr>
+            <td>{{drug.drugName}}</td>
+            <td>{{drug.drugSchedule}}</td>
+            <td>{{drug.drugComments}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+     
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  
+
+
+
+
+{% endblock %}
+
+
+{% block extrascripts %}
+
+<script type="text/javascript" >
+
+$( window ).load(function(){
+  heading = $(".visit-title");
+  content = heading.next();
+  content.slideToggle(500);
+});
+$(".visit-title").click(function(){
+  heading = $(this);
+  content = heading.next();
+  content.slideToggle(500);
+});
+</script>
+
+{% endblock %}

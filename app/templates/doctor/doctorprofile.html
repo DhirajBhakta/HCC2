@@ -1,0 +1,45 @@
+{% extends "doctor/baseDoctorTemplate.html" %}
+
+
+{% block profilename %}
+{{doctorUser.doctorName}}
+{%  endblock %}
+
+{% block pageheader %}
+<h1> Dr. {{doctorUser.doctorName}}</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+Profile
+{% endblock %}
+
+
+
+{% block emptyspace %}
+<div class="row">
+<div class="jumbotron col-md-6">
+<table cellpadding="10pt">
+	<tr>
+		<td><b><i class="fa fa-slack"></i> &nbsp;Doctor ID </b></td>
+		<td>:</td>
+		<td>{{doctorUser.doctorID}}</td>
+	</tr>
+	
+	<tr>
+		<td><b>Treatment count</b></td>
+		<td>:</td>
+		<td>{{doctorUser.treatmentCount}}</td>
+	</tr>
+	
+</table>
+</div>
+
+
+<div class="col-md-6">
+<button type="button" class="btn darkercolor" style="padding:40px;border-radius:20px"><span style="color:white;font-size:40px">{{doctorUser.treatmentCount}}</span></button>
+</div>
+
+</div>
+
+
+{% endblock %}
