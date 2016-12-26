@@ -1,6 +1,13 @@
 {% extends "pharma/basePharmaTemplate.html" %}
 
-
+{% block head %}
+{{super()}}
+<style>
+.autocompl_drugname{
+  width:100%;
+}
+</style>
+{% endblock %}
 
 {% block emptyspace %}
 
@@ -14,11 +21,7 @@
 	{% for row in range(10) %}
      		<tr>
 	   			<td>
-	   				<select class="js-example-basic-single" name='DRUG_NAME{{row}}'>
-	   				  {% for drug in druglist %} 
-	   				   <option value="{{drug}}">{{drug}}</option>
-	   				   {% endfor %}
-	   				</select>   
+	   				<input class="autocompl_drugname large">
 	   			</td>
 	   			<td ><input type="text" class="small" name='DRUG_QTY{{row}}' /></td>
 	   		    <td ><input type="text" class="small" name='BATCH_NO{{row}}' /></td>
@@ -35,15 +38,19 @@
 
 {% block extrascripts %}
 <script>
+//The Recieved JSON drugList
+var druglist=[];
 
-
-
-var druglist;
+//On Load
 $(document).ready(function() {
-  $(".js-example-basic-single").select2();
   $.get("/pharma/getDruglist",function (data){
-  	 druglist = $.parseJSON(data);
+  	 data = $.parseJSON(data);
+     for(var i=0;i<data.length;i++)
+       druglist[i] = data[i]; 
     });
+  $('.autocompl_drugname').autocomplete({
+    source:druglist
+  });
 });
 
 

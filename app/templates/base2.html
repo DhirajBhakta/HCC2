@@ -11,6 +11,9 @@
 
     <title>NITK-H   CC {% block title%} {% endblock %}</title>
 
+    <!-- JQuery UI CSS -->
+    <link href="{{ url_for('static',filename='css/jquery-ui.min.css')}}" rel="stylesheet">
+
     <!-- Bootstrap Core CSS -->
     <link href="{{ url_for('static',filename='css/bootstrap.min.css') }} " rel="stylesheet">
 
@@ -28,6 +31,8 @@
  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
      <!-- jQuery -->
     <script src="{{ url_for('static',filename='js/jquery.js') }}"></script>
+
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -309,6 +314,9 @@
     <!-- Morris Charts JavaScript -->
     <script src="{{ url_for('static',filename='js/plugins/morris/raphael.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/plugins/morris/morris.min.js') }}"></script>
+
+    <!--jquery UI script-->
+    <script src="{{ url_for('static',filename='js/jquery-ui.min.js')}}"></script>
 
     {% block extrascripts %}
     {% endblock %}
