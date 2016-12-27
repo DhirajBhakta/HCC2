@@ -9,6 +9,13 @@
 </style>
 {% endblock %}
 
+
+
+
+
+
+
+<!--body-->
 {% block emptyspace %}
 
 	<table class="table table-condensed" id="stockTBL" >
@@ -18,17 +25,15 @@
 	   <th>BATCH NUMBER</th>
 	   <th>EXPIRY DATE</th>  
 	</tr>
-	{% for row in range(10) %}
-     		<tr>
+     		<tr class="tablerows">
 	   			<td>
 	   				<input class="autocompl_drugname large">
 	   			</td>
-	   			<td ><input type="text" class="small" name='DRUG_QTY{{row}}' /></td>
-	   		    <td ><input type="text" class="small" name='BATCH_NO{{row}}' /></td>
-	   			<td ><input type="text" class="small" name='EXP_DATE{{row}}' /></td>
+	   			<td ><input type="text" class="small"  /></td>
+	   		    <td ><input type="text" class="small"  /></td>
+	   			<td ><input type="text" class="small" /></td>
 
 	   		</tr>
-    {% endfor %}
 	</table>
 	<button class="btn btn-success" id="expandBTN">Extend</button>
     <button class="btn btn-danger" id="submitBTN">Submit</button>
@@ -36,6 +41,14 @@
 
 
 
+
+
+
+
+
+
+
+<!--JS-->
 {% block extrascripts %}
 <script>
 //The Recieved JSON drugList
@@ -54,9 +67,20 @@ $(document).ready(function() {
 });
 
 
-document.getElementById("expandBTN").addEventListener("click",function(){
- addrow();
+$(".autocompl_drugname").each(function(){
+  this.hasGivenBirth = false;
+  this.addEventListener("input",function(){
+  var text = this.value;
+
+       if(text != "" && this.hasGivenBirth==false)
+       { 
+         this.hasGivenBirth = true;
+         var $row = $(this).parent().parent();
+         add_row_after($row);
+       }  
+  });
 });
+
 
 
 document.getElementById("submitBTN").addEventListener("click",function(){
@@ -69,39 +93,31 @@ document.getElementById("submitBTN").addEventListener("click",function(){
 
 
 
-function addrow(){
-	if (typeof addrow.rows == 'undefined')
-	{
-		addrow.rows = 10;
-	}
-	rownum = addrow.rows;
-	
-	var tbl = document.getElementById("stockTBL");
-     var newrow = document.createElement("tr");
-      var select_td = document.createElement("td");
-        var select = document.createElement("select");
-    
-    var select_name = "DRUG_NAME"+rownum;
-    select.setAttribute("name",select_name);
-    select.setAttribute("class","js-example-basic-single");
-    for (var i=0; i<druglist.length;i++)
-    {
-    	console.log(druglist[i]);
-      select.innerHTML += "<option value="+druglist[i]+"> "+druglist[i]+"</option>";
-    }
+function add_row_after(row)
+{
+  var $newRow = $(row).clone();
+  $(row).after($newRow);
+  console.log("ROw added");
+  
+  var $newInput = $newRow.find(".autocompl_drugname");
+  $newInput.val("");
+  var i = $newInput.get(0);
 
-    select_td.appendChild(select);
-    newrow.appendChild(select_td);
-    
-    var DRUG_QTY="DRUG_QTY"+rownum;
-    var BATCH_NO="BATCH_NO"+rownum;
-    var EXP_DATE="EXP_DATE"+rownum;
-    newrow.innerHTML += "<td ><input type='text' class='small' name="+DRUG_QTY+"/></td><td ><input type='text' class='small' name="+BATCH_NO+"/></td><td ><input type='text' class='small' name="+EXP_DATE+"/></td>";
-    
-
-    
-    tbl.appendChild(newrow);
-    
+  
+  $newInput.autocomplete({
+    source:druglist
+  })
+  
+  i.hasGivenBirth=false;
+  i.addEventListener("input",function(){
+       var text = this.value;
+       if(text != "" && this.hasGivenBirth==false)
+       { 
+         this.hasGivenBirth = true;
+         var $row = $(this).parent().parent();
+         add_row_after($row);
+       }  
+  });
 
 }
 
