@@ -29,14 +29,17 @@
 	   			<td>
 	   				<input class="autocompl_drugname large">
 	   			</td>
-	   			<td ><input type="text" class="small"  /></td>
-	   		    <td ><input type="text" class="small"  /></td>
-	   			<td ><input type="text" class="small" /></td>
+	   			<td ><input type="text" class="small QTY"     disabled="true" /></td>
+	   		  <td ><input type="text" class="small BATCHNO" disabled="true" /></td>
+	   			<td ><input type="text" class="small EXPDATE" disabled="true" /></td>
 
 	   		</tr>
 	</table>
 	<button class="btn btn-success" id="expandBTN">Extend</button>
-    <button class="btn btn-danger" id="submitBTN">Submit</button>
+  <button class="btn btn-danger" id="submitBTN">Submit</button>
+
+  <div id="stockUpdateWarnings">
+  </div>
 {% endblock %}
 
 
@@ -61,34 +64,59 @@ $(document).ready(function() {
      for(var i=0;i<data.length;i++)
        druglist[i] = data[i]; 
     });
-  $('.autocompl_drugname').autocomplete({
+  first_input = $('.autocompl_drugname')[0];
+  input_eventlistener_adder(first_input);
+  $(first_input).autocomplete({
     source:druglist
   });
 });
 
 
-$(".autocompl_drugname").each(function(){
-  this.hasGivenBirth = false;
-  this.addEventListener("input",function(){
-  var text = this.value;
+function required(input)
+{
+  if(this.value == "")
+  {
+    $('#stockUpdateWarnings').append("<p style='color:red'>Fields are empty</p>");
+  }
+}
 
-       if(text != "" && this.hasGivenBirth==false)
-       { 
-         this.hasGivenBirth = true;
-         var $row = $(this).parent().parent();
-         add_row_after($row);
-       }  
+function digit(input)
+{
+  if($.isNumeric(input.value))
+  {
+    $('#stockUpdateWarnings').append("<p style='color:red'>Enter Numeric Value in QTY</p>");
+  }
+}
+
+//form-validation function
+function validate_all()
+{ 
+  var result=true;
+  $('.QTY').each(function()
+  {
+      if (!this.disabled == "true")
+      {
+          result=required(this);
+          result=digit(this);
+      } 
   });
-});
 
+
+ return result;
+}
 
 
 document.getElementById("submitBTN").addEventListener("click",function(){
-  json_data = table_to_JSON(document.getElementById("stockTBL"));
- $.ajax({
-     url: '/pharma/stockUpdateSubmit',  data: json_data,  
-     contentType:"application/json; charset=utf-8", 
-     type : 'POST', async: "false",  success  : function (serverResponse) {}});
+  
+  if(validate_all())
+ {
+    json_data = table_to_JSON(document.getElementById("stockTBL"));
+    $.ajax({
+       url: '/pharma/stockUpdateSubmit',  data: json_data,  
+       contentType:"application/json; charset=utf-8", 
+       type : 'POST', async: "false",  success  : function (serverResponse) {}}
+    );
+ }
 });
 
 
@@ -101,24 +129,32 @@ function add_row_after(row)
   
   var $newInput = $newRow.find(".autocompl_drugname");
   $newInput.val("");
-  var i = $newInput.get(0);
+  var newInput = $newInput.get(0);
 
   
   $newInput.autocomplete({
     source:druglist
   })
   
-  i.hasGivenBirth=false;
-  i.addEventListener("input",function(){
+  input_eventlistener_adder(newInput);
+
+}
+
+function input_eventlistener_adder(newInput)
+{
+  newInput.hasGivenBirth=false;
+  newInput.addEventListener("input",function(){
        var text = this.value;
        if(text != "" && this.hasGivenBirth==false)
        { 
          this.hasGivenBirth = true;
          var $row = $(this).parent().parent();
          add_row_after($row);
+         $row.find('.small').each(function(){
+          $(this).removeAttr('disabled');
+         });
        }  
   });
-
 }
 
 
