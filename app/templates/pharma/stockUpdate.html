@@ -9,6 +9,9 @@
 .tablehead th{
   color:white;
 }
+.error {
+  background-color : #faa;
+}
 </style>
 {% endblock %}
 
@@ -20,35 +23,36 @@
 
 <!--body-->
 {% block emptyspace %}
-
+<form onsubmit="send_table(); return false;">
 <table class="table table-condensed" id="stockTBL" >
 
   <tr class="tablehead semibold darkercolor">
      <th>DRUG NAME</th>
-     <th>QTY</th>
+     <th>QUANTITY</th>
      <th>BATCH NUMBER</th>
      <th>EXPIRY DATE</th>  
   </tr>
 
 	<tr class="tablerows">
 		<td>
-			<input class="autocompl_drugname large">
+			<input class="autocompl_drugname form-control error-handler large">
 		</td>
-		<td ><input type="text" class="small QTY"     disabled="true" /></td>
-	  <td ><input type="text" class="small BATCHNO" disabled="true" /></td>
-		<td ><input type="text" class="small EXPDATE" disabled="true" /></td>
+		<td ><input type="text" class="form-control error-handler small QTY"     disabled="true" /></td>
+	  <td ><input type="text" class="form-control error-handler small BATCHNO" disabled="true" /></td>
+		<td ><input type="text" class="form-control error-handler small EXPDATE" disabled="true" /></td>
 	</tr>
 </table>
 
 <button class="btn btn-success" id="expandBTN">Extend</button>
-<button class="btn btn-danger" id="submitBTN">Submit</button>
-
+<input class="btn btn-danger" id="submitBTN" value="Submit" type="submit">
+</form>
 <div id="stockUpdateWarnings"></div>
 
 {% endblock %}
 
 <!--JS-->
 {% block extrascripts %}
+<script type="text/javascript" src="/static/js/date.js"></script>
 <script>
 //The Recieved JSON drugList
 var druglist=[];
@@ -69,56 +73,71 @@ $(document).ready(function() {
   $(first_input).autocomplete({
     source:druglist
   });
+
+  //First input is required
+  $(first_input).attr('required','true')
 });
 
 
-function required(input)
-{
-  if(this.value == "")
-  {
-    $('#stockUpdateWarnings').append("<p style='color:red'>Fields are empty</p>");
-    return false;
-  }
-  return true;
-}
-
-function digit(input)
-{
-  if($.isNumeric(input.value))
-  {
-    $('#stockUpdateWarnings').append("<p style='color:red'>Enter Numeric Value in QTY</p>");
-    return false;
-  }
-  return true;
-}
-
 //form-validation function
-function validate_row(row)
+function validate_row(curr_row)
 {
-  if(row.next() == null) // Last row
+  if(curr_row == null)
+    return false
+
+  row = $(curr_row)
+
+  ret = true
+
+  if(row.next().length != 0)
   {
+    name = row.find(".autocompl_drugname").val()
+    qty = row.find(".QTY").val()
+    batchno = row.find(".BATCHNO").val()
+    expdate = row.find(".EXPDATE").val()
+
+    name_ele = row.find(".autocompl_drugname")
+    qty_ele = row.find(".QTY")
+    batchno_ele = row.find(".BATCHNO")
+    expdate_ele = row.find(".EXPDATE")
 
 
+    if(isNaN(qty))
+    {
+      qty_ele.addClass('error')
+      ret = false
+    }
+    if(!batchno)
+    {
+      ret = false
+    }
+    if(Date.parse(expdate) == null)
+    {
+      expdate_ele.addClass('error')
+      ret = false
+    }
+    if(name == '')
+    {
+      name_ele.addClass('error')
+      ret = false
+    }
   }
-  else // Any other row
-  {
-    
-  }
 
+  return ret
 }
+
 function validate_all()
 { 
-  var result=true;
-  $('.tablerows').each(function()
-  {
-    validate_row(this);
-  });
-
- return result;
+  return $.map($('.tablerows'), validate_row).reduce((x,y) => x&&y)
 }
 
+$(".error-handler").click(function(){
+    if( $(this).hasClass('error') ){
+      $(this).removeClass('error');
+    }
+});
 
-document.getElementById("submitBTN").addEventListener("click",function(){
+function send_table(){
   
   if(validate_all())
  {
@@ -129,7 +148,7 @@ document.getElementById("submitBTN").addEventListener("click",function(){
        type : 'POST', async: "false",  success  : function (serverResponse) {}}
     );
  }
-});
+};
 
 
 
@@ -137,8 +156,15 @@ function add_row_after(row)
 {
   var $newRow = $(row).clone();
   $(row).after($newRow);
+  $(row).children().each(function(){
+    $(this).find('input').attr('required','true')
+  });
+
   console.log("Row added");
-  
+
+  $newRow.children().each(function(){
+    $(this).find('input').removeAttr('required')
+  }); 
   var $newInput = $newRow.find(".autocompl_drugname");
   $newInput.val("");
   var newInput = $newInput.get(0);
@@ -157,6 +183,7 @@ function input_eventlistener_adder(newInput)
   newInput.hasGivenBirth=false;
   newInput.addEventListener("input",function(){
        var text = this.value;
+       $(newInput).removeClass('error')
        if(text != "" && this.hasGivenBirth==false)
        { 
          this.hasGivenBirth = true;
@@ -173,23 +200,24 @@ function input_eventlistener_adder(newInput)
 function table_to_JSON (table) {
   var data = {};
   var headers = [];
+
   for (var i=0; i< table.rows[0].cells.length ;i++)
   	headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
   console.log(headers);
+
   for (var i=1;i<table.rows.length;i++)
   {
   	var rowdata = {};
   	var tablerow = table.rows[i];
-  	for (var j=0; j<tablerow.cells.length;j++)
+  	for (var j=0; j<tablerow.cells.length-1;j++)
   	{
   		rowdata[headers[j]] = tablerow.cells[j].children[0].value;
   	}
   	data[i] = rowdata;
   }
-  
- json = JSON.stringify(data); 
- console.log(json);
- return json;
+  json = JSON.stringify(data); 
+  console.log(json);
+  return json;
 }
 
 </script>
