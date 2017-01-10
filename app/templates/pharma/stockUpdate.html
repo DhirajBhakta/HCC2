@@ -6,6 +6,9 @@
 .autocompl_drugname{
   width:100%;
 }
+.tablehead th{
+  color:white;
+}
 </style>
 {% endblock %}
 
@@ -18,38 +21,31 @@
 <!--body-->
 {% block emptyspace %}
 
-	<table class="table table-condensed" id="stockTBL" >
-	<tr class="tablehead semibold darkercolor">
-	   <th>DRUG NAME</th>
-	   <th>QTY</th>
-	   <th>BATCH NUMBER</th>
-	   <th>EXPIRY DATE</th>  
+<table class="table table-condensed" id="stockTBL" >
+
+  <tr class="tablehead semibold darkercolor">
+     <th>DRUG NAME</th>
+     <th>QTY</th>
+     <th>BATCH NUMBER</th>
+     <th>EXPIRY DATE</th>  
+  </tr>
+
+	<tr class="tablerows">
+		<td>
+			<input class="autocompl_drugname large">
+		</td>
+		<td ><input type="text" class="small QTY"     disabled="true" /></td>
+	  <td ><input type="text" class="small BATCHNO" disabled="true" /></td>
+		<td ><input type="text" class="small EXPDATE" disabled="true" /></td>
 	</tr>
-     		<tr class="tablerows">
-	   			<td>
-	   				<input class="autocompl_drugname large">
-	   			</td>
-	   			<td ><input type="text" class="small QTY"     disabled="true" /></td>
-	   		  <td ><input type="text" class="small BATCHNO" disabled="true" /></td>
-	   			<td ><input type="text" class="small EXPDATE" disabled="true" /></td>
+</table>
 
-	   		</tr>
-	</table>
-	<button class="btn btn-success" id="expandBTN">Extend</button>
-  <button class="btn btn-danger" id="submitBTN">Submit</button>
+<button class="btn btn-success" id="expandBTN">Extend</button>
+<button class="btn btn-danger" id="submitBTN">Submit</button>
 
-  <div id="stockUpdateWarnings">
-  </div>
+<div id="stockUpdateWarnings"></div>
+
 {% endblock %}
-
-
-
-
-
-
-
-
-
 
 <!--JS-->
 {% block extrascripts %}
@@ -59,11 +55,15 @@ var druglist=[];
 
 //On Load
 $(document).ready(function() {
+
+  //Get drug list from server
   $.get("/pharma/getDruglist",function (data){
   	 data = $.parseJSON(data);
      for(var i=0;i<data.length;i++)
        druglist[i] = data[i]; 
     });
+
+  //Add the trigger to first input
   first_input = $('.autocompl_drugname')[0];
   input_eventlistener_adder(first_input);
   $(first_input).autocomplete({
@@ -77,7 +77,9 @@ function required(input)
   if(this.value == "")
   {
     $('#stockUpdateWarnings').append("<p style='color:red'>Fields are empty</p>");
+    return false;
   }
+  return true;
 }
 
 function digit(input)
@@ -85,22 +87,32 @@ function digit(input)
   if($.isNumeric(input.value))
   {
     $('#stockUpdateWarnings').append("<p style='color:red'>Enter Numeric Value in QTY</p>");
+    return false;
   }
+  return true;
 }
 
 //form-validation function
+function validate_row(row)
+{
+  if(row.next() == null) // Last row
+  {
+
+
+  }
+  else // Any other row
+  {
+    
+  }
+
+}
 function validate_all()
 { 
   var result=true;
-  $('.QTY').each(function()
+  $('.tablerows').each(function()
   {
-      if (!this.disabled == "true")
-      {
-          result=required(this);
-          result=digit(this);
-      } 
+    validate_row(this);
   });
-
 
  return result;
 }
@@ -125,7 +137,7 @@ function add_row_after(row)
 {
   var $newRow = $(row).clone();
   $(row).after($newRow);
-  console.log("ROw added");
+  console.log("Row added");
   
   var $newInput = $newRow.find(".autocompl_drugname");
   $newInput.val("");
