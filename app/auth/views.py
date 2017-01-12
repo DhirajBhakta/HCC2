@@ -102,7 +102,6 @@ def loginAdmin():
     if request.method == 'POST':
         cursor = mysql.connect().cursor()
         password = request.form.get('PASSWORD')
-        thisUser = USER()
         thisUser = USER.checkIfIDExists(cursor,"admin")
         if thisUser.verify_password(password):
             login_user(thisUser)
@@ -117,7 +116,6 @@ def loginPharma():
     if request.method == 'POST':
         cursor = mysql.connect().cursor()
         password = request.form.get('PASSWORD')
-        thisUser = USER()
         thisUser = USER.checkIfIDExists(cursor,"pharma")
         if thisUser.verify_password(password):
             login_user(thisUser)

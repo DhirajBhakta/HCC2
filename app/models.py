@@ -383,10 +383,12 @@ class DRUG():
 
 	def stockUpdate(cursor,drugList):
 		for drug in drugList:
-			cursor.execute("SELECT drug_id FROM Drug WHERE trade_name=%s",(drug.drugName,))
+			print(drug.drugName)
+			cursor.execute("SELECT  drug_id FROM Drug WHERE trade_name=%s",drug.drugName)
 			tuple = cursor.fetchone()
+			print(tuple)
 			drugID = tuple[0]
-			cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugId,drug.quantity,drug.expiryDate))
+			cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugID,drug.quantity,drug.expiryDate.strftime('%Y-%m-%d')))
 
 
 
