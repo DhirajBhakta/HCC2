@@ -19,6 +19,9 @@ class USER(UserMixin):
 	userType = None
 
 
+	def get_utype(self):
+		return str(self.userType)
+
 	def get_id(self):
 		return str(self.ID)
 
