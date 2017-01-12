@@ -43,8 +43,7 @@
 	</tr>
 </table>
 
-<button class="btn btn-success" id="expandBTN">Extend</button>
-<input class="btn btn-danger" id="submitBTN" value="Submit" type="submit">
+<input class="btn btn-success" id="submitBTN" value="Submit" type="submit">
 </form>
 <div id="stockUpdateWarnings"></div>
 
@@ -209,7 +208,7 @@ function table_to_JSON (table) {
   {
   	var rowdata = {};
   	var tablerow = table.rows[i];
-  	for (var j=0; j<tablerow.cells.length-1;j++)
+  	for (var j=0; j<tablerow.cells.length;j++)
   	{
   		rowdata[headers[j]] = tablerow.cells[j].children[0].value;
   	}
