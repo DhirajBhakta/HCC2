@@ -363,6 +363,12 @@ class PRESCRIPTION():
 
 class DRUG():
 
+	def __init__(self):
+		self.drugName = None
+		self.quantity = None
+		self.batchNumber = None
+		self.expiryDate = None
+
 	def retrieveDBdrugs(cursor):
 		drugNamesList = list()
 		cursor.execute("SELECT DISTINCT trade_name FROM Drug")
@@ -371,6 +377,17 @@ class DRUG():
 			print(drugName)
 			drugNamesList.append(drugName[0])
 		return drugNamesList
+
+	def stockUpdate(cursor,drugList):
+		for drug in drugList:
+			cursor.execute("SELECT drug_id FROM Drug WHERE trade_name=%s",(drug.drugName,))
+			tuple = cursor.fetchone()
+			drugID = tuple[0]
+			cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugId,drug.quantity,drug.expiryDate))
+
+
+
+
 
 
 

@@ -17,8 +17,14 @@ def stockUpdate():
 
 @pharma.route("/stockUpdateSubmit",methods=['POST'])
 def stockUpdateSubmit():
-	json = request.get_json(silent=True)
-	print (json)
+	drugList = request.get_json(silent=True)
+	for key,value in drugList.items():
+		print(value['batchnumber'])
+		print(value['drugname'])
+		print(value['quantity'])
+		print(value['expirydate'])
+
+
 	return render_template('pharma/success.html')
 
 @pharma.route("/getDruglist",methods=['GET'])
