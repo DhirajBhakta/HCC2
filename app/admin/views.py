@@ -2,6 +2,7 @@ from flask import render_template, redirect ,request,url_for ,flash, current_app
 from flask_login import login_user , logout_user, current_user,login_required
 from . import admin
 from ..models import STUDENT,DOCTOR,Appointment,Schedule
+from ..utils import specific_login_required
 from .. import mysql,mail
 from ..email import send_email
 from flask_mail import Message
@@ -10,6 +11,7 @@ import datetime
 
 
 @admin.route('/reschedule',methods=['GET','POST'])
+@specific_login_required("ADMIN")
 def reschedule():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -27,6 +29,7 @@ def reschedule():
 
 
 @admin.route('/getAppointmentCalendarForDoctor',methods=['GET'])
+@specific_login_required("ADMIN")
 def getAppointmentCalendarForDoctor():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -37,6 +40,7 @@ def getAppointmentCalendarForDoctor():
 
 
 @admin.route('/modifyCalendarSchedule',methods=['POST'])
+@specific_login_required("ADMIN")
 def modifyCalendarSchedule():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -52,6 +56,7 @@ def modifyCalendarSchedule():
 
 
 @admin.route('/deleteCalendarSchedule',methods=['POST'])
+@specific_login_required("ADMIN")
 def deleteCalendarSchedule():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -66,6 +71,7 @@ def deleteCalendarSchedule():
 
 
 @admin.route('/retrieveBookedAppointments',methods=['GET'])
+@specific_login_required("ADMIN")
 def retrieveBookedAppointments():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -80,6 +86,7 @@ def retrieveBookedAppointments():
 	return json_string
 
 @admin.route('/getViableDatesForCategory',methods=['GET'])
+@specific_login_required("ADMIN")
 def getViableDatesForCategory():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -94,6 +101,7 @@ def getViableDatesForCategory():
 
 
 @admin.route('/getPatientDetails',methods=['GET'])
+@specific_login_required("ADMIN")
 def getPatientDetails():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -106,6 +114,7 @@ def getPatientDetails():
 	return thisStudent.name
 
 @admin.route('/submitAppointment',methods=['POST'])
+@specific_login_required("ADMIN")
 def submitAppointment():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -121,6 +130,7 @@ def submitAppointment():
 
 
 @admin.route('/appointments',methods=['GET','POST'])
+@specific_login_required("ADMIN")
 def appointments():
 	conn = mysql.connect()
 	cursor = conn.cursor()
