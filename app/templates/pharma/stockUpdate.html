@@ -204,7 +204,7 @@ function table_to_JSON (table) {
   	headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
   console.log(headers);
 
-  for (var i=1;i<table.rows.length;i++)
+  for (var i=1;i<table.rows.length-1;i++)
   {
   	var rowdata = {};
   	var tablerow = table.rows[i];

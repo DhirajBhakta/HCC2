@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.16, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.33, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: HCCdb
 -- ------------------------------------------------------
--- Server version	5.7.16-0ubuntu0.16.04.1
+-- Server version	5.6.33-0ubuntu0.14.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,14 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Current Database: `HCCdb`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `HCCdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `HCCdb`;
 
 --
 -- Table structure for table `Appointment_calendar`
@@ -159,6 +151,7 @@ CREATE TABLE `Batch` (
 
 LOCK TABLES `Batch` WRITE;
 /*!40000 ALTER TABLE `Batch` DISABLE KEYS */;
+INSERT INTO `Batch` VALUES ('121212qw',11,1212,'2019-02-12'),('121212qwqw',455,12,NULL);
 /*!40000 ALTER TABLE `Batch` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,6 +383,29 @@ INSERT INTO `Employee` VALUES ('0','Dr.Who','0000-00-00','OTHER','NA','NA','NA',
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Notification_buffer`
+--
+
+DROP TABLE IF EXISTS `Notification_buffer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Notification_buffer` (
+  `prescription_id` int(10) unsigned NOT NULL,
+  `status` enum('NOT_SENT','SENT','ACK') DEFAULT NULL,
+  PRIMARY KEY (`prescription_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Notification_buffer`
+--
+
+LOCK TABLES `Notification_buffer` WRITE;
+/*!40000 ALTER TABLE `Notification_buffer` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Notification_buffer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Patient`
 --
 
@@ -560,7 +576,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES ('14IT110DOCTOR','pbkdf2:sha1:1000$VrMQQOXk$6406a9abd7779ef8ac374d41cd5d4b73d2e04d83','dhirajcr@yahoo.com','YES','DOCTOR'),('14IT137','pbkdf2:sha1:1000$YVrKu2VI$9e44f5868af13b05a2d6714bbcae239b4cd78f8b','ranganath.pai@gmail.com','YES','STUDENT'),('14IT223','pbkdf2:sha1:1000$p9QvUeKI$3f76423b05698b7d1a64f5705e6caca3e628fa18','vaibhav.nayak@gmail.com','YES','STUDENT'),('14IT139','pbkdf2:sha1:1000$eKZYSe3x$5c4c7ff0081d66202c647696c9492e6d3762d0d2','rishab.ranga1996@gmail.com','NO','STUDENT'),('14IT214','pbkdf2:sha1:1000$W6lb3L2M$0e01b6dc143e98d1db9b06f27c5b44212d8e631c','jayendrasai@gmail.com','YES','STUDENT'),('VISITDOC001','pbkdf2:sha1:1000$a0CimXjW$a79d14f98a6823ea2ea1e433a0fb2d8e85402dc1','doc1_anil_k@tutanota.com','YES','DOCTOR'),('admin','pbkdf2:sha1:1000$G2PGVkMG$2fa48ea4d6e6e6df42040161921210ec2abdd089','nitkhcc@gmail.com','YES','ADMIN'),('14IT110','pbkdf2:sha1:1000$SRAwWuNw$3a3ba3b1c55e994a6504ca18d641e3871b002838','dhirajbhakta110@gmail.com','YES','STUDENT'),('14IT117','pbkdf2:sha1:1000$TDF1oBP4$41109ee72699195bc92828ab406e6c1510eb11cd','kevingeorge2006@hotmail.com','YES','STUDENT'),('admin','pbkdf2:sha1:1000$6eVfvLTT$cd4499154301ecfb79128ed26f7564107b4734c2','nitkhcc2@gmail.com','YES','PHARMA');
+INSERT INTO `User` VALUES ('14IT110DOCTOR','pbkdf2:sha1:1000$VrMQQOXk$6406a9abd7779ef8ac374d41cd5d4b73d2e04d83','dhirajcr@yahoo.com','YES','DOCTOR'),('14IT137','pbkdf2:sha1:1000$YVrKu2VI$9e44f5868af13b05a2d6714bbcae239b4cd78f8b','ranganath.pai@gmail.com','YES','STUDENT'),('14IT223','pbkdf2:sha1:1000$p9QvUeKI$3f76423b05698b7d1a64f5705e6caca3e628fa18','vaibhav.nayak@gmail.com','YES','STUDENT'),('14IT139','pbkdf2:sha1:1000$eKZYSe3x$5c4c7ff0081d66202c647696c9492e6d3762d0d2','rishab.ranga1996@gmail.com','NO','STUDENT'),('14IT214','pbkdf2:sha1:1000$W6lb3L2M$0e01b6dc143e98d1db9b06f27c5b44212d8e631c','jayendrasai@gmail.com','YES','STUDENT'),('VISITDOC001','pbkdf2:sha1:1000$a0CimXjW$a79d14f98a6823ea2ea1e433a0fb2d8e85402dc1','doc1_anil_k@tutanota.com','YES','DOCTOR'),('admin','pbkdf2:sha1:1000$G2PGVkMG$2fa48ea4d6e6e6df42040161921210ec2abdd089','nitkhcc@gmail.com','YES','ADMIN'),('14IT110','pbkdf2:sha1:1000$SRAwWuNw$3a3ba3b1c55e994a6504ca18d641e3871b002838','dhirajbhakta110@gmail.com','YES','STUDENT'),('14IT117','pbkdf2:sha1:1000$TDF1oBP4$41109ee72699195bc92828ab406e6c1510eb11cd','kevingeorge2006@hotmail.com','YES','STUDENT'),('pharma','pbkdf2:sha1:1000$6eVfvLTT$cd4499154301ecfb79128ed26f7564107b4734c2','nitkhcc2@gmail.com','YES','PHARMA');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -650,12 +666,6 @@ SET character_set_client = utf8;
  1 AS `start_time`,
  1 AS `end_time`*/;
 SET character_set_client = @saved_cs_client;
-
---
--- Current Database: `HCCdb`
---
-
-USE `HCCdb`;
 
 --
 -- Final view structure for view `View_appointment_admin`
@@ -756,4 +766,4 @@ USE `HCCdb`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-12 16:56:21
+-- Dump completed on 2017-01-12 22:16:27

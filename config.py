@@ -17,7 +17,7 @@ class Config:
     HCC_ADMIN = "fill this shit later"
     
     MYSQL_DATABASE_USER = 'root'
-    MYSQL_DATABASE_PASSWORD = 'root'
+    MYSQL_DATABASE_PASSWORD = 'student'
     MYSQL_DATABASE_DB = 'HCCdb'
     MYSQL_DATABASE_HOST = 'localhost'
 
