@@ -3,11 +3,13 @@ from .. import mysql
 from ..models import DOCTOR , PrescriptionDrug, PRESCRIPTION, STUDENT,DRUG, Appointment
 from . import doctor
 from .forms import WorkbenchForm1
+from ..utils import specific_login_required
 from flask_login import current_user, login_required
 import datetime
 
 
 @doctor.route('/',methods=['GET','POST'] )
+@specific_login_required("DOCTOR")
 def showWorkbench():
 	form = WorkbenchForm1()
 	conn = mysql.connect()
@@ -31,6 +33,7 @@ def showWorkbench():
 
 
 @doctor.route('/addPrescription',methods=['GET','POST'])
+@specific_login_required("DOCTOR")
 def addPrescription():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -71,6 +74,7 @@ def addPrescription():
 
 
 @doctor.route('/viewPatientProfile/<patientID>')
+@specific_login_required("DOCTOR")
 def viewPatientProfile(patientID):
 	cursor = mysql.connect().cursor()
 	patient = DOCTOR.retrievePatientDetails(cursor,patientID)
@@ -90,7 +94,7 @@ def viewPatientProfile(patientID):
 
 
 @doctor.route('/profile')
-@login_required
+@specific_login_required("DOCTOR")
 def showDoctorProfile():
 	cursor = mysql.connect().cursor()
 	empID = current_user.ID
@@ -104,6 +108,7 @@ def showDoctorProfile():
 
 
 @doctor.route('/viewHistory',methods=['GET','POST'])
+@specific_login_required("DOCTOR")
 def showHistory():
 	cursor = mysql.connect().cursor()
 	empID = current_user.ID
@@ -126,6 +131,7 @@ def showHistory():
 
 
 @doctor.route('/showUpcomingAppointments')
+@specific_login_required("DOCTOR")
 def showUpcomingAppointments():
 	cursor = mysql.connect().cursor()
 	empID = current_user.ID
@@ -139,6 +145,7 @@ def showUpcomingAppointments():
 
 
 @doctor.route('/success')
+@specific_login_required("DOCTOR")
 def success():
 	cursor = mysql.connect().cursor()
 	empID = current_user.ID
