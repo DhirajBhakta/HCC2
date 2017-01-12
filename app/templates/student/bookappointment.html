@@ -125,69 +125,86 @@
 		font-size:20px;
 
 	}
+	.ba{
+		padding:20px;
+		border-radius:5px;
+	}
 
 </style>
 {% endblock %}
 
 
   {% block pageheader %}
-  Book an Appointment
+  Appointments
   {% endblock %}
 
   {% block emptyspace %}
 
-   <div class="row lightestcolor" id="mainrow">
-  	<div class="btn-group-vertical btn-group-lg col-lg-4 sidebarfont">
-  	  <button type="button" class="category btn btn-info" name="PAEDIATRICS">Paediatrician</button>
-  	  <button type="button" class="category  btn btn-info" name="OPTHALMOLOGY"> Opthalmologist</button>
-  	  <button type="button" class="category btn btn-info" name="ENT">ENT </button>
-  	  <button type="button" class="category btn btn-info" name="GYNAECOLOGY"> Gynaecologist</button>
-  	  <button type="button" class="category btn btn-info" name="DERMATOLOGY">Dermatologist </button>
-  	  <button type="button" class="category btn btn-info" name="ORTHOPAEDICS">Orthopaedics </button>
-  	  <button type="button" class="category btn btn-info" name="HOMEOPATHY">Homeopathy </button>
-  	  <button type="button" class="category btn btn-info" name="AYURVEDA">Ayurveda </button>
-  	  <button type="button" class="category btn btn-info" name="DENTISTRY"> Dentist</button>
-  	  <button type="button" id="aaa" class="category btn btn-info" name="PSYCHIATRY"> Psychiatrist</button>
+
+	<div class="ba lightestcolor2" id="booked-appointments" style="display:none">
+		<div class="row">
+			<div class="col-md-8 " >
+				<p class="robotofont" style="font-size:30px;">Booked Appointments</p>
+			</div>
+		</div>
+		<div class="">
+			<ul id="booked-appointments-list">
+				<!--- Appointments get inserted here -->
+
+			</ul>
+		</div>
 	</div>
-  	
-   <div class="col-md-8">
-  	<p id="response" class="robotofont">Select a Category</p>
-  	  	<div class="row response-box" id="response-box">
-  			<p>Date: <input type="text" class="form-control" id="datepicker" /></p>
-  	
-  	</div>
-	
-    <div class="row" style="margin-top:20px">
-        <div class="col-md-3"></div>
-		<div class = "col-md-5 details-wrap" >
-		     <div  id="appointment-card" class="profile-header-appointment darkcolor">
-			 	<p class="app-header">Appointment</p>
-			 	<p id="doctor-name" class="lvl1"></p>
-			 	
-             </div>
-             <div style="padding:20px">
-			 <p id="date-details" class="lvl2"></p>
-		   	 <p id="time-details" class="lvl2"></p>
-		   	 </div>
-		   	<div class="row" style="padding:20px"> 
-		   		<div class="col-lg-10">
-            		<button type="button"  class=" btn btn-success btn-block confirm-btn " id="confirm-btn">Confirm</button>
-            	</div>
-            </div>
+
+	<div class="row">
+		<div class="col-md-8  lightestcolor">
+			<p class="robotofont" style="font-size:30px;">Book an Appointment</p>
+		</div>
+	</div>
+  <div class="row lightestcolor" id="mainrow">
+	  <div class="btn-group-vertical btn-group-lg col-lg-4 sidebarfont">
+	    <button type="button" class="category btn btn-info" name="PAEDIATRICS">Paediatrician</button>
+	    <button type="button" class="category  btn btn-info" name="OPTHALMOLOGY"> Opthalmologist</button>
+	    <button type="button" class="category btn btn-info" name="ENT">ENT </button>
+	    <button type="button" class="category btn btn-info" name="GYNAECOLOGY"> Gynaecologist</button>
+	    <button type="button" class="category btn btn-info" name="DERMATOLOGY">Dermatologist </button>
+	    <button type="button" class="category btn btn-info" name="ORTHOPAEDICS">Orthopaedics </button>
+	    <button type="button" class="category btn btn-info" name="HOMEOPATHY">Homeopathy </button>
+	    <button type="button" class="category btn btn-info" name="AYURVEDA">Ayurveda </button>
+	    <button type="button" class="category btn btn-info" name="DENTISTRY"> Dentist</button>
+	    <button type="button" id="aaa" class="category btn btn-info" name="PSYCHIATRY"> Psychiatrist</button>
+		</div>
+	  	
+		<div class="col-md-8">
+
+			<p id="response" class="robotofont">Select a Category</p>
+			<div class="row" >
+
+			<div class="row response-box" id="response-box">
+				<p>Date: <input type="text" class="form-control" id="datepicker" /></p>
+			</div>
+
+				<div class="col-md-3"></div>
+				<div class = "col-md-5 details-wrap" >
+					<div  id="appointment-card" class="profile-header-appointment darkcolor">
+						<p class="app-header">Appointment</p>
+						<p id="doctor-name" class="lvl1"></p>
+
+					</div>
+					<div style="padding:20px">
+						<p id="date-details" class="lvl2"></p>
+						<p id="time-details" class="lvl2"></p>
+					</div>
+					<div class="row" style="padding:20px"> 
+						<div class="col-lg-10">
+							<button type="button"  class=" btn btn-success btn-block confirm-btn " id="confirm-btn">Confirm</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 
 	</div>
-	</div>
-  </div>
-
-  <div class="col-md-10 lightestcolor" id="booked-appointments">
-  <p class="robotofont" style="font-size:40px;">Booked Appointments</p>
-  <ul id="booked-appointments-list">
-
-  </ul>
-      
-  </div>
-
 
 
 
@@ -202,12 +219,15 @@
 
   	$(document).ready(function(){
   		$.get("/student/retrieveBookedAppointments",function(data){
-  			if(data && data!="")
-  			{	console.log(data);
-  			   $("#booked-appointments").css('visibility','visible');	
-  			   data = $.parseJSON(data);
+  			data = $.parseJSON(data)
+  			console.log(data)
+  			if( data.length != 0)
+  			{	
+  			   console.log(data);
+  			   $("#booked-appointments").css('display', '');	
   			   for(var i=0;i<data.length;i++)
   			   {
+  			   	console.log(data[i])
   			   	 var category = (data[i].category).toLowerCase();
   			   	 category = capitalize(category);
   			   	 var docName = "Dr."+data[i].doctorName +' ('+category+')';
@@ -234,7 +254,7 @@
   			
   		});
 
-         function deleteAppointment(btn){
+      function deleteAppointment(btn){
   			slotID = btn.value;
   			btn = $(btn);
   			$.post('/student/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
@@ -244,18 +264,14 @@
   					li_item.remove();
   					location.reload();
   				}
-
   			});
   		}
-
-
-  	
-  	
   	
   	$(".category").click(function(){
 	    var btnname = this.name
 	  	$.get("/student/bookAppointment",{ CATEGORY:btnname } ,function(data){
 	  		data = $.parseJSON(data);
+	  		console.log(data)
 	  		$("#response").html(btnname);
 	  		
 

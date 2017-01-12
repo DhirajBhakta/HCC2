@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>NITK-H   CC {% block title%} {% endblock %}</title>
+    <title>NITK-HCC {% block title%} {% endblock %}</title>
 
     <!-- JQuery UI CSS -->
     <link href="{{ url_for('static',filename='css/jquery-ui.min.css')}}" rel="stylesheet">
@@ -116,7 +116,6 @@
     .second-navbar{
         border-radius: 0px;
         margin:0px;
-        height:100px;
         border-color:rgb(47, 102, 163);
 
     }
@@ -279,7 +278,7 @@
 
                 <!-- Page Heading -->
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class=" col-md-offset-1 col-md-12">
                         <h1 class="page-header">
                            {% block pageheader %}
                            {% endblock %}

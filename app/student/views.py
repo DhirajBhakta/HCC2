@@ -82,7 +82,7 @@ def retrieveBookedAppointments():
 	studentUser = STUDENT()
 	studentUser.storeTuple(cursor,"rollno",id)
 	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,studentUser.patientID,"PATIENT")
-	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments])
+	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments]), 200, {'ContentType':'application/json'} 
 	return json_string
 
 @student.route('/deleteBookedAppointment',methods=['POST'])
