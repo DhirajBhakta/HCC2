@@ -21,8 +21,8 @@ def stockUpdate():
 	cursor = conn.cursor()
 	if request.method == 'POST':
 		jsonDict = request.get_json(silent=True)
-		drugList = list()
-		for key,value in jsonDict.items():
+		drugList = []
+		for value in jsonDict:
 			drug = DRUG()
 			drug.batchNumber=value['batchnumber']
 			drug.drugName   =value['drugname']
@@ -30,9 +30,10 @@ def stockUpdate():
 			date = value['expirydate']
 			drug.expiryDate = datetime.strptime(date,'%d/%m/%Y')
 			drugList.append(drug)
+		print(drugList)
 		DRUG.stockUpdate(cursor,drugList)
 		conn.commit()	
-		return render_template('pharma/success.html')	
+		return json.dumps({"success" : "true"}), 200	
 	
 	druglist = DRUG.retrieveDBdrugs(cursor)
 	druglist = [""]+druglist

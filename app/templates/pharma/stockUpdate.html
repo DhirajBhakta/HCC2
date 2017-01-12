@@ -45,7 +45,7 @@
 
 <input class="btn btn-success" id="submitBTN" value="Submit" type="submit">
 </form>
-<div id="stockUpdateWarnings"></div>
+<p id="stockUpdateWarnings"></p>
 
 {% endblock %}
 
@@ -137,15 +137,24 @@ $(".error-handler").click(function(){
 });
 
 function send_table(){
-  
   if(validate_all())
  {
     json_data = table_to_JSON(document.getElementById("stockTBL"));
+    console.log(json_data)
     $.ajax({
-       url: '/pharma/stockUpdateSubmit',  data: json_data,  
+       url: '/pharma/stockUpdate',  
+       data: json_data,  
        contentType:"application/json; charset=utf-8", 
-       type : 'POST', async: "false",  success  : function (serverResponse) {}}
-    );
+       type : 'POST', 
+       async: "false", 
+       success  : function (data) {
+          data = $.parseJSON(data)
+          console.log(data["success"])
+          if(data["success"] == "true"){
+            $("#stockUpdateWarnings").css('color', 'green')
+            $("#stockUpdateWarnings").text("Success")
+          }
+        }});
  }
 };
 
@@ -197,7 +206,7 @@ function input_eventlistener_adder(newInput)
 
 
 function table_to_JSON (table) {
-  var data = {};
+  var data = [];
   var headers = [];
 
   for (var i=0; i< table.rows[0].cells.length ;i++)
@@ -212,10 +221,9 @@ function table_to_JSON (table) {
   	{
   		rowdata[headers[j]] = tablerow.cells[j].children[0].value;
   	}
-  	data[i] = rowdata;
+  	data.push(rowdata);
   }
   json = JSON.stringify(data); 
-  console.log(json);
   return json;
 }
 

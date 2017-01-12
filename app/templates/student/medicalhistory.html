@@ -25,6 +25,7 @@
     padding:0px;
     margin-bottom:15px;
     margin-top:15px;
+    background-color:#faa;
   }
   .visit-desc{
     padding:10px;
@@ -113,12 +114,12 @@
 $( window ).load(function(){
   heading = $(".visit-title");
   content = heading.next();
-  content.slideToggle(500);
+  content.slideToggle(200);
 });
 $(".visit-title").click(function(){
   heading = $(this);
   content = heading.next();
-  content.slideToggle(500);
+  content.slideToggle(200);
 });
 </script>
 
