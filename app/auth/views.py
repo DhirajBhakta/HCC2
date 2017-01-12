@@ -91,6 +91,7 @@ def loginDoctor():
         thisUser = USER.checkIfIDExists(cursor,thisDoctor.doctorEmployeeID)
         if thisUser.verify_password(form.password.data):
             login_user(thisUser)
+            print(thisUser.get_utype())
             return redirect(url_for('doctor.showWorkbench'))
         else:
             flash('Invalid doctorID or password.')
@@ -111,6 +112,19 @@ def loginAdmin():
     return render_template('auth/adminlogin.html')
 
 
+@auth.route('/login/pharma',methods=['GET','POST'])
+def loginPharma():
+    if request.method == 'POST':
+        cursor = mysql.connect().cursor()
+        password = request.form.get('PASSWORD')
+        thisUser = USER()
+        thisUser = USER.checkIfIDExists(cursor,"pharma")
+        if thisUser.verify_password(password):
+            login_user(thisUser)
+            return redirect(url_for('pharma.stockUpdate'))
+        else:
+            flash('Invalid Password')
+    return render_template('auth/pharmalogin.html')
 
 
 

@@ -1,12 +1,13 @@
 from flask import render_template, request ,redirect
 from .. import mysql
 from ..models import STUDENT, PRESCRIPTION, Appointment
+from ..utils import specific_login_required
 from . import student
 from flask_login import current_user, login_required
 import json
 
 @student.route("/profile")
-@login_required
+@specific_login_required("STUDENT")
 def showStudentProfile():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -18,6 +19,7 @@ def showStudentProfile():
 
 
 @student.route('/medicalhistory')
+@specific_login_required("STUDENT")
 def showMedicalHistory():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -40,6 +42,7 @@ def showMedicalHistory():
 
 
 @student.route('/bookAppointment',methods=['GET'])
+@specific_login_required("STUDENT")
 def bookAppointment():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -56,6 +59,7 @@ def bookAppointment():
 
 
 @student.route('/submitAppointment',methods=['POST'])
+@specific_login_required("STUDENT")
 def submitAppointment():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -70,6 +74,7 @@ def submitAppointment():
 	return render_template('student/success.html',studentUser=studentUser)
 
 @student.route('/retrieveBookedAppointments',methods=['GET'])
+@specific_login_required("STUDENT")
 def retrieveBookedAppointments():
 	conn = mysql.connect()
 	cursor = conn.cursor()
@@ -81,6 +86,7 @@ def retrieveBookedAppointments():
 	return json_string
 
 @student.route('/deleteBookedAppointment',methods=['POST'])
+@specific_login_required("STUDENT")
 def deleteBookedAppointment():
 	conn = mysql.connect()
 	cursor = conn.cursor()
