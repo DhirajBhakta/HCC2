@@ -38,8 +38,8 @@ def create_app(config_name):
     app.register_blueprint(admin_blueprint,url_prefix='/admin')
 
 
-    from .student import student as student_blueprint
-    app.register_blueprint(student_blueprint,url_prefix='/student')
+    from .patient import patient as patient_blueprint
+    app.register_blueprint(patient_blueprint,url_prefix='/patient')
 
     from .doctor import doctor as doctor_blueprint
     app.register_blueprint(doctor_blueprint,url_prefix='/doctor')

@@ -38,13 +38,15 @@ class JsonSerializable:
 
 class USER(UserMixin):
 	#this name attribute shall not be put into DB.!!
-	name = None
-
-	ID = None
-	emailID = None
-	passwordHash = None
-	userType = None
-
+	def __init__(self):
+		self.name 		  = None
+		self.ID   		  = None #matters a lot
+		self.emailID 	  = None
+		self.passwordHash = None
+		self.userType     = None #matters a lot
+		self.mode         = 0    #mode is 0 for student
+							     #mode is 0 when employee uses for himself
+							     #mode is 1,2,3... when employee uses for his dependants
 
 	def get_utype(self):
 		return str(self.userType)
@@ -134,6 +136,13 @@ class USER(UserMixin):
 			return 0
 		else:
 			return 1
+
+	def getPatientID(self,cursor):
+		if(self.userType=="STUDENT"):
+			cursor.execute("SELECT patient_id FROM Student WHERE rollno=%s",(self.ID,))
+		else:
+			cursor.execute("SELECT patient_id FROM Employee WHERE emp_id=%s",(self.ID,))
+		return cursor.fetchone()[0]
 
 	def confirmUser(self,cursor):
 		cursor.execute("UPDATE User SET confirmed='YES' WHERE id=%s",(self.ID,))
@@ -247,6 +256,17 @@ class EMPLOYEE(JsonSerializable):
 
 
 
+class DEPENDANT(JsonSerializable):
+	def __init__(self):
+		self.empID 		 = None
+		self.dependantID = None
+		self.name  		 = None
+		self.DOB 		 = None
+		self.phno        = None
+		self.emailID     = None
+		self.relationship= None
+		self.patientID   = None
+		self.bloodID     = None
 
 
 
@@ -371,6 +391,7 @@ class PRESCRIPTION(JsonSerializable):
 			self.prescriptionDrugs.append(prescriptionDrug)
 
 
+
 	def insertIntoDB(self,conn,docID,patientID,indication):
 		cursor = conn.cursor()
 		self.doctor.storeTuple(cursor,"doctor_id",docID)
@@ -404,9 +425,14 @@ class PRESCRIPTION(JsonSerializable):
 		cursor.execute("UPDATE Notification_buffer SET status='SENT' WHERE status='NOT_SENT'")
 		return prescList
 
-	def getPrescriptionList(cursor,date):
+	#for a particular date
+	def getPrescriptionList(cursor,mode,value):
 		prescriptionList = list()
-		cursor.execute("SELECT prescription_id FROM Prescription WHERE DATE(date_time)=%s",(date,))
+		if(mode=="BY_DATE"):
+			cursor.execute("SELECT prescription_id FROM Prescription WHERE DATE(date_time)=%s",(value,))
+		elif(mode=="BY_PATIENTID"):
+			cursor.execute("SELECT prescription_id FROM Prescription WHERE patient_id = %s",(value,))
+			
 		prescIDtuples = cursor.fetchall()
 		for prescIDtuple in prescIDtuples:
 			prescription = PRESCRIPTION()
@@ -507,7 +533,7 @@ class Appointment():
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
 
 
-	def retrieveBookedAppointments(cursor,ID,forWHOM):
+	def getBookedAppointments(cursor,ID,forWHOM):
 		appointments = list()
 		if forWHOM == "PATIENT":
 			cursor.execute("SELECT * FROM View_patient_appointment WHERE patient_id=%s",ID)
