@@ -54,3 +54,13 @@ def getDruglist():
 
 
 
+@pharma.route("/getNOT_SENT",methods=['GET'])
+@specific_login_required("PHARMA")
+def getNOT_SENT():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	presclist = PRESCRIPTION.getNOT_SENTprescriptions(cursor)
+	conn.commit()
+	json_string = json.dumps(presclist)
+	return json_string
+

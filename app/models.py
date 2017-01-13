@@ -286,10 +286,11 @@ class DOCTOR():
 
 
 class PrescriptionDrug():
-	drugName = None
-	drugQty  = None
-	drugSchedule = None
-	drugComments = None
+	def __init__(self):
+		self.drugName = None
+		self.drugQty  = None
+		self.drugSchedule = None
+		self.drugComments = None
 
 	def storeData(self,drugName,drugQty,drugSchedule,drugComments):
 		self.drugName 	  = drugName
@@ -300,15 +301,15 @@ class PrescriptionDrug():
 
 
 class PRESCRIPTION():
-	prescriptionID = None
-	prescriptionDrugs = None
-	prescriptionDateTime = datetime.datetime.now()
-	doctor = DOCTOR()
-	patientID = None
-	indication = None
+
 
 	def __init__(self):
 		self.prescriptionDrugs = list()
+		self.prescriptionID = None
+		self.prescriptionDateTime = datetime.datetime.now()
+		self.doctor = DOCTOR()
+		self.patientID = None
+		self.indication = None
 
 
 	def addDrug(self,drug):
@@ -350,7 +351,21 @@ class PRESCRIPTION():
 			tuple = cursor.fetchone()
 			drugID = tuple[0]
 			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments))
+		self.pushNotification(cursor)
 		conn.commit()		
+
+	def pushNotification(self,cursor):
+		cursor.execute("INSERT INTO Notification_buffer VALUES(%s,%s)",(self.prescriptionID,"NOT_SENT",))
+
+	def getNOT_SENTprescriptions(cursor):
+		cursor.execute("SELECT prescription_id FROM Notification_buffer WHERE status='NOT_SENT'")
+		tuples = cursor.fetchall()
+		prescList = list()
+		for tuple in tuples:
+			prescID = tuple[0]
+			prescList.append(prescID)
+		cursor.execute("UPDATE Notification_buffer SET status='SENT' WHERE status='NOT_SENT'")
+		return prescList
 
 	def getPrescriptionList(cursor,date):
 		prescriptionList = list()
