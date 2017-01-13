@@ -8,6 +8,33 @@ import datetime
 
 
 
+class JsonSerializable:
+	def getJSON(self):
+		jsonDict = dict()
+		for key,value in self.__dict__.items():
+			if(hasattr(value,"getJSON")):
+				print("KEY:"+str(key))
+				jsonDict[key] = value.getJSON()
+			elif(type(value) is list):
+				tempList = list()
+				for item in value:
+					if(hasattr(item,"getJSON")):
+						tempList.append(item.getJSON())
+					else:
+						tempList.append(item)
+				jsonDict[key] = tempList
+
+			else:
+				if(isinstance(value,datetime.datetime)):
+					print("\n\n"+str(key)+"\n\n")
+					jsonDict[key] = str(value.strftime("%x %X"))#date time
+				else:
+					jsonDict[key] = value
+		return jsonDict
+
+
+
+
 
 class USER(UserMixin):
 	#this name attribute shall not be put into DB.!!
@@ -131,7 +158,7 @@ def load_user(ID):
 
 
 
-class STUDENT():
+class STUDENT(JsonSerializable):
 	def __init__(self):
 		self.rollno       = None
 		self.name         = None
@@ -175,7 +202,7 @@ class STUDENT():
 
 
 
-class EMPLOYEE():
+class EMPLOYEE(JsonSerializable):
 	def __init__(self):
 		self.empID        = None
 		self.name         = None
@@ -224,7 +251,7 @@ class EMPLOYEE():
 
 
 
-class DOCTOR():
+class DOCTOR(JsonSerializable):
 	def __init__(self):
 		self.doctorID = None
 		self.doctorName = None
@@ -280,7 +307,7 @@ class DOCTOR():
 
 
 
-class PrescriptionDrug():
+class PrescriptionDrug(JsonSerializable):
 	def __init__(self):
 		self.drugName = None
 		self.drugQty  = None
@@ -295,7 +322,7 @@ class PrescriptionDrug():
 
 
 
-class PRESCRIPTION():
+class PRESCRIPTION(JsonSerializable):
 
 
 	def __init__(self):
@@ -389,7 +416,7 @@ class PRESCRIPTION():
 
 
 
-class DRUG():
+class DRUG(JsonSerializable):
 
 	def __init__(self):
 		self.drugName = None
