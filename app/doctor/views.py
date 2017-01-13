@@ -121,7 +121,7 @@ def showHistory():
 		if date is not None:
 			date = datetime.datetime.strptime(date,"%Y-%m-%d").date()
 			print(date)
-			prescriptionList = PRESCRIPTION.getPrescriptionList(cursor,date)
+			prescriptionList = PRESCRIPTION.getPrescriptionList(cursor,"BY_DATE",date)
 			return render_template('doctor/history.html',doctorUser=doctor,prescriptionList=prescriptionList)
 
 			

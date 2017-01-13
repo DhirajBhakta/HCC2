@@ -7,7 +7,7 @@ from .. import mysql,mail
 from ..email import send_email
 from flask_mail import Message
 
-
+#patient Login(STUDENT,EMPLOYEE)
 @auth.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
@@ -17,17 +17,13 @@ def login():
         if user is not None:
             if not user.isConfirmed(cursor):
                 flash('Email ID not confirmed! Please click on the link given to you via email', 'danger')
-                return render_template('auth/login.html',form=form)
-            
+                return render_template('auth/login.html',form=form)          
             if user.verify_password(form.password.data):
+                flash("about to be logged innnn")
                 login_user(user)
-                type = form.patientType.data
-                if (type=='STUDENT'):
-                    return  redirect(url_for('student.showStudentProfile'))
-				
-				#do this after Employee model is finalized
+                return  redirect(url_for('patient.showPatientProfile'))
             else:
-                flash('Invalid UserName or Password......................')
+                flash('Invalid UserName or Password.')
         else:
             flash('Invalid UserName or Password. user object is None')
     return render_template('auth/login.html',form=form)
