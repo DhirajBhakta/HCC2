@@ -61,6 +61,7 @@ def getNOT_SENT():
 	cursor = conn.cursor()
 	presclist = PRESCRIPTION.getNOT_SENTprescriptions(cursor)
 	conn.commit()
-	json_string = json.dumps([obj.__dict__ for obj in presclist])
+	json_string = json.dumps([obj.getJSON() for obj in presclist])
+	print("\n\n\n\n\n"+json_string+"\n\n\n\n")
 	return json_string
 
