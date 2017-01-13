@@ -9,9 +9,47 @@
 
 {% block emptyspace %}
 <!-- THIS IS BODY -->
+<div>
+	<ul id="notifList">
+	</ul>
+</div>
 {% endblock %}
 
 
 {% block extrascripts %}
 <!-- ANY JS CODE -->
+<script>
+$(document).ready(function() {
+  // run the first time; all subsequent calls will take care of themselves
+  requestForNOT_SENT();
+});
+
+
+  function requestForNOT_SENT() {
+  $.ajax({
+    url: "{{url_for('pharma.getNOT_SENT')}}",
+    success: function(JSONdata) {
+    		prescList = JSON.parse(JSONdata);
+    		console.log(prescList);
+    		for (var presc in prescList)
+    		{
+	    		if(presc != null)
+	    		{
+	      		 $("#notifList").append("<li>"+presc+"</li>");
+	    		}
+	    	}
+
+    },
+    complete: function(){
+  			setTimeout(requestForNOT_SENT, 5000); 
+	}	  	
+    
+
+  });
+}
+  
+
+
+
+</script>
 {% endblock %} 
