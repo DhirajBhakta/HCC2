@@ -132,22 +132,17 @@ def load_user(ID):
 
 
 class STUDENT():
-	rollno = None
-	name = None
-	DOB = None
-	sex = None
-	phno = None
-	email = None
-	guardianPhno = None
-	locAddr = None
-	permAddr = None
-	patientID = None
-	dept = None
-	course = None
-	blood = None
-
-
-
+	def __init__(self):
+		self.rollno       = None
+		self.name         = None
+		self.DOB          = None
+		self.sex 		  = None
+		self.phno   	  = None
+		self.email  	  = None
+		self.guardianPhno = None
+		self.locAddr      = None
+		self.permAddr	  = None
+		self.patientID    = None
 
 	#Database to object
 	def storeTuple(self,cursor,colname,value):
@@ -181,24 +176,23 @@ class STUDENT():
 
 
 class EMPLOYEE():
-	empID = None
-	name = None
-	DOB = None
-	sex = None
-	phno = None
-	email = None
-	locAddr = None
-	permAddr = None
-	workStatus = None
-	designation = None
-	patientID = None
-	dept = None
-	blood = None
+	def __init__(self):
+		self.empID        = None
+		self.name         = None
+		self.DOB          = None
+		self.sex 		  = None
+		self.phno   	  = None
+		self.email  	  = None
+		self.locAddr      = None
+		self.permAddr	  = None
+		self.workStatus   = None
+		self.designation  = None
+		self.patientID    = None
 
 
 	#Database to object
-	def storeTuple(self,cursor,empID):
-		cursor.execute("SELECT * FROM Employee WHERE emp_id='"+empID+"'")
+	def storeTuple(self,cursor,colname,value):
+		cursor.execute("SELECT * FROM Employee WHERE "+colname+"=%s",(value,))
 		tuple = cursor.fetchone()
 		
 		self.empID 	      = tuple[0]
@@ -231,11 +225,12 @@ class EMPLOYEE():
 
 
 class DOCTOR():
-	doctorID = None
-	doctorName = None
-	doctorSpecialization = None
-	doctorEmployeeID = None
-	treatmentCount = 0
+	def __init__(self):
+		self.doctorID = None
+		self.doctorName = None
+		self.doctorSpecialization = None
+		self.doctorEmployeeID = None
+		self.treatmentCount = 0
 
     #Database to object
 	def storeTuple(self,cursor,colName,value):
@@ -247,7 +242,7 @@ class DOCTOR():
 		self.doctorName = tuple[1]
 		self.doctorSpecialization = tuple[2]
 		self.doctorEmployeeID = tuple[3]
-		DOCTOR.updateTreatmentCount(self,cursor)
+		self.updateTreatmentCount(cursor)
 		return True
 
 
@@ -309,6 +304,7 @@ class PRESCRIPTION():
 		self.prescriptionDateTime = datetime.datetime.now()
 		self.doctor = DOCTOR()
 		self.patientID = None
+		self.patient = None  #will become either STUDENT() or EMPLOYEEE() at run time
 		self.indication = None
 
 
@@ -326,6 +322,17 @@ class PRESCRIPTION():
 		self.indication = tuple[4]
 		self.doctor.storeTuple(cursor,"doctor_id",tuple[2])
 
+		#convention : Employees Patient ID always <9999....
+		#			  Dependants :10000 - 99999	
+		#			  Students :  99999 - ...
+		if(int(self.patientID) > 9999):
+			#student
+			self.patient = STUDENT()
+		else:
+			#employee
+			self.patient = EMPLOYEE()
+		self.patient.storeTuple(cursor,"patient_id",self.patientID)
+		self.patient.__dict__.pop("DOB")
 		cursor.execute("SELECT * FROM Prescription_drug_map WHERE prescription_id=%s",(self.prescriptionID,))
 		drugtuples = cursor.fetchall()
 		for drugtuple in drugtuples:
@@ -362,8 +369,11 @@ class PRESCRIPTION():
 		tuples = cursor.fetchall()
 		prescList = list()
 		for tuple in tuples:
+			presc = PRESCRIPTION()
 			prescID = tuple[0]
-			prescList.append(prescID)
+			print("PRESC ID =="+str(prescID))
+			presc.storeTuple(cursor,prescID)
+			prescList.append(presc)
 		cursor.execute("UPDATE Notification_buffer SET status='SENT' WHERE status='NOT_SENT'")
 		return prescList
 
@@ -392,16 +402,13 @@ class DRUG():
 		cursor.execute("SELECT DISTINCT trade_name FROM Drug")
 		drugNames = cursor.fetchall()
 		for drugName in drugNames:
-			print(drugName)
 			drugNamesList.append(drugName[0])
 		return drugNamesList
 
 	def stockUpdate(cursor,drugList):
 		for drug in drugList:
-			print(drug.drugName)
 			cursor.execute("SELECT  drug_id FROM Drug WHERE trade_name=%s",drug.drugName)
 			tuple = cursor.fetchone()
-			print(tuple)
 			drugID = tuple[0]
 			cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugID,drug.quantity,drug.expiryDate.strftime('%Y-%m-%d')))
 
@@ -432,7 +439,6 @@ class Appointment():
 		cursor.execute("SELECT * from Appointment_calendar JOIN Doctor ON Appointment_calendar.doctor_id = Doctor.doctor_id AND Doctor.specialization = %s ",specialization)
 		tuples = cursor.fetchall()
 		for tuple in tuples:
-			print(tuple)
 			appointmentDate = Appointment()
 			appointmentDate.calendarID = tuple[0]
 			date = tuple[1]
@@ -451,7 +457,6 @@ class Appointment():
 		cursor.execute("SELECT * from Appointment_calendar JOIN Doctor ON Appointment_calendar.doctor_id = Doctor.doctor_id AND Doctor.specialization = %s",specialization)
 		tuples = cursor.fetchall()
 		for tuple in tuples:
-			print(tuple)
 			appointmentDate = Appointment()
 			appointmentDate.calendarID = tuple[0]
 			date = tuple[1]
@@ -477,7 +482,6 @@ class Appointment():
 
 	def retrieveBookedAppointments(cursor,ID,forWHOM):
 		appointments = list()
-		print("\n\n\n"+str(ID)+"\n\n\n")
 		if forWHOM == "PATIENT":
 			cursor.execute("SELECT * FROM View_patient_appointment WHERE patient_id=%s",ID)
 			tuples = cursor.fetchall()
@@ -502,9 +506,6 @@ class Appointment():
 				if(patientType == "STUDENT"):
 					cursor.execute("SELECT name,rollno,Course.course_name  FROM Student JOIN Course ON Student.course_id=Course.course_id AND patient_id=%s",(appointment.patientID,))
 					stu = cursor.fetchone()
-					print("\n\n\n")
-					print(stu)
-					print("\n\n\n")
 					appointment.patientName = stu[0]
 					appointment.rollno = stu[1]
 					appointment.courseName = stu[2]
@@ -523,9 +524,6 @@ class Appointment():
 				if(patientType == "STUDENT"):
 					cursor.execute("SELECT name,rollno,Course.course_name  FROM Student JOIN Course ON Student.course_id=Course.course_id AND patient_id=%s",(appointment.patientID,))
 					stu = cursor.fetchone()
-					print("\n\n\n")
-					print(stu)
-					print("\n\n\n")
 					appointment.patientName = stu[0]
 					appointment.rollno = stu[1]
 					appointment.courseName = stu[2]
