@@ -3,16 +3,102 @@
 {% block head %}
 {{super()}}
 <!-- THIS IS HEAD ..Put the styles , or import CSS here -->
+<style type="text/css">
+.card-bg{
+  box-shadow: #000 0.5px 0.5px 1px 1px;
+  padding:0px;
+  margin-bottom:10px;
+}
+.card-heading{
+  padding: 20px 0px 20px 10px;
+  background-color:#55f;
+  color:white;
+}
+.drug-table{
+  width:60%;
+  margin:auto;
+  margin-bottom:10px;
+}
+.pres-id{
+  margin-right:20px;
+  float:right;
+  vertical-align:middle;
+}
+.pres-time{
+  margin-right:20px;
+  float:right;
+  vertical-align:middle;
+}
+.doctor-name{
+  vertical-align:middle;
+}
+.card-body{
+  padding:20px;
+}
+.card-subtitle{
+  background-color:#ddf;
+  padding: 5px 20px;
+}
+.buttons{
+  margin:auto;
+  text-align:center;
+}
+.confirm{
+  padding:10px 20px;
+  background-color:#55f;
+  box-shadow: #000 0.5px 0.5px 0.25px 0.25px;
+  font-weight:bold;
+  color:white;
+}
+.patient-name{
+  float:right;
+}
+.reject{
+  padding:10px 20px;
+  background-color:#d55;
+  box-shadow: #000 0.5px 0.5px 0.25px 0.25px;
+  font-weight:bold;
+  color:white;
+   margin-left:10%;
+}
+#notifList{
+  padding:0px;
+}
+
+
+</style>
 {% endblock %}
 
 
 
 {% block emptyspace %}
 <!-- THIS IS BODY -->
-<div>
-	<ul id="notifList">
-	</ul>
+<div class="col-md-4">
+  <ul class="nav nav-tabs nav-stacked">
+    <li class="active"><a data-toggle="tab" href="#home">Ongoing Notifications</a></li>
+    <li><a data-toggle="tab" href="#menu1">Seen Notifications</a></li>
+  </ul>
 </div>
+
+<div class="col-md-6">
+<div class="tab-content">
+  <div id="home" class="tab-pane fade in active">
+    <ul id="notifList">
+    </ul>
+  </div>
+  <div id="menu1" class="tab-pane fade">
+    <h3>Menu 1</h3>
+    <p>Some content in menu 1.</p>
+  </div>
+  <div id="menu2" class="tab-pane fade">
+    <h3>Menu 2</h3>
+    <p>Some content in menu 2.</p>
+  </div>
+</div>
+</div>
+
+{% include 'pharma/notificationCard.html' %}
+
 {% endblock %}
 
 
@@ -34,9 +120,28 @@ $(document).ready(function() {
     		for (var i=0;i<prescList.length ; i++)
     		{
 	    		
-	      		 $("#notifList").append("<li>"+prescList[i].doctor.doctorName+"  "
-                                          +prescList[i].patient.name+"</li>");
-	    		
+	      	$("#notifList").prepend($("#card").html());
+          latestCard = $(".card-bg:first")
+          console.log(latestCard)
+          latestCard.find(".doctor-name").text(prescList[i]["doctor"]["doctorName"])
+          latestCard.find(".pres-id").text(prescList[i]["prescriptionID"])
+          latestCard.find(".pres-time").text(prescList[i]["prescriptionDateTime"])
+          latestCard.find(".patient-name").text(prescList[i]["patient"]["name"])
+          latestCard.find(".diagnosis").text(prescList[i]["indication"])
+
+          drugtable = latestCard.find(".drug-table")
+          drugs = prescList[i].prescriptionDrugs
+          for(var j=0; j < drugs.length; j++)
+          {
+
+            drugtable.append("<tr><td>" + drugs[j]["drugName"] + "</td><td>" 
+                              + drugs[j]["drugQty"] + "</td></tr>")
+
+          }
+
+          latestCard.show(1000);
+
+
 	    	}
 
     },
