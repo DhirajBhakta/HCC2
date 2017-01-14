@@ -19,7 +19,6 @@ def login():
                 flash('Email ID not confirmed! Please click on the link given to you via email', 'danger')
                 return render_template('auth/login.html',form=form)          
             if user.verify_password(form.password.data):
-                flash("about to be logged innnn")
                 login_user(user)
                 return  redirect(url_for('patient.showPatientProfile'))
             else:

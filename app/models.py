@@ -38,18 +38,24 @@ class JsonSerializable:
 
 class USER(UserMixin):
 	#this name attribute shall not be put into DB.!!
+	role_patient = ['STUDENT','EMPLOYEE']
+	role_staff   = ['DOCTOR','PHARMA','ADMIN']
 	def __init__(self):
 		self.name 		  = None
-		self.ID   		  = None #matters a lot
+		self.ID   		  = None
 		self.emailID 	  = None
 		self.passwordHash = None
-		self.userType     = None #matters a lot
+		self.userType     = None #{DOCTOR,PHARMA,ADMIN,STUDENT,EMPLOYEE}  'ppl who can log in'
+		self.userRole     = None #{PATIENT,STAFF}   'Broader category'
 		self.mode         = 0    #mode is 0 for student
 							     #mode is 0 when employee uses for himself
 							     #mode is 1,2,3... when employee uses for his dependants
 
 	def get_utype(self):
 		return str(self.userType)
+
+	def get_urole(self):
+		return str(self.userRole)
 
 	def get_id(self):
 		return str(self.ID)
@@ -81,7 +87,7 @@ class USER(UserMixin):
 		self.name = name
 		self.ID = id
 		self.emailID = email
-		self.userType = usertype
+		self.userType = usertype		
 		self.passwordHash =  generate_password_hash(password)
 	    
 
@@ -95,6 +101,10 @@ class USER(UserMixin):
 		self.passwordHash = tuple[1]
 		self.emailID = tuple[2]
 		self.userType = tuple[4]
+		if(USER.role_patient.__contains__(str(self.userType))):
+			self.userRole = "PATIENT"
+		elif(USER.role_staff.__contains__(str(self.userType))):
+			self.userRole = "STAFF"
 		return True
 
 	def checkIfExistsInDB(cursor,patientType,id,email):
