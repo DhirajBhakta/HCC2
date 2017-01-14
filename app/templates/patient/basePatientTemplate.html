@@ -10,8 +10,16 @@
 {% endblock %}
 
 
-{% block showprofilebutton %}
+{% block dropdownmenuitems %}
+  <li>
    <a href="{{ url_for('patient.showPatientProfile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+  </li>
+  {% if current_user.userType=="EMPLOYEE" %}
+  <li>
+   <a href="{{ url_for('patient.switchUser') }}"><i class="fa fa-users" aria-hidden="true"></i> Switch User</a>
+  </li>
+  
+  {% endif %} 
 {% endblock %}
     
  

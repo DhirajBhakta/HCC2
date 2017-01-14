@@ -19,15 +19,8 @@ def specific_login_required(utype="ANY",urole="ANY"):
             else:
                 type = user.get_utype()
                 role = user.get_urole()
-                print("utype="+utype)
-                print("type="+type)
-                print("urole="+urole)
-                print("role="+role)
-                
-                print(user.get_utype())
                 if((urole == role) or (utype==type)):
                     return fn(*args,**kwargs)
-                print("ugh--------------")      
                 return login_manager.unauthorized()
         return decorated_view
     return wrapper

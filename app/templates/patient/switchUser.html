@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<style>
+.center {
+    margin			: auto;
+    width			: 50%;
+    height 			: 50%;
+    border			: 3px solid green;
+    padding			: 10px;
+    background-color: rgba(0,0,0,0.8);
+    color           : white;
+    margin-top:10%; 
+}
+</style>
+{% endblock %}
+
+
+{% block page_content %}
+<div>
+	<h1 class="heading">Choose User</h1>
+	<div class="container center">
+ 		<form action="{{url_for('patient.switchUser')}}" method="POST">
+  			<input type="radio" name="DEPENDANT_ID" value="-1"/>{{patient.name}}
+	     	<br/><br/>
+		   	{% for dependant in patient.dependants %}
+		  		<input type="radio" name="DEPENDANT_ID" value="{{dependant.dependantID}}"/> {{dependant.name}}&nbsp;&nbsp;({{dependant.relationship}}) 
+		  		<br/><br/>
+		   	{% endfor %}
+			<input class="btn btn-success" type="submit" value="Go"/>
+ 		</form>
+	</div>
+</div>
+
+
+{% endblock %}

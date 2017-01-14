@@ -47,15 +47,17 @@ class USER(UserMixin):
 		self.passwordHash = None
 		self.userType     = None #{DOCTOR,PHARMA,ADMIN,STUDENT,EMPLOYEE}  'ppl who can log in'
 		self.userRole     = None #{PATIENT,STAFF}   'Broader category'
-		self.mode         = 0    #mode is 0 for student
-							     #mode is 0 when employee uses for himself
-							     #mode is 1,2,3... when employee uses for his dependants
-
+		   
 	def get_utype(self):
 		return str(self.userType)
 
 	def get_urole(self):
 		return str(self.userRole)
+
+	def get_mode(self):
+		return self.mode
+	def set_mode(self,mode):
+		self.mode = mode
 
 	def get_id(self):
 		return str(self.ID)
@@ -234,6 +236,7 @@ class EMPLOYEE(JsonSerializable):
 		self.workStatus   = None
 		self.designation  = None
 		self.patientID    = None
+		self.dependants   = None #list
 
 
 	#Database to object
@@ -254,10 +257,12 @@ class EMPLOYEE(JsonSerializable):
 		self.patientID    = tuple[10]
 		
 		cursor.execute("SELECT dept_name FROM Department WHERE dept_id='"+str(tuple[11])+"'")
-		tupledept   = cursor.fetchone()
+		tupledept         = cursor.fetchone()
 
-		self.dept   = tupledept[0]
-		self.blood  = tuple[12]
+		self.dept   	  = tupledept[0]
+		self.blood  	  = tuple[12]
+		self.dependants   = DEPENDANT.getAllDependants(cursor,self.empID) 
+
 
 	def checkIfExistsInDB(cursor,rollno):
 		cursor.execute("SELECT * FROM Student WHERE rollno=%s",(rollno,))
@@ -268,15 +273,48 @@ class EMPLOYEE(JsonSerializable):
 
 class DEPENDANT(JsonSerializable):
 	def __init__(self):
-		self.empID 		 = None
 		self.dependantID = None
+		self.empID 		 = None
 		self.name  		 = None
 		self.DOB 		 = None
 		self.phno        = None
-		self.emailID     = None
+		self.email     = None
 		self.relationship= None
 		self.patientID   = None
-		self.bloodID     = None
+		self.blood     = None
+
+	#Database to Object
+	#particular dependant of a particular employee
+	def storeTuple(self,cursor,empID,dependantID):
+		cursor.execute("SELECT * FROM Dependant WHERE emp_id=%s AND dependant_id=%s",(empID,dependantID))
+		tuple = cursor.fetchone()
+		self.dependantID = tuple[0]
+		self.empID 		 = tuple[1]
+		self.name  		 = tuple[2]
+		self.DOB 		 = tuple[3]
+		self.sex		 = tuple[4]
+		self.phno        = tuple[5]
+		self.email       = tuple[6]
+		self.relationship= tuple[7]
+		self.patientID   = tuple[8]
+		self.blood       = tuple[9]
+
+
+	#all dependants of a given employee
+	def getAllDependants(cursor,empID):
+		dependants = list()
+		cursor.execute("SELECT dependant_id FROM Dependant WHERE emp_id=%s",(empID,))
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			dependantID = tuple[0]
+			dependant   = DEPENDANT()
+			dependant.storeTuple(cursor,empID,dependantID)
+			dependants.append(dependant)
+		return dependants
+
+
+
+
 
 
 
