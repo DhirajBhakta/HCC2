@@ -51,11 +51,20 @@ Profile
 <div class="row zero-margin">
 	<div class="col-md-8 profile-block">
 	<table cellpadding="10pt">
+		{% if current_user.userType=="STUDENT" %}
 		<tr class="row-style-2">
 			<td><b><i class="fa fa-slack"></i> &nbsp;Roll number </b></td>
 			<td>:</td>
 			<td>{{patient.rollno}}</td>
 		</tr>
+		{% else %}
+		<tr class="row-style-2">
+			<td><b><i class="fa fa-slack"></i> &nbsp;Employee ID </b></td>
+			<td>:</td>
+			<td>{{patient.empID}}</td>
+		</tr>
+		{% endif %}
+		
 		<tr class="row-style-1">
 			<td><b>Date of Birth </b></td>
 			<td>:</td>
@@ -71,11 +80,19 @@ Profile
 			<td>:</td>
 			<td>{{patient.dept}}</td>
 		</tr>
+		{% if current_user.userType=="STUDENT" %}
 		<tr class="row-style-2">
 			<td><b>Course </b></td>
 			<td>:</td>
 			<td>{{patient.course}}</td>
 		</tr>
+		{% else %}
+		<tr class="row-style-2">
+			<td><b>Designation </b></td>
+			<td>:</td>
+			<td>{{patient.designation}}</td>
+		</tr>
+		{% endif %}
 		<tr class="row-style-1">
 			<td><b><i class="fa fa-phone"></i> &nbsp;Contact number </b></td>
 			<td>:</td>
@@ -96,11 +113,19 @@ Profile
 			<td>:</td>
 			<td>{{patient.permAddr}}</td>
 		</tr>
+		{% if current_user.userType == "STUDENT" %}
 		<tr class="row-style-1">
 			<td><b><i class="fa fa-phone"></i> &nbsp;Guardian Ph.no </b></td>
 			<td>:</td>
 			<td>{{patient.gaurdianPhno}}</td>
 		</tr>
+		{% else %}
+		<tr class="row-style-1">
+			<td><b><i class="fa fa-phone"></i> &nbsp;Work Status </b></td>
+			<td>:</td>
+			<td>{{patient.workStatus}}</td>
+		</tr>
+		{% endif %}
 		<tr class="row-style-2">
 			<td><b><span class="glyphicon glyphicon-tint" style="color:red"></span> &nbsp;Blood Group </b></td>
 			<td>:</td>

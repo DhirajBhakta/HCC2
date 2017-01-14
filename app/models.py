@@ -251,9 +251,9 @@ class EMPLOYEE(JsonSerializable):
 		self.permAddr	  = str(tuple[7])
 		self.workStatus   = tuple[8]
 		self.designation  = tuple[9]
-		self.patientID    = tuple[9]
+		self.patientID    = tuple[10]
 		
-		cursor.execute("SELECT dept_name FROM Department WHERE dept_id='"+str(tuple[10])+"'")
+		cursor.execute("SELECT dept_name FROM Department WHERE dept_id='"+str(tuple[11])+"'")
 		tupledept   = cursor.fetchone()
 
 		self.dept   = tupledept[0]
