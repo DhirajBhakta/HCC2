@@ -138,7 +138,7 @@ def showUpcomingAppointments():
 	doctor = DOCTOR()
 	doctor.storeTuple(cursor,"emp_id",empID)
 	
-	bookedAppointments = Appointment.retrieveBookedAppointments(cursor,doctor.doctorID,"DOCTOR")
+	bookedAppointments = Appointment.getBookedAppointments(cursor,doctor.doctorID,"DOCTOR")
 	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppointments=bookedAppointments)
 
 	

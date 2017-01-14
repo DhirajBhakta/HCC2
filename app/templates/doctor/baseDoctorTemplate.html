@@ -60,8 +60,10 @@ Dr.{{doctorUser.doctorName}}
 
 
 
-{% block showprofilebutton %}
+{% block dropdownmenuitems %}
+<li>
    <a href="{{ url_for('doctor.showDoctorProfile') }}"><i class="fa fa-fw fa-user"></i> Profile</a>
+</li>
 {% endblock %}
 
 

@@ -1,4 +1,4 @@
-from flask import render_template, request ,redirect
+from flask import render_template, request ,redirect,url_for, session
 from .. import mysql
 from ..models import STUDENT,EMPLOYEE,DEPENDANT ,PRESCRIPTION, Appointment
 from ..utils import specific_login_required
@@ -11,15 +11,27 @@ class DB:
 	conn   = mysql.connect()
 	cursor = conn.cursor()
 
+#session['mode']
+#  is -1 for student
+#  is -1 when employee uses for himself
+#  is  0,1,2,3... when employee uses for his dependants
+
 def classifyAndGetCurrentUser():
 	userType = current_user.get_utype()
 	ID       = current_user.get_id()
+	mode     = session['mode']
+	print("MODE in classifyAndGetCurrentUser:"+str(mode))
+	print("MODE"+str(mode))
+	print("utype:"+userType)
 	if(userType == "STUDENT"):
 		patient = STUDENT()
 		patient.storeTuple(DB.cursor,"rollno",ID)
-	else:
+	elif((userType == "EMPLOYEE") and (mode == -1)):
 		patient = EMPLOYEE()
 		patient.storeTuple(DB.cursor,"emp_id",ID)
+	elif((userType == "EMPLOYEE") and (mode != -1)):
+		patient = DEPENDANT()
+		patient.storeTuple(DB.cursor,ID,mode)
 	return patient
 #-------------------------------------------------------
 
@@ -27,6 +39,7 @@ def classifyAndGetCurrentUser():
 @patient.route("/profile",methods=["GET"])
 @specific_login_required(urole="PATIENT")
 def showPatientProfile():
+	print("\n\nshowPatientProfile called classifyAndGetCurrentUser")
 	patient = classifyAndGetCurrentUser()
 	return render_template("patient/patientprofile.html",patient=patient)
 
@@ -77,6 +90,20 @@ def deleteBookedAppointment():
 	Appointment.deleteBookedAppointment(DB.cursor,slotID)
 	DB.conn.commit()
 	return "true"
+
+
+@patient.route('/switchUser',methods=['GET','POST'])
+@specific_login_required(urole="PATIENT")
+def switchUser():
+	if(request.method == 'POST'):
+		dependantID = request.form.get('DEPENDANT_ID')
+		session['mode']= int(dependantID)
+		return redirect(url_for('patient.showPatientProfile'))
+
+	session['mode']=-1
+	patient = classifyAndGetCurrentUser()
+	return render_template('patient/switchUser.html',patient=patient)
+
 
 
 

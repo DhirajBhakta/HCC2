@@ -248,9 +248,10 @@
                 <li class="dropdown sidebarlistitem">
                     <a href="#" class="dropdown-toggle mytoggle" data-toggle="dropdown"><i class="fa fa-user"></i> {%block profilename %}  {% endblock %}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li>
-                           {% block showprofilebutton %} {% endblock%}
-                        </li>
+                          {% block dropdownmenuitems %}
+                        
+                          {% endblock%}
+                        
                         <li class="divider"></li>
                         <li>
                             <a href="{{url_for('auth.logout')}}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>

@@ -1,4 +1,4 @@
-from flask import render_template, redirect ,request,url_for ,flash, current_app,jsonify
+from flask import session ,render_template, redirect ,request,url_for ,flash, current_app,jsonify
 from flask_login import login_user , logout_user, current_user,login_required
 from . import auth
 from ..models import USER,STUDENT,DOCTOR
@@ -19,7 +19,11 @@ def login():
                 flash('Email ID not confirmed! Please click on the link given to you via email', 'danger')
                 return render_template('auth/login.html',form=form)          
             if user.verify_password(form.password.data):
+                session['mode']=-1
                 login_user(user)
+                utype = user.get_utype()
+                if(utype=="EMPLOYEE"):
+                    return redirect(url_for('patient.switchUser'))
                 return  redirect(url_for('patient.showPatientProfile'))
             else:
                 flash('Invalid UserName or Password.')
@@ -30,8 +34,9 @@ def login():
 
 @auth.route('/logout')
 def logout():
-	logout_user()
-	return redirect(url_for('main.index'))
+    logout_user()
+    session.clear()
+    return redirect(url_for('main.index'))
 
 
 
@@ -86,7 +91,6 @@ def loginDoctor():
         thisUser = USER.checkIfIDExists(cursor,thisDoctor.doctorEmployeeID)
         if thisUser.verify_password(form.password.data):
             login_user(thisUser)
-            print(thisUser.get_utype())
             return redirect(url_for('doctor.showWorkbench'))
         else:
             flash('Invalid doctorID or password.')
