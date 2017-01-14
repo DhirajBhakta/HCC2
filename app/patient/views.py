@@ -11,38 +11,38 @@ class DB:
 	conn   = mysql.connect()
 	cursor = conn.cursor()
 
-	def classifyAndGetCurrentUser():
-		userType = current_user.get_utype()
-		ID       = current_user.get_id()
-		if(userType == "STUDENT"):
-			patient = STUDENT()
-			patient.storeTuple(DB.cursor,"rollno",ID)
-		else:
-			patient = EMPLOYEE()
-			patient.storeTuple(DB.cursor,"emp_id",ID)
-		return patient
+def classifyAndGetCurrentUser():
+	userType = current_user.get_utype()
+	ID       = current_user.get_id()
+	if(userType == "STUDENT"):
+		patient = STUDENT()
+		patient.storeTuple(DB.cursor,"rollno",ID)
+	else:
+		patient = EMPLOYEE()
+		patient.storeTuple(DB.cursor,"emp_id",ID)
+	return patient
 #-------------------------------------------------------
 
 
 @patient.route("/profile",methods=["GET"])
-@specific_login_required("PATIENT")
+@specific_login_required(urole="PATIENT")
 def showPatientProfile():
 	patient = classifyAndGetCurrentUser()
 	return render_template("patient/patientprofile.html",patient=patient)
 
 
 @patient.route('/medicalhistory',methods=["GET"])
-@specific_login_required("PATIENT")
+@specific_login_required(urole="PATIENT")
 def showMedicalHistory():
 	patient   = classifyAndGetCurrentUser()
-	patientID = current_user.getPatientID()
+	patientID = current_user.getPatientID(DB.cursor)
 	prescriptionList = PRESCRIPTION.getPrescriptionList(DB.cursor,"BY_PATIENTID",patientID)
 	return render_template('patient/medicalhistory.html',prescriptionList=prescriptionList,patient=patient)
 
 
 
 @patient.route('/bookAppointment',methods=['GET','POST'])
-@specific_login_required("PATIENT")
+@specific_login_required(urole="PATIENT")
 def bookAppointment():
 	patient  = classifyAndGetCurrentUser()
 	if(request.method == "POST"):
@@ -54,7 +54,7 @@ def bookAppointment():
 
 	category = request.args.get('CATEGORY')
 	if category is not None:
-		appointmentDates = Appointment.getViableDatesForCategory(cursor,category)
+		appointmentDates = Appointment.getViableDatesForCategory(DB.cursor,category)
 		json_string = json.dumps([obj.__dict__ for obj in appointmentDates])
 		return json_string
 	return render_template('patient/bookappointment.html',patient=patient)
@@ -62,7 +62,7 @@ def bookAppointment():
 	
 
 @patient.route('/getBookedAppointments',methods=['GET'])
-@specific_login_required("PATIENT")
+@specific_login_required(urole="PATIENT")
 def getBookedAppointments():
 	patient = classifyAndGetCurrentUser()
 	bookedAppointments = Appointment.getBookedAppointments(DB.cursor,patient.patientID,"PATIENT")
@@ -71,7 +71,7 @@ def getBookedAppointments():
 
 
 @patient.route('/deleteBookedAppointment',methods=['POST'])
-@specific_login_required("PATIENT")
+@specific_login_required(urole="PATIENT")
 def deleteBookedAppointment():
 	slotID = request.form.get('SLOTID')
 	Appointment.deleteBookedAppointment(DB.cursor,slotID)
