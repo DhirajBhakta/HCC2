@@ -59,9 +59,41 @@ def getDruglist():
 def getNOT_SENT():
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	presclist = PRESCRIPTION.getNOT_SENTprescriptions(cursor)
+	presclist = PRESCRIPTION.getPrescriptions(cursor, 'NOT_SENT')
 	conn.commit()
 	json_string = json.dumps([obj.getJSON() for obj in presclist])
-	print("\n\n\n\n\n"+json_string+"\n\n\n\n")
 	return json_string
 
+
+
+@pharma.route("/getSENT",methods=['GET'])
+@specific_login_required("PHARMA")
+def getSENT():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	presclist = PRESCRIPTION.getPrescriptions(cursor, 'SENT')
+	conn.commit()
+	json_string = json.dumps([obj.getJSON() for obj in presclist[:10]])
+	return json_string
+
+
+@pharma.route("/getACK",methods=['GET'])
+@specific_login_required("PHARMA")
+def getACK():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	presclist = PRESCRIPTION.getPrescriptions(cursor, 'ACK')
+	conn.commit()
+	json_string = json.dumps([obj.getJSON() for obj in presclist[:10]])
+	return json_string
+
+@pharma.route("/setACK", methods=['POST'])
+@specific_login_required("PHARMA")
+def setACK():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	data = request.get_json(silent=True)
+	print("data = " + str(data))
+	PRESCRIPTION.setPrescriptionAck(cursor, data["pres-id"])
+	conn.commit()
+	return 'true'
