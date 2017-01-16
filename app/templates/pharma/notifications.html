@@ -3,16 +3,121 @@
 {% block head %}
 {{super()}}
 <!-- THIS IS HEAD ..Put the styles , or import CSS here -->
+<style type="text/css">
+.card-bg{
+  box-shadow: #000 0.5px 0.5px 1px 1px;
+  padding:0px;
+  margin-bottom:10px;
+}
+.card-heading{
+  padding: 20px 0px 20px 10px;
+  background-color:#55f;
+  color:white;
+}
+.drug-table{
+  width:60%;
+  margin:auto;
+  margin-bottom:10px;
+}
+.pres-id{
+  margin-right:20px;
+  float:right;
+  vertical-align:middle;
+}
+.pres-time{
+  margin-right:20px;
+  float:right;
+  vertical-align:middle;
+}
+.doctor-name{
+  vertical-align:middle;
+}
+.card-body{
+  padding:20px;
+}
+.card-subtitle{
+  background-color:#ddf;
+  padding: 5px 20px;
+}
+.buttons{
+  margin:auto;
+  text-align:center;
+}
+.card-button{
+  padding:10px 20px;
+  font-weight:bold;
+  box-shadow: #000 0.5px 0.5px 0.25px 0.25px;
+  color:white;
+  transition:.5s all;
+}
+.card-button:hover{
+
+  transition:.5s all;
+}
+.card-button:active{
+  color:white;
+  text-decoration: none;
+}
+
+.confirm{
+  background-color:#55f;
+}
+.confirm:hover{
+  background-color:#77f;
+  color:white;
+  text-decoration: none;
+}
+.patient-name{
+  float:right;
+}
+.reject{
+  background-color:#d55; 
+  margin-left:10%;
+}
+.reject:hover{
+  background-color:#f77;
+  color:white;
+  text-decoration: none;
+}
+.card-list{
+  padding:0px;
+}
+
+
+</style>
 {% endblock %}
 
 
 
 {% block emptyspace %}
 <!-- THIS IS BODY -->
-<div>
-	<ul id="notifList">
-	</ul>
+<div class="col-md-4">
+  <ul class="nav nav-pills nav-stacked">
+    <li class="active"><a data-toggle="pill" href="#home" data-type ="not-sent">New Notifications</a></li>
+    <li><a data-toggle="pill" href="#menu1" data-type ="sent">Seen Notifications</a></li>
+    <li><a data-toggle="pill" href="#menu2" data-type ="ack">Acknowledged Notifications</a></li>
+  </ul>
 </div>
+
+<div class="col-md-6">
+<div class="tab-content">
+  <div id="home" class="tab-pane fade in active">
+    <h4 id="not-sent-empty"> Nothing to show here. </h4>
+    <ul id="not-sent-list" class="card-list"></ul>
+  </div>
+  <div id="menu1" class="tab-pane fade">
+    <h4 id="sent-empty"> Nothing to show here. </h4>
+    <ul id="sent-list" class="card-list"> </ul>
+  </div>
+  <div id="menu2" class="tab-pane fade">
+    <h4 id="ack-empty"> Nothing to show here. </h4>
+    <ul id="ack-list" class="card-list"> </ul>
+  </div>
+</div>
+</div>
+
+{% include 'pharma/notificationCard.html' %}
+
 {% endblock %}
 
 
@@ -22,34 +127,124 @@
 $(document).ready(function() {
   // run the first time; all subsequent calls will take care of themselves
   requestForNOT_SENT();
+  $("a[data-toggle='pill']").on('click', requestNotification);
 });
+  
+
+function createSetAck(cardToDelete, presID){
+  return function(){
+    data = {}
+    data["pres-id"] = presID
+    $.ajax({ 
+      url: "{{ url_for('pharma.setACK') }} ",
+      type: "POST",
+      data: JSON.stringify(data),
+      contentType : 'application/json',
+      success : function(data){
+                  $(cardToDelete).hide('slow', function(){ $(cardToDelete).remove(); });
+                }
+    });
+  }
+}
+function makeCards(notifType, prescription){
+
+  notifList = $('#' + notifType + '-list')
+  notifList.prepend($("#card").html());
+  latestCard = notifList.find(".card-bg:first")
+  latestCard.data('id', prescription["prescriptionID"])
+  latestCard.find(".doctor-name").text(prescription["doctor"]["doctorName"])
+  latestCard.find(".pres-id").text(prescription["prescriptionID"])
+  latestCard.find(".pres-time").text(prescription["prescriptionDateTime"])
+  latestCard.find(".patient-name").text(prescription["patient"]["name"])
+  latestCard.find(".diagnosis").text(prescription["indication"])
+  if(notifType == "ack")
+  {
+    latestCard.find(".confirm").hide()
+    latestCard.find(".reject").hide()
+  }
+  else
+  {
+    latestCard.find(".confirm").click(createSetAck(latestCard, prescription["prescriptionID"]))
+    latestCard.find(".reject").click(createSetAck(latestCard, prescription["prescriptionID"]))
+  }
+
+  drugtable = latestCard.find(".drug-table")
+  drugs = prescription.prescriptionDrugs
+  for(var j=0; j < drugs.length; j++)
+  {
+
+    drugtable.append("<tr><td>" + drugs[j]["drugName"] + "</td><td>" 
+                      + drugs[j]["drugQty"] + "</td></tr>")
+
+  }
+}
 
 
-  function requestForNOT_SENT() {
+function requestNotification(){
+    
+    if($(this).hasClass('active')) return
+
+    notifType = $(this).data()["type"]
+    query_url = ""
+    empty = '#' + notifType + "-empty"
+    targetPane = '#' + notifType + '-list'
+
+    if( notifType == 'not-sent') 
+      return
+    else if(notifType == 'sent')
+    {
+      query_url = " {{ url_for('pharma.getSENT' ) }} "
+    } 
+    else 
+    {
+      query_url = " {{ url_for('pharma.getACK' ) }} "
+    } 
+
+    console.log("Target pane = " + empty)
+    $(targetPane).empty()
+
+    $.ajax({
+    url: query_url,
+    success: function(JSONdata) {
+
+        prescList = JSON.parse(JSONdata);
+        console.log(prescList);
+        if(prescList.length != 0)
+        {
+          $(empty).hide()
+        }
+        for (var i=0;i<prescList.length ; i++)
+        {
+          makeCards(notifType, prescList[i])
+          latestCard.show();
+        }
+      }  
+    });
+}
+
+function requestForNOT_SENT() {
   $.ajax({
     url: "{{url_for('pharma.getNOT_SENT')}}",
     success: function(JSONdata) {
-    		prescList = JSON.parse(JSONdata);
-    		console.log(prescList);
-    		for (var i=0;i<prescList.length ; i++)
-    		{
-	    		
-	      		 $("#notifList").append("<li>"+prescList[i].doctor.doctorName+"  "
-                                          +prescList[i].patient.name+"</li>");
-	    		
-	    	}
-
-    },
+        prescList = JSON.parse(JSONdata);
+        console.log(prescList);
+        if(prescList.length != 0)
+        {
+          $("#not-sent-empty").hide()
+        }
+        for (var i=0;i<prescList.length ; i++)
+        {
+          makeCards("not-sent", prescList[i])
+          latestCard.show(1000);
+        }
+      },
     complete: function(){
-  			setTimeout(requestForNOT_SENT, 5000); 
-	}	  	
+        setTimeout(requestForNOT_SENT, 5000); 
+  }     
     
 
   });
 }
-  
-
-
 
 </script>
 {% endblock %} 
