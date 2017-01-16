@@ -1,0 +1,33 @@
+ {% extends "doctor/baseDoctorTemplate.html" %}
+
+ {% block head %}
+ {{super()}}
+ <style type="text/css">
+ .center{
+ 	 	margin:auto;
+ 		width:20%;
+ 		border:2px solid green;
+ 		box-shadow: 0px 0px 5px yellow;
+ }
+ </style>
+ {% endblock %}
+
+
+ {% block emptyspace %}
+ <div class="container center">
+ 	<form action="{{url_for('doctor.acceptSpecialPatient')}}" method="POST">
+ 		<input type="hidden" name="EMP_ID" value="{{ employee.empID }}" />
+ 		<input type="radio" name="PATIENT" value="-1"/> {{employee.name}} <br/><br/>
+ 		{% for dependant in employee.dependants %}
+ 		<input type="radio" name="PATIENT" value="{{dependant.dependantID}}"/> 
+ 		{{dependant.name}}({{dependant.relationship}})
+ 		<br/><br/>
+ 		{% endfor %}
+ 		<input type="submit" class="btn btn-success" value="OK"/>
+ 	</form>
+ </div>
+ {% endblock %}
+
+
+ {% block extrascripts %}
+ {% endblock %}

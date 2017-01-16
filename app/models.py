@@ -264,8 +264,8 @@ class EMPLOYEE(JsonSerializable):
 		self.dependants   = DEPENDANT.getAllDependants(cursor,self.empID) 
 
 
-	def checkIfExistsInDB(cursor,rollno):
-		cursor.execute("SELECT * FROM Student WHERE rollno=%s",(rollno,))
+	def checkIfExistsInDB(cursor,empID):
+		cursor.execute("SELECT * FROM Employee WHERE emp_id=%s",(empID,))
 		return cursor.fetchone()
 
 
@@ -283,9 +283,24 @@ class DEPENDANT(JsonSerializable):
 		self.patientID   = None
 		self.blood     = None
 
+
+	def storeTuple(self,cursor,colname,value):
+		cursor.execute("SELECT * FROM Dependant WHERE "+colname+"=%s ",value)
+		tuple = cursor.fetchone()
+		self.dependantID = tuple[0]
+		self.empID 		 = tuple[1]
+		self.name  		 = tuple[2]
+		self.DOB 		 = tuple[3]
+		self.sex		 = tuple[4]
+		self.phno        = tuple[5]
+		self.email       = tuple[6]
+		self.relationship= tuple[7]
+		self.patientID   = tuple[8]
+		self.blood       = tuple[9]
+
 	#Database to Object
 	#particular dependant of a particular employee
-	def storeTuple(self,cursor,empID,dependantID):
+	def _storeTuple(self,cursor,empID,dependantID):
 		cursor.execute("SELECT * FROM Dependant WHERE emp_id=%s AND dependant_id=%s",(empID,dependantID))
 		tuple = cursor.fetchone()
 		self.dependantID = tuple[0]
@@ -308,7 +323,7 @@ class DEPENDANT(JsonSerializable):
 		for tuple in tuples:
 			dependantID = tuple[0]
 			dependant   = DEPENDANT()
-			dependant.storeTuple(cursor,empID,dependantID)
+			dependant._storeTuple(cursor,empID,dependantID)
 			dependants.append(dependant)
 		return dependants
 
@@ -342,19 +357,24 @@ class DOCTOR(JsonSerializable):
 
 
 	def checkIfExistsInDB(cursor,docID):
-		cursor.execute("SELECT * FROM Doctor WHERE doctor_id = %s",(docID,))
+		cursor.execute("SELECT * FROM Doctor WHERE doctor_id = %s",docID)
 		return cursor.fetchone()
 
 	def updateTreatmentCount(self,cursor):
-		cursor.execute("SELECT COUNT(*) FROM Prescription WHERE doctor_id=%s",(self.doctorID,))
+		cursor.execute("SELECT COUNT(*) FROM Prescription WHERE doctor_id=%s",self.doctorID)
 		self.treatmentCount = cursor.fetchone()[0] 
 
 	def retrievePatientDetails(cursor,patientID):
-		studentPatient = STUDENT()
-		cursor.execute("SELECT rollno FROM Student WHERE patient_id=%s",patientID)
-		rollno = cursor.fetchone()[0]
-		studentPatient.storeTuple(cursor,"rollno",rollno)
-		return studentPatient
+		cursor.execute("SELECT patient_type FROM Patient WHERE patient_id=%s",patientID)
+		type = cursor.fetchone()[0]
+		if(type=="STUDENT"):
+			patient = STUDENT()
+		elif(type=="EMPLOYEE"):
+			patient = EMPLOYEE()
+		elif(type=="DEPENDANT"):
+			patient = DEPENDANT()
+		patient.storeTuple(cursor,"patient_id",patientID)
+		return patient
 
 	def getAllDoctorDetails(cursor):
 		docList =list()
