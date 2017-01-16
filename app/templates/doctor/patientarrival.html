@@ -1,0 +1,29 @@
+{% extends "doctor/baseDoctorTemplate.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{%block head%}
+{{super()}}
+<style type="text/css">
+	.center-box{
+		margin-left: 200px;
+		margin-right: 200px;
+		padding:10px;
+		padding-left: 50px;
+		padding-right: 50px;
+		background-color: white;
+		box-shadow: 1px 1px 4px black;
+     }
+</style>
+{% endblock%}
+
+
+{% block emptyspace %}
+
+
+<div class="col-md-10">
+  <div class="center-box lightestcolor2">
+    {{ wtf.quick_form(form) }}
+   </div>
+</div>
+
+{% endblock %}

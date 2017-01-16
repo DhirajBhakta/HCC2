@@ -31,7 +31,7 @@ def classifyAndGetCurrentUser():
 		patient.storeTuple(DB.cursor,"emp_id",ID)
 	elif((userType == "EMPLOYEE") and (mode != -1)):
 		patient = DEPENDANT()
-		patient.storeTuple(DB.cursor,ID,mode)
+		patient._storeTuple(DB.cursor,ID,mode)
 	return patient
 #-------------------------------------------------------
 
