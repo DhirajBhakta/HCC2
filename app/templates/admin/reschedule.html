@@ -130,7 +130,8 @@ li.replacement-item{
 		
 		$.get("/admin/getAppointmentCalendarForDoctor",{DOCTORID:doctorID},function(data){
 			data = $.parseJSON(data);
-			console.log('aASSSSSSSSS'+data)
+			console.log('aASSSSSSSSS'+data);
+			$("#doc-appointments-list").empty();
 			for(var i=0;i<data.length;i++)
 			{
 				calendarID = data[i].calendarID;
