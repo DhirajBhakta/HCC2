@@ -28,7 +28,7 @@ def stockUpdate():
 			drug.drugName   =value['drugname']
 			drug.quantity   =value['quantity']
 			date = value['expirydate']
-			drug.expiryDate = datetime.strptime(date,'%d/%m/%Y')
+			drug.expiryDate = datetime.strptime(date,'%m/%Y')
 			drugList.append(drug)
 		print(drugList)
 		DRUG.stockUpdate(cursor,drugList)
@@ -94,6 +94,6 @@ def setACK():
 	cursor = conn.cursor()
 	data = request.get_json(silent=True)
 	print("data = " + str(data))
-	PRESCRIPTION.setPrescriptionAck(cursor, data["pres-id"])
+	PRESCRIPTION.setPrescriptionAck(cursor, data["pres-id"], data["ack-type"])
 	conn.commit()
 	return 'true'

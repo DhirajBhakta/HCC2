@@ -83,6 +83,9 @@
   padding:0px;
 }
 
+.neg-row{
+  background-color:#faa;
+}
 
 </style>
 {% endblock %}
@@ -131,10 +134,11 @@ $(document).ready(function() {
 });
   
 
-function createSetAck(cardToDelete, presID){
+function createSetAck(cardToDelete, presID, ackType = "ACK"){
   return function(){
     data = {}
     data["pres-id"] = presID
+    data["ack-type"] = ackType
     $.ajax({ 
       url: "{{ url_for('pharma.setACK') }} ",
       type: "POST",
@@ -160,21 +164,27 @@ function makeCards(notifType, prescription){
   if(notifType == "ack")
   {
     latestCard.find(".confirm").hide()
-    latestCard.find(".reject").hide()
+   // latestCard.find(".reject").hide()
   }
   else
   {
     latestCard.find(".confirm").click(createSetAck(latestCard, prescription["prescriptionID"]))
-    latestCard.find(".reject").click(createSetAck(latestCard, prescription["prescriptionID"]))
+   // latestCard.find(".reject").click(createSetAck(latestCard, prescription["prescriptionID"], "NACK"))
   }
 
   drugtable = latestCard.find(".drug-table")
   drugs = prescription.prescriptionDrugs
   for(var j=0; j < drugs.length; j++)
   {
-
-    drugtable.append("<tr><td>" + drugs[j]["drugName"] + "</td><td>" 
-                      + drugs[j]["drugQty"] + "</td></tr>")
+    canBeDone = drugs[j]["drugInventory"] - drugs[j]["drugQty"] 
+    classType = ""
+    if(canBeDone > 0)
+      classType = " class = \" pos-row \" "
+    else
+      classType = " class = \" neg-row \" "
+    drugtable.append("<tr " + classType  + "><td>" + drugs[j]["drugName"] +
+                     "</td><td>" + drugs[j]["drugQty"] + 
+                     "</td><td>" + drugs[j]["drugInventory"] + "</td></tr>")
 
   }
 }
