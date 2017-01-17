@@ -342,7 +342,7 @@ class PRESCRIPTION(JsonSerializable):
 		self.prescriptionDrugs.append(drug)
 
 	#Database to object	
-	def storeTuple(self,cursor,prescID):
+	def storeTuple(self,cursor,prescID, view = "OTHER"):
 		cursor.execute("SELECT * FROM Prescription WHERE prescription_id=%s ",(prescID,))
 		tuple = cursor.fetchone()
 		self.prescriptionID = tuple[0]
@@ -363,10 +363,14 @@ class PRESCRIPTION(JsonSerializable):
 			self.patient = EMPLOYEE()
 		self.patient.storeTuple(cursor,"patient_id",self.patientID)
 		self.patient.__dict__.pop("DOB")
-		cursor.execute("""select P.*, SUM(B.qty) as inventory 
-						  from Prescription_drug_map as P, Batch as B 
-						  where P.drug_id = B.drug_id 
-						  and prescription_id={}""".format(prescID))
+		if view == "PHARMA":
+			cursor.execute("select P.*, SUM(B.qty) as inventory \
+							from Prescription_drug_map as P, Batch as B \
+							where P.drug_id = B.drug_id  \
+							and prescription_id= %s", (prescID,))
+		else :
+			cursor.execute(" select * from Prescription_drug_map WHERE prescription_id = %s", (prescID,))
+
 		drugtuples = cursor.fetchall()
 		for drugtuple in drugtuples:
 			if drugtuple[0] == None:
@@ -375,7 +379,10 @@ class PRESCRIPTION(JsonSerializable):
 			cursor.execute("SELECT trade_name FROM Drug WHERE drug_id=%s",(drugtuple[1]))
 			drugName = cursor.fetchone()[0]
 			prescriptionDrug = PrescriptionDrug()
-			prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4], int(drugtuple[5]))
+			if view == "PHARMA": 
+				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4], int(drugtuple[5]))
+			else:
+				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4])
 			self.prescriptionDrugs.append(prescriptionDrug)
 
 	def modInventory(cursor, prescID):
