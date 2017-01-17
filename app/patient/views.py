@@ -63,7 +63,7 @@ def bookAppointment():
 		appointmentStatus = request.form.get('APPSTATUS')
 		Appointment.commitSubmittedAppointmentIntoDB(DB.cursor,calendarID,patient.patientID,appointmentStatus)
 		DB.conn.commit()
-		return render_template('patient/success.html',patient=patient)
+		return "SUCCESS"
 
 	category = request.args.get('CATEGORY')
 	if category is not None:

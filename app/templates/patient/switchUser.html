@@ -22,10 +22,10 @@
 	<h1 class="heading">Choose User</h1>
 	<div class="container center">
  		<form action="{{url_for('patient.switchUser')}}" method="POST">
-  			<input type="radio" name="DEPENDANT_ID" value="-1"/>{{patient.name}}
+  			<input type="radio" name="DEPENDANT_ID" value="-1"/ required>{{patient.name}}
 	     	<br/><br/>
 		   	{% for dependant in patient.dependants %}
-		  		<input type="radio" name="DEPENDANT_ID" value="{{dependant.dependantID}}"/> {{dependant.name}}&nbsp;&nbsp;({{dependant.relationship}}) 
+		  		<input type="radio" name="DEPENDANT_ID" value="{{dependant.dependantID}}" required/> {{dependant.name}}&nbsp;&nbsp;({{dependant.relationship}}) 
 		  		<br/><br/>
 		   	{% endfor %}
 			<input class="btn btn-success" type="submit" value="Go"/>

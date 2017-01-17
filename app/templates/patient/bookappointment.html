@@ -141,7 +141,7 @@
   {% block emptyspace %}
 
 
-	<div class="ba lightestcolor2" id="booked-appointments" style="display:none">
+	<div class="ba lightestcolor2" id="booked-appointments">
 		<div class="row">
 			<div class="col-md-8 " >
 				<p class="robotofont" style="font-size:30px;">Booked Appointments</p>
@@ -150,7 +150,6 @@
 		<div class="">
 			<ul id="booked-appointments-list">
 				<!--- Appointments get inserted here -->
-
 			</ul>
 		</div>
 	</div>
@@ -184,7 +183,7 @@
 			</div>
 
 				<div class="col-md-3"></div>
-				<div class = "col-md-5 details-wrap" >
+				<div class = "col-md-5 details-wrap" id="appointment-card-main">
 					<div  id="appointment-card" class="profile-header-appointment darkcolor">
 						<p class="app-header">Appointment</p>
 						<p id="doctor-name" class="lvl1"></p>
@@ -217,7 +216,13 @@
     var selectedCalendarID;
     var appstatus = "BOOKED";
 
-  	$(document).ready(function(){
+  	$(document).ready(function()
+  	{
+  		   loadAppointmentCards();
+  	});
+
+  	function loadAppointmentCards()
+  	{
   		$.get("/patient/getBookedAppointments",function(data){
   			data = $.parseJSON(data)
   			console.log(data)
@@ -246,15 +251,20 @@
   			   	 	$("#booked-appointments-list").append("<li class=\"reditem\">"+dispStr+" </li>");
 
   			   	  }
-  			   }
-
-
+  			   	}
             }
   		});
-  			
-  		});
+  	}
 
-      function deleteAppointment(btn){
+  	function dropAppointmentCards()
+  	{
+  		$("#booked-appointments-list").empty();
+  	}
+      
+
+
+    function deleteAppointment(btn)
+    {
   			slotID = btn.value;
   			btn = $(btn);
   			$.post('/patient/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
@@ -265,9 +275,10 @@
   					location.reload();
   				}
   			});
-  		}
+  	}
   	
-  	$(".category").click(function(){
+  	$(".category").click(function()
+  	{
 	    var btnname = this.name
 	  	$.get("/patient/bookAppointment",{ CATEGORY:btnname } ,function(data){
 	  		data = $.parseJSON(data);
@@ -297,6 +308,7 @@
 			        return [false];
 			    },
 			    onSelect: function(date){
+			       $('#appointment-card-main').show();
 			       $('.response-box').css('visibility','visible');
 			       $('.details-wrap').css('visibility','visible');
 			       $('#confirm-btn').css('visibility','visible');
@@ -344,8 +356,15 @@
 
     $("#confirm-btn").click(function(){
    		$.post("/patient/bookAppointment",{CALENDARID:selectedCalendarID,APPSTATUS:appstatus},function(data){
-   			$("#mainrow").html("<button type='button' class='btn btn-success' style='padding:60px;border-radius:100px'><i  style='font-size:75px;color:black' class='fa fa-check'></i></button> <span style='font-size: 50px'> Success!</span>");
-   			$("#booked-appointments").css('visibility','hidden');
+   			   if(data=="SUCCESS")
+   			   {
+   			   	dropAppointmentCards();
+   				loadAppointmentCards();
+	     		$("#appointment-card-main").hide().fadeOut(2000);
+	     		 $('html, body').animate({ scrollTop: 0 }, 'slow');
+   				}
+   			   
+   		
    		});
     });
     
@@ -367,15 +386,16 @@
     {
     	return string.charAt(0).toUpperCase() + string.slice(1);
     }
-    function formatDate(date) {
+    function formatDate(date) 
+    {
     	var str = date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
     	return str;
     }
-     function formatTime(timestr) {
+     function formatTime(timestr) 
+     {
        
         console.log(timestr);
         var str = timestr.split(':');
-
       	return str[0]+":"+str[1];
     }
 

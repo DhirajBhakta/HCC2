@@ -7,13 +7,18 @@ from .. import mysql,mail
 from ..email import send_email
 from flask_mail import Message
 
+class DB:
+    conn    = mysql.connect()
+    cursor  = conn.cursor()
+
+
+
 #patient Login(STUDENT,EMPLOYEE)
 @auth.route('/login',methods=['GET','POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        cursor = mysql.connect().cursor()
-        user   = USER.checkIfIDExists(cursor,form.ID.data)
+        user   = USER.checkIfIDExists(DB.cursor,form.ID.data)
         if user is not None:
             if not user.isConfirmed(cursor):
                 flash('Email ID not confirmed! Please click on the link given to you via email', 'danger')
@@ -28,8 +33,9 @@ def login():
             else:
                 flash('Invalid UserName or Password.')
         else:
-            flash('Invalid UserName or Password. user object is None')
+            flash("User doesn't exist")
     return render_template('auth/login.html',form=form)
+
 
 
 @auth.route('/logout')
@@ -43,20 +49,19 @@ def logout():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
-    if form.validate_on_submit():
-        newUser = USER()
-        newUser.storeData(form.name.data,form.ID.data,form.email.data,form.password.data,form.patientType.data)
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        newUser.insertIntoDB(cursor)
-        conn.commit()
-        token = newUser.generate_confirmation_token()
-        send_email(newUser.emailID, 'Confirm Your Account',
-                   'auth/email/confirm', user=newUser, token=token)
-        flash('A confirmation email has been sent to you by email.')
-        return redirect(url_for('main.index'))
-    if (request.method == "POST"):
-    	flash(form.errors)
+    if(request.methods=="POST"):
+        if form.validate_on_submit():
+            newUser = USER()
+            newUser.storeData(form.name.data,form.ID.data,form.email.data,form.password.data,form.patientType.data)
+            newUser.insertIntoDB(DB.cursor)
+            DB.conn.commit()
+            token = newUser.generate_confirmation_token()
+            send_email(newUser.emailID, 'Confirm Your Account',
+                       'auth/email/confirm', user=newUser, token=token)
+            flash('A confirmation email has been sent to you by email.')
+            return redirect(url_for('main.index'))
+        else:
+    	   flash(form.errors)
     return render_template('auth/register.html', form=form)
 
 
