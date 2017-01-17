@@ -59,7 +59,7 @@ def getDruglist():
 def getNOT_SENT():
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	presclist = PRESCRIPTION.getPrescriptions(cursor, 'NOT_SENT')
+	presclist = PRESCRIPTION.getPrescriptions(cursor, 'NOT_SENT', "PHARMA")
 	conn.commit()
 	json_string = json.dumps([obj.getJSON() for obj in presclist])
 	return json_string
@@ -71,7 +71,7 @@ def getNOT_SENT():
 def getSENT():
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	presclist = PRESCRIPTION.getPrescriptions(cursor, 'SENT')
+	presclist = PRESCRIPTION.getPrescriptions(cursor, 'SENT', "PHARMA")
 	conn.commit()
 	json_string = json.dumps([obj.getJSON() for obj in presclist[:10]])
 	return json_string
@@ -82,7 +82,7 @@ def getSENT():
 def getACK():
 	conn = mysql.connect()
 	cursor = conn.cursor()
-	presclist = PRESCRIPTION.getPrescriptions(cursor, 'ACK')
+	presclist = PRESCRIPTION.getPrescriptions(cursor, 'ACK', "PHARMA")
 	conn.commit()
 	json_string = json.dumps([obj.getJSON() for obj in presclist[:10]])
 	return json_string

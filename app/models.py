@@ -518,7 +518,7 @@ class PRESCRIPTION(JsonSerializable):
 	def pushNotification(self,cursor):
 		cursor.execute("INSERT INTO Notification_buffer VALUES(%s,%s)",(self.prescriptionID,"NOT_SENT",))
 
-	def getPrescriptions(cursor, status='NOT_SENT'):
+	def getPrescriptions(cursor, status='NOT_SENT', view = "OTHER"):
 		cursor.execute("SELECT prescription_id FROM Notification_buffer WHERE status= %s", (status,))
 		tuples = cursor.fetchall()
 		prescList = list()
@@ -526,21 +526,16 @@ class PRESCRIPTION(JsonSerializable):
 			presc = PRESCRIPTION()
 			prescID = tuple[0]
 			print("PRESC ID =="+str(prescID))
-			presc.storeTuple(cursor,prescID)
+			presc.storeTuple(cursor,prescID, view)
 			prescList.append(presc)
 		if status == 'NOT_SENT':
 			cursor.execute("UPDATE Notification_buffer SET status='SENT' WHERE status='NOT_SENT'")
 		return prescList
 
-<<<<<<< HEAD
 
-	def setPrescriptionAck(cursor, presId):
-		cursor.execute("UPDATE Notification_buffer SET status = 'ACK' WHERE prescription_id = %s", (presId, ))
-=======
 	def setPrescriptionAck(cursor, presId , ackType = "ACK"):
 		PRESCRIPTION.modInventory(cursor, presId)
 		cursor.execute("UPDATE Notification_buffer SET status = %s WHERE prescription_id = %s", ( ackType, presId, ))
->>>>>>> pharma
 
 	def getPrescriptionList(cursor,mode,value):
 		prescriptionList = list()
