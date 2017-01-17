@@ -641,8 +641,8 @@ class Appointment():
 	def commitSubmittedAppointmentIntoDB(cursor,calendarID,patientID,appStatus):
 		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id,status) VALUES (%s,%s,%s)",(patientID,calendarID,appStatus))
 		cursor.execute("UPDATE Appointment_calendar SET session_limit = session_limit -1 WHERE calendar_id=%s",calendarID)
-
-
+		cursor.execute("SELECT slot_id FROM Appointment_slot WHERE patient_id=%s AND calendar_id=%s",(patientID,calendarID))
+		return cursor.fetchone()[0]
 
 	def commitSubmittedAppointmentIntoDB_admin(cursor,calendarID,rollno):
 		cursor.execute("INSERT INTO Appointment_slot (patient_id,calendar_id) VALUES ((SELECT patient_id FROM Student WHERE rollno=%s),%s)",(rollno,calendarID))
