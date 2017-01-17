@@ -455,7 +455,8 @@ class PRESCRIPTION(JsonSerializable):
 			cursor.execute("select P.*, SUM(B.qty) as inventory \
 							from Prescription_drug_map as P, Batch as B \
 							where P.drug_id = B.drug_id  \
-							and prescription_id= %s", (prescID,))
+							and prescription_id= %s \
+							group by B.drug_id ", (prescID,))
 		else :
 			cursor.execute(" select * from Prescription_drug_map WHERE prescription_id = %s", (prescID,))
 
@@ -476,7 +477,7 @@ class PRESCRIPTION(JsonSerializable):
 	def modInventory(cursor, prescID):
 		cursor.execute("SELECT drug_id, qty FROM Prescription_drug_map WHERE prescription_id = {} ".format(prescID))	
 		drugIDList = cursor.fetchall()
-		remaining = {}
+		remaining = []
 		for (drugID, drugQty) in drugIDList:
 			drugQty = int(drugQty)
 			cursor.execute("SELECT * FROM Batch WHERE drug_id = {} ORDER BY exp_date ASC".format(drugID))
@@ -485,7 +486,7 @@ class PRESCRIPTION(JsonSerializable):
 				batchNo = batch[0]
 				batchQty = int(batch[2])
 				if batchQty >= drugQty: 
-					cursor.execute("UPDATE Batch SET qty = %d WHERE batch_no = %s ", (batchQty - drugQty, batchNo)) 
+					cursor.execute("UPDATE Batch SET qty = %s WHERE batch_no = %s ", (batchQty - drugQty, batchNo, )) 
 					break
 				else:
 					drugQty = drugQty - batchQty
