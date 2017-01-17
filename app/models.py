@@ -401,12 +401,15 @@ class PrescriptionDrug(JsonSerializable):
 		self.drugQty  = None
 		self.drugSchedule = None
 		self.drugComments = None
+		self.drugInventory = None
 
-	def storeData(self,drugName,drugQty,drugSchedule,drugComments):
+	def storeData(self, drugName, drugQty, drugSchedule, drugComments, drugInventory = None):
 		self.drugName 	  = drugName
 		self.drugQty  	  = drugQty
 		self.drugSchedule = drugSchedule
 		self.drugComments = drugComments
+		self.drugInventory = drugInventory
+
 
 
 
@@ -427,7 +430,7 @@ class PRESCRIPTION(JsonSerializable):
 		self.prescriptionDrugs.append(drug)
 
 	#Database to object	
-	def storeTuple(self,cursor,prescID):
+	def storeTuple(self,cursor,prescID, view = "OTHER"):
 		cursor.execute("SELECT * FROM Prescription WHERE prescription_id=%s ",(prescID,))
 		tuple = cursor.fetchone()
 		self.prescriptionID = tuple[0]
@@ -448,14 +451,50 @@ class PRESCRIPTION(JsonSerializable):
 			self.patient = EMPLOYEE()
 		self.patient.storeTuple(cursor,"patient_id",self.patientID)
 		self.patient.__dict__.pop("DOB")
-		cursor.execute("SELECT * FROM Prescription_drug_map WHERE prescription_id=%s",(self.prescriptionID,))
+		if view == "PHARMA":
+			cursor.execute("select P.*, SUM(B.qty) as inventory \
+							from Prescription_drug_map as P, Batch as B \
+							where P.drug_id = B.drug_id  \
+							and prescription_id= %s", (prescID,))
+		else :
+			cursor.execute(" select * from Prescription_drug_map WHERE prescription_id = %s", (prescID,))
+
 		drugtuples = cursor.fetchall()
 		for drugtuple in drugtuples:
+			if drugtuple[0] == None:
+				return
+			print(drugtuple)
 			cursor.execute("SELECT trade_name FROM Drug WHERE drug_id=%s",(drugtuple[1]))
 			drugName = cursor.fetchone()[0]
 			prescriptionDrug = PrescriptionDrug()
-			prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4])
+			if view == "PHARMA": 
+				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4], int(drugtuple[5]))
+			else:
+				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4])
 			self.prescriptionDrugs.append(prescriptionDrug)
+
+	def modInventory(cursor, prescID):
+		cursor.execute("SELECT drug_id, qty FROM Prescription_drug_map WHERE prescription_id = {} ".format(prescID))	
+		drugIDList = cursor.fetchall()
+		remaining = {}
+		for (drugID, drugQty) in drugIDList:
+			drugQty = int(drugQty)
+			cursor.execute("SELECT * FROM Batch WHERE drug_id = {} ORDER BY exp_date ASC".format(drugID))
+			batchList = cursor.fetchall()
+			for batch in batchList:
+				batchNo = batch[0]
+				batchQty = int(batch[2])
+				if batchQty >= drugQty: 
+					cursor.execute("UPDATE Batch SET qty = %d WHERE batch_no = %s ", (batchQty - drugQty, batchNo)) 
+					break
+				else:
+					drugQty = drugQty - batchQty
+					cursor.execute("UPDATE Batch SET qty = 0 WHERE batch_no = %s ", (batchNo,))
+			remaining.append(drugQty)
+		return remaining
+
+
+
 
 
 
@@ -480,7 +519,7 @@ class PRESCRIPTION(JsonSerializable):
 		cursor.execute("INSERT INTO Notification_buffer VALUES(%s,%s)",(self.prescriptionID,"NOT_SENT",))
 
 	def getPrescriptions(cursor, status='NOT_SENT'):
-		cursor.execute("SELECT prescription_id FROM Notification_buffer WHERE status=%s", (status,))
+		cursor.execute("SELECT prescription_id FROM Notification_buffer WHERE status= %s", (status,))
 		tuples = cursor.fetchall()
 		prescList = list()
 		for tuple in tuples:
@@ -493,9 +532,15 @@ class PRESCRIPTION(JsonSerializable):
 			cursor.execute("UPDATE Notification_buffer SET status='SENT' WHERE status='NOT_SENT'")
 		return prescList
 
+<<<<<<< HEAD
 
 	def setPrescriptionAck(cursor, presId):
 		cursor.execute("UPDATE Notification_buffer SET status = 'ACK' WHERE prescription_id = %s", (presId, ))
+=======
+	def setPrescriptionAck(cursor, presId , ackType = "ACK"):
+		PRESCRIPTION.modInventory(cursor, presId)
+		cursor.execute("UPDATE Notification_buffer SET status = %s WHERE prescription_id = %s", ( ackType, presId, ))
+>>>>>>> pharma
 
 	def getPrescriptionList(cursor,mode,value):
 		prescriptionList = list()
@@ -533,15 +578,19 @@ class DRUG(JsonSerializable):
 		for drug in drugList:
 			cursor.execute("SELECT  drug_id FROM Drug WHERE trade_name=%s",drug.drugName)
 			tuple = cursor.fetchone()
-			drugID = tuple[0]
-			cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugID,drug.quantity,drug.expiryDate.strftime('%Y-%m-%d')))
-
-
-
-
-
-
-
+			if tuple == None:
+				cursor.execute("SELECT MAX(drug_id) FROM Drug")
+				drugID = cursor.fetchone()[0] + 1
+				cursor.execute("INSERT INTO Drug VALUES ( {}, \"\", %s, 0) ".format(drugID), (drug.drugName,))
+			else:
+				drugID = tuple[0]
+			cursor.execute("SELECT * FROM Batch WHERE batch_no = %s", (drug.batchNumber, ))
+			batchExists = cursor.fetchone()
+			print("BatchDebug = " + str(batchExists))
+			if(batchExists == None):
+				cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugID,drug.quantity,drug.expiryDate.strftime('%Y-%m-%d')))
+			else:
+				cursor.execute("UPDATE Batch SET qty = qty + {} WHERE drug_id = {}".format(int(drug.quantity), drugID,))
 
 
 
