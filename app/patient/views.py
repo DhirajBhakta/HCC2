@@ -61,9 +61,9 @@ def bookAppointment():
 	if(request.method == "POST"):
 		calendarID 		  = request.form.get('CALENDARID')
 		appointmentStatus = request.form.get('APPSTATUS')
-		Appointment.commitSubmittedAppointmentIntoDB(DB.cursor,calendarID,patient.patientID,appointmentStatus)
+		slotID = Appointment.commitSubmittedAppointmentIntoDB(DB.cursor,calendarID,patient.patientID,appointmentStatus)
 		DB.conn.commit()
-		return render_template('patient/success.html',patient=patient)
+		return str(slotID)
 
 	category = request.args.get('CATEGORY')
 	if category is not None:

@@ -22,14 +22,14 @@
 		background-color: white !important;
 		color:black;
 	}
-	.response-box{
-		visibility: hidden;
+	#date-div{
+		display: none;
 		margin:auto;
     }
 	#datepicker{
 		width:230px;
 	}
-	#response{
+	#category-heading{
 		color:rgb(4,67,78);
 		background-color: #cde9fe;
 		padding:5px;
@@ -58,11 +58,11 @@
 		padding-left: 20px;
 
 	}
-	.details-wrap{
+	#appointment-card{
         box-shadow: 1px 1px 2px grey;
         margin-bottom: 2px;
         padding:0px !important;
-        visibility: hidden;
+        display: none;
         
 	}
 	.heading{
@@ -78,7 +78,6 @@
 	}
 	.confirm-btn{
 		margin: 15px;
-		visibility: hidden;
 		border-radius: 0px;
 	}
 	.white-bold{
@@ -140,8 +139,8 @@
 
   {% block emptyspace %}
 
-
-	<div class="ba lightestcolor2" id="booked-appointments" style="display:none">
+<!-- Already booked Appointments --> 
+	<div class="ba lightestcolor2">
 		<div class="row">
 			<div class="col-md-8 " >
 				<p class="robotofont" style="font-size:30px;">Booked Appointments</p>
@@ -150,17 +149,19 @@
 		<div class="">
 			<ul id="booked-appointments-list">
 				<!--- Appointments get inserted here -->
-
 			</ul>
 		</div>
 	</div>
 
-	<div class="row">
+	
+	<div class="row" id="HEADING">
 		<div class="col-md-8  lightestcolor">
 			<p class="robotofont" style="font-size:30px;">Book an Appointment</p>
 		</div>
 	</div>
-  <div class="row lightestcolor" id="mainrow">
+
+  	<div class="row lightestcolor" id="mainrow">
+  	  <!--LEFT COLUMN : for category selection -->
 	  <div class="btn-group-vertical btn-group-lg col-lg-4 sidebarfont">
 	    <button type="button" class="category btn btn-info" name="PAEDIATRICS">Paediatrician</button>
 	    <button type="button" class="category  btn btn-info" name="OPTHALMOLOGY"> Opthalmologist</button>
@@ -172,38 +173,34 @@
 	    <button type="button" class="category btn btn-info" name="AYURVEDA">Ayurveda </button>
 	    <button type="button" class="category btn btn-info" name="DENTISTRY"> Dentist</button>
 	    <button type="button" id="aaa" class="category btn btn-info" name="PSYCHIATRY"> Psychiatrist</button>
-		</div>
-	  	
-		<div class="col-md-8">
-
-			<p id="response" class="robotofont">Select a Category</p>
-			<div class="row" >
-
-			<div class="row response-box" id="response-box">
+	  </div>
+	  <!--RIGHT	COLUMN : rest-->
+	  <div class="col-md-8">
+		<p id="category-heading" class="robotofont">Select a Category</p>
+		<div class="row" >
+			<div class="row" id="date-div">
 				<p>Date: <input type="text" class="form-control" id="datepicker" /></p>
 			</div>
 
-				<div class="col-md-3"></div>
-				<div class = "col-md-5 details-wrap" >
-					<div  id="appointment-card" class="profile-header-appointment darkcolor">
-						<p class="app-header">Appointment</p>
-						<p id="doctor-name" class="lvl1"></p>
+			<div class="col-md-3"></div>
+			<div class = "col-md-5" id="appointment-card" >
+				<div class="profile-header-appointment darkcolor">
+					<p class="app-header">Appointment</p>
+					<p id="doctor-name" class="lvl1"></p>
 
-					</div>
-					<div style="padding:20px">
-						<p id="date-details" class="lvl2"></p>
-						<p id="time-details" class="lvl2"></p>
-					</div>
-					<div class="row" style="padding:20px"> 
-						<div class="col-lg-10">
-							<button type="button"  class=" btn btn-success btn-block confirm-btn " id="confirm-btn">Confirm</button>
-						</div>
+				</div>
+				<div style="padding:20px">
+					<p id="date-details" class="lvl2"></p>
+					<p id="time-details" class="lvl2"></p>
+				</div>
+				<div class="row" style="padding:20px"> 
+					<div class="col-lg-10">
+						<button type="button"  class=" btn btn-success btn-block confirm-btn " id="confirm-btn">Confirm</button>
 					</div>
 				</div>
 			</div>
-
 		</div>
-
+	  </div>
 	</div>
 
 
@@ -214,76 +211,34 @@
   {% block extrascripts %}
   <script src="{{url_for('static',filename='js/jquery-ui.min.js')}}"></script>	
   <script type="text/javascript">
-    var selectedCalendarID;
-    var appstatus = "BOOKED";
 
+  	//on load ------------------------------------------
   	$(document).ready(function(){
+
   		$.get("/patient/getBookedAppointments",function(data){
   			data = $.parseJSON(data)
-  			console.log(data)
   			if( data.length != 0)
   			{	
-  			   console.log(data);
-  			   $("#booked-appointments").css('display', '');	
   			   for(var i=0;i<data.length;i++)
-  			   {
-  			   	console.log(data[i])
-  			   	 var category = (data[i].category).toLowerCase();
-  			   	 category = capitalize(category);
-  			   	 var docName = "Dr."+data[i].doctorName +' ('+category+')';
-  			   	 var date = new Date(data[i].date);
-  			   	 date = "Date: "+date.toDateString();
-  			   	 var startTime = data[i].startTime;
-  			   	 var endTime = data[i].endTime;
-  			   	 var status = data[i].status;
-
-  			   	 dispStr = date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span><br> <button type='button' name='SLOTID' onclick='deleteAppointment(this);' value='"+data[i].slotID+"' class='btn btn-danger cancel-btn'>Cancel Appointment</button>";
-  			   	 if (status == "BOOKED")
-  			   	 { 
-  			   	 	$("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
-  			   	 }
-  			   	 else{
-  			   	 	$("#booked-appointments-list").append("<li class=\"reditem\">"+dispStr+" </li>");
-
-  			   	  }
-  			   }
-
-
-            }
+  			    	makeBookedAppointmentCard(data[i],data[i].slotID);
+  	      	}
   		});
-  			
-  		});
+  		$('html, body').animate({ scrollTop: $("#HEADING").offset().top },2000);
+  	});
+    //----------------------------------------------------
+      
 
-      function deleteAppointment(btn){
-  			slotID = btn.value;
-  			btn = $(btn);
-  			$.post('/patient/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
-  				if(boolData == "true")
-  				{
-  					li_item = btn.parent();
-  					li_item.remove();
-  					location.reload();
-  				}
-  			});
-  		}
   	
   	$(".category").click(function(){
-	    var btnname = this.name
-	  	$.get("/patient/bookAppointment",{ CATEGORY:btnname } ,function(data){
+	    var category = this.name;
+	   	$("#category-heading").html(category);
+
+	  	$.get("/patient/bookAppointment",{ CATEGORY:category } ,function(data){
 	  		data = $.parseJSON(data);
-	  		console.log(data)
-	  		$("#response").html(btnname);
-	  		
-
-
-	  		$('#response-box').css('visibility','visible');
-	  		$('.details-wrap').css('visibility','hidden');
-	  		$('.confirm-btn').css('visibility','hidden');
-
-
+	  		$('#date-div').show();
 	    	$("#datepicker").remove();
 	    	var t_datepicker = $("<input type=\"text\" class=\"form-control\" id=\"datepicker\" />");
-	    	$( "#response-box" ).append(t_datepicker);
+	    	$( "#date-div" ).append(t_datepicker);
 	    	
 	    	$( "#datepicker" ).datepicker({
 			    dateFormat: "dd-mm-yy",
@@ -297,11 +252,9 @@
 			        return [false];
 			    },
 			    onSelect: function(date){
-			       $('.response-box').css('visibility','visible');
-			       $('.details-wrap').css('visibility','visible');
-			       $('#confirm-btn').css('visibility','visible');
+			       $('#appointment-card').show();
 
-
+			        var selectedCalendarID;
                     var selectedDate = $(this).datepicker('getDate');
 			    	var selectedStartTime;
 			    	var selectedEndTime;
@@ -323,6 +276,7 @@
  					displayTimeStringStart = formatTime(selectedStartTime);
  					displayTimeStringEnd = formatTime(selectedEndTime);
 
+ 					var appstatus="";
  					if(sessionLimit<0)
  					{
  						$("#appointment-card").css("background-color","red");
@@ -335,6 +289,18 @@
 			    	$('#doctor-name').html("<span class=\"white-bold\">Dr."+doctorName+ "</span> ");
 			    	$('#time-details').html("<span><i class=\"fa fa-clock-o\" aria-hidden=\"true\"></i></span>  "+displayTimeStringStart +" to "+displayTimeStringEnd);
 
+			    	var newAppointment = {};
+			    	newAppointment['calendarID']  = selectedCalendarID;
+			    	newAppointment['category']	  = category;
+			    	newAppointment['doctorName'] 	  = doctorName;
+			    	newAppointment['date']    	  = selectedDate;
+			    	newAppointment['startTime']	  = selectedStartTime;
+			    	newAppointment['endTime']  	  = selectedEndTime;
+			    	newAppointment['status']   	  = appstatus;	
+
+			    	
+			    	$("#confirm-btn").unbind("click").click(wrapper(newAppointment,appstatus));
+
 			    }
 			});//end of datepicker
 
@@ -342,19 +308,58 @@
     }); //endof click event
 
 
-    $("#confirm-btn").click(function(){
-   		$.post("/patient/bookAppointment",{CALENDARID:selectedCalendarID,APPSTATUS:appstatus},function(data){
-   			$("#mainrow").html("<button type='button' class='btn btn-success' style='padding:60px;border-radius:100px'><i  style='font-size:75px;color:black' class='fa fa-check'></i></button> <span style='font-size: 50px'> Success!</span>");
-   			$("#booked-appointments").css('visibility','hidden');
-   		});
-    });
+ 
     
+  
 
-
-
-
-    function cmpDates(d1,d2)
+    function makeBookedAppointmentCard(appointment,slotID)
     {
+    	var category = (appointment.category).toLowerCase();
+  		category 	 = capitalize(category);
+  		var docName  = "Dr."+appointment.doctorName+'('+category+')';
+  		var date 	 = new Date(appointment.date);
+  		date 		 = "Date: "+date.toDateString();
+  		var startTime= appointment.startTime;
+  		var endTime  = appointment.endTime;
+  		var status   = appointment.status;
+  		dispStr = date+"<span style=\"float:right\">"+docName+"<br>"+startTime+" to "+endTime+"</span><br> <button type='button' name='SLOTID' onclick='deleteAppointment(this);' value='"+slotID+"' class='btn btn-danger cancel-btn'>Cancel Appointment</button>";
+  		if (status == "BOOKED")
+  			   	  $("#booked-appointments-list").append("<li class=\"item\">"+dispStr+" </li>");
+  		else		   	 
+  			   	 $("#booked-appointments-list").append("<li class=\"reditem\">"+dispStr+" </li>");
+    }
+
+
+     function deleteAppointment(btn)
+     {
+  			slotID = btn.value;
+  			btn = $(btn);
+  			$.post('/patient/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
+  				if(boolData == "true")
+  				{
+  					li_item = btn.parent();
+  					li_item.remove();
+  				}
+  			});
+  	}
+
+  	function wrapper(newAppointment,status)
+  	{
+  		return function(){
+  		calID = String(newAppointment.calendarID);
+  		console.log(calID+" "+typeof calID);
+  		$.post("/patient/bookAppointment",{CALENDARID:calID,APPSTATUS:status},function(slotID)
+  			{
+   			   if(slotID != "")
+   			   		makeBookedAppointmentCard(newAppointment,slotID);
+   			   $("#appointment-card").hide();
+   			   $('html, body').animate({scrollTop:0}, 'slow');
+   			});
+  		}
+  	}
+
+
+    function cmpDates(d1,d2){
     	if(d1.getDate() == d2.getDate() &&
     		d1.getMonth() == d2.getMonth() &&
     		d1.getYear() == d2.getYear())
@@ -363,21 +368,19 @@
     		return false;
     }
 
-    function capitalize(string)
-    {
+    function capitalize(string){
     	return string.charAt(0).toUpperCase() + string.slice(1);
     }
-    function formatDate(date) {
+    
+    function formatDate(date){
     	var str = date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear();
     	return str;
     }
+     
      function formatTime(timestr) {
-       
-        console.log(timestr);
         var str = timestr.split(':');
-
       	return str[0]+":"+str[1];
-    }
+     }
 
  
   </script>

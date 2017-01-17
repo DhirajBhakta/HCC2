@@ -1,4 +1,9 @@
 #virtualenv
 venv/
-__pycache__
+__pycache__/
+app/auth/__pycache__/
+app/doctor/__pycache__/
+app/pharma/__pycache__/
+app/*/__pycache__/
+config.py
 *.pyc
