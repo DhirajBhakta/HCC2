@@ -18,6 +18,8 @@
 --
 -- Table structure for table `Appointment_calendar`
 --
+CREATE DATABASE IF NOT EXISTS HCCdb;
+USE HCCdb;
 
 DROP TABLE IF EXISTS `Appointment_calendar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
