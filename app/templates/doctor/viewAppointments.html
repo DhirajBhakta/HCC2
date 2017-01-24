@@ -28,21 +28,21 @@
 }
 
 
-a.moredetails-link:link{
-	color:rgb(150,150,200);
+a.patient-name:link{
+	color:rgb(200,200,250);
 	text-decoration:none;
 }
-a.moredetails-link:active{
-	color:rgb(150,150,200);
-	text-decoration:none;
-}
-
-a.moredetails-link:visited{
+a.patient-name:active{
 	color:rgb(150,150,200);
 	text-decoration:none;
 }
 
-a.moredetails-link:hover{
+a.patient-name:visited{
+	color:rgb(150,150,200);
+	text-decoration:none;
+}
+
+a.patient-name:hover{
 	color:white;
 	text-decoration:none;
 }
@@ -65,24 +65,28 @@ Upcoming Appointments
 
 {% block emptyspace %}
 
-	
-	{% set THIS_DATE = "0000-00-00" %}
+{% set THIS_DATE = [] %}
+<div class="lightestcolor2 block col-md-10">
+<ul>
 	{% for app in bookedAppointments%}
+		{{ THIS_DATE }}
 		{% if THIS_DATE != app.date.strftime("%Y-%m-%d") %}
 				{% if THIS_DATE != "0000-00-00"%}
 				     </div>
 				{% endif %}
 				{% set THIS_DATE = app.date.strftime("%Y-%m-%d") %}
-				<div class="lightestcolor2 block col-md-10">
-			    <ul>
+
 			 	<h3>{{app.date.strftime("%B %d %Y")}}</h3>
+			 	<h3>{{ THIS_DATE}}</h3>
+
 				<hr class="line" />
 		{% endif %}
+		{{ THIS_DATE }}
 		<li class="app-item darkestcolor">
-			<a class="moredetails-link" href={{url_for('doctor.viewPatientProfile',patientID=app.patientID)}} >
+			<a class="patient-name" href={{url_for('doctor.viewPatientProfile',patientID=app.patientID)}} >
 				{{app.patientName}}
 			</a>
-				<span style="float:right">({{app.courseName}})</span>
+				<span class="patient-type" style="float:right">({{app.patientType}})</span>
 		</li>
 	{% endfor %}
 	</ul>

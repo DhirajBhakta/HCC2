@@ -672,12 +672,10 @@ class Appointment():
 				appointment.date = tuple[0]
 				appointment.patientID = tuple[1]
 				patientType = tuple[2]
-				if(patientType == "STUDENT"):
-					cursor.execute("SELECT name,rollno,Course.course_name  FROM Student JOIN Course ON Student.course_id=Course.course_id AND patient_id=%s",(appointment.patientID,))
-					stu = cursor.fetchone()
-					appointment.patientName = stu[0]
-					appointment.rollno = stu[1]
-					appointment.courseName = stu[2]
+				cursor.execute("SELECT name  FROM {} WHERE patient_id={}".format(patientType.title(), appointment.patientID))
+				pat = cursor.fetchone()
+				appointment.patientName = pat[0]
+				appointment.patientType = patientType.title()
 				appointments.append(appointment)
 		elif forWHOM == "ADMIN":
 			date = ID[0]
