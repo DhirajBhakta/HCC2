@@ -132,8 +132,20 @@ def showHistory():
 @specific_login_required("DOCTOR")
 def showUpcomingAppointments():
 	doctor = getCurrentDoctor()
-	bookedAppointments = Appointment.getBookedAppointments(DB.cursor,doctor.doctorID,"DOCTOR")
-	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppointments=bookedAppointments)
+	bookedApps 	 = Appointment.getBookedAppointments(DB.cursor,doctor.doctorID,"DOCTOR")
+	bookedAppsOrdered = sorted(bookedApps,key=lambda x:x.date ,reverse=True) 
+	bookedAppointments = [[]]
+	bookedAppointments[-1].append(bookedAppsOrdered[0])
+	DATE = bookedAppsOrdered[0].date
+	for app in bookedAppsOrdered:
+		if app.date!=DATE:
+			bookedAppointments.append(list())
+		bookedAppointments[-1].append(app)
+
+
+
+
+	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppsOrdered=bookedAppsOrdered)
 
 	
 
