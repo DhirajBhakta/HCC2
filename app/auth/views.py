@@ -10,6 +10,8 @@ from flask_mail import Message
 #patient Login(STUDENT,EMPLOYEE)
 @auth.route('/login',methods=['GET','POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('patient.showPatientProfile'))
     form = LoginForm()
     if form.validate_on_submit():
         cursor = mysql.connect().cursor()

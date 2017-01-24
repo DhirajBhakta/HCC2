@@ -36,7 +36,9 @@ def classifyAndGetCurrentUser():
 #-------------------------------------------------------
 
 
+
 @patient.route("/profile",methods=["GET"])
+@login_required
 @specific_login_required(urole="PATIENT")
 def showPatientProfile():
 	print("\n\nshowPatientProfile called classifyAndGetCurrentUser")
