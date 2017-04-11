@@ -150,7 +150,7 @@ def showUpcomingAppointments():
 
 
 
-	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppsOrdered=bookedAppsOrdered)
+	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppointments=bookedAppsOrdered)
 
 	
 
