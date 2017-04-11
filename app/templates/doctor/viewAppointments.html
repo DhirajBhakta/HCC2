@@ -70,23 +70,11 @@ Upcoming Appointments
 <ul>
 {% if bookedAppointments is defined %}
 	{% for app in bookedAppointments%}
-		{{ THIS_DATE }}
-		{% if THIS_DATE != app.date.strftime("%Y-%m-%d") %}
-				{% if THIS_DATE != "0000-00-00"%}
-				     </div>
-				{% endif %}
-				{% set THIS_DATE = app.date.strftime("%Y-%m-%d") %}
-
-			 	<h3>{{app.date.strftime("%B %d %Y")}}</h3>
-			 	<h3>{{ THIS_DATE}}</h3>
-
-				<hr class="line" />
-		{% endif %}
+		{% set THIS_DATE = app.date.strftime("%B %d %Y") %}
 		{{ THIS_DATE }}
 		<li class="app-item darkestcolor">
 			<a class="patient-name" href={{url_for('doctor.viewPatientProfile',patientID=app.patientID)}} >
-				{{app.patientName}}
-			</a>
+				{{app.patientName}} 			</a>
 				<span class="patient-type" style="float:right">({{app.patientType}})</span>
 		</li>
 	{% endfor %}

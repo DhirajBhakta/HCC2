@@ -71,6 +71,7 @@ def bookAppointment():
 	if category is not None:
 		appointmentDates = Appointment.getViableDatesForCategory(DB.cursor,category)
 		json_string = json.dumps([obj.__dict__ for obj in appointmentDates])
+		print(json_string)
 		return json_string
 	return render_template('patient/bookappointment.html',patient=patient)
 
