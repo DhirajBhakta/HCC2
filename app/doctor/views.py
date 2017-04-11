@@ -120,7 +120,7 @@ def showHistory():
 		date = request.form.get('DATE')
 		if date is not None:
 			date = datetime.datetime.strptime(date,"%Y-%m-%d").date()
-			prescriptionList = PRESCRIPTION.getPrescriptionList(cursor,"BY_DATE",date)
+			prescriptionList = PRESCRIPTION.getPrescriptionList(DB.cursor,"BY_DATE",date)
 			return render_template('doctor/history.html',doctorUser=doctor,prescriptionList=prescriptionList)
 
 		return render_template('doctor/history.html',doctorUser=doctor)
@@ -134,13 +134,18 @@ def showUpcomingAppointments():
 	doctor = getCurrentDoctor()
 	bookedApps 	 = Appointment.getBookedAppointments(DB.cursor,doctor.doctorID,"DOCTOR")
 	bookedAppsOrdered = sorted(bookedApps,key=lambda x:x.date ,reverse=True) 
-	bookedAppointments = [[]]
-	bookedAppointments[-1].append(bookedAppsOrdered[0])
-	DATE = bookedAppsOrdered[0].date
-	for app in bookedAppsOrdered:
-		if app.date!=DATE:
-			bookedAppointments.append(list())
-		bookedAppointments[-1].append(app)
+	print(bookedApps)
+	if bookedApps == []:
+		pass
+
+	else:
+		bookedAppointments = [[]]
+		bookedAppointments[-1].append(bookedAppsOrdered[0])
+		DATE = bookedAppsOrdered[0].date
+		for app in bookedAppsOrdered:
+			if app.date!=DATE:
+				bookedAppointments.append(list())
+			bookedAppointments[-1].append(app)
 
 
 

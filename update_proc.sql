@@ -1,4 +1,5 @@
 DELIMITER ##
+USE HCCdb
 CREATE PROCEDURE fill_calendar(IN upto_date DATE)
     BEGIN
         DECLARE last_date DATE;

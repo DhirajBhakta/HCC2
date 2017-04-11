@@ -68,6 +68,7 @@ Upcoming Appointments
 {% set THIS_DATE = [] %}
 <div class="lightestcolor2 block col-md-10">
 <ul>
+{% if bookedAppointments is defined %}
 	{% for app in bookedAppointments%}
 		{{ THIS_DATE }}
 		{% if THIS_DATE != app.date.strftime("%Y-%m-%d") %}
@@ -89,6 +90,10 @@ Upcoming Appointments
 				<span class="patient-type" style="float:right">({{app.patientType}})</span>
 		</li>
 	{% endfor %}
+
+{% else %}
+	No appointments Booked
+{% endif %}
 	</ul>
 	</div>
 
