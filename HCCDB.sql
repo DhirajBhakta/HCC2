@@ -773,3 +773,6 @@ SET character_set_client = @saved_cs_client;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2017-01-15 12:16:24
+use HCCdb;
+insert into Appointment_calendar values(1, '2017-04-11', 0, '5:00', '10:00');
+
