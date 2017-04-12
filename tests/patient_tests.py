@@ -37,7 +37,26 @@ class PatientTesting(unittest.TestCase):
 		self.base_url = "http://localhost:5000"
 		self.verificationErrors = []
 		self.accept_next_alert = True
-	
+
+	def test_dependants(self):
+		driver = self.driver
+		driver.get(self.base_url + "/auth/login")
+		driver.find_element_by_id("ID").clear()
+		driver.find_element_by_id("ID").send_keys("FACMA001")
+		driver.find_element_by_id("password").clear()
+		driver.find_element_by_id("password").send_keys("password")
+		driver.find_element_by_id("submit").click()
+		driver.find_element_by_name("DEPENDANT_ID").click()
+		driver.find_element_by_css_selector("input.btn.btn-success").click()
+		self.assertEqual("Dr.I Jeyaraman", driver.find_element_by_xpath("//div/div/div/h1").text)
+		self.waitFor('Dr.I Jeyaraman', 'linktext')
+		driver.find_element_by_link_text("Dr.I Jeyaraman").click()
+		self.waitFor('Switch User', 'linktext')
+		driver.find_element_by_link_text("Switch User").click()
+		driver.find_element_by_xpath("(//input[@name='DEPENDANT_ID'])[2]").click()
+		driver.find_element_by_css_selector("input.btn.btn-success").click()
+		self.assertEqual("Senthil Thilak", driver.find_element_by_xpath("//div/div/div/h1").text)
+
 	def test_login(self):
 		driver = self.driver
 		driver.get(self.base_url + "/auth/login")
@@ -69,9 +88,8 @@ class PatientTesting(unittest.TestCase):
 	def test_logout(self):
 		self.test_login()
 		driver = self.driver
-		driver.implicitly_wait(300)
-		driver.find_element_by_link_text("Ranganath Pai M").click()
-		driver.find_element_by_link_text("Log Out").click()
+		self.waitFor("Ranganath Pai M", "linktext")
+		driver.get(self.base_url + '/auth/logout')
 		self.assertTrue(self.is_element_present(By.LINK_TEXT, "Click here to register"))
 		self.assertEqual("Click here to register", driver.find_element_by_link_text("Click here to register").text)
 		self.assertEqual("", driver.find_element_by_css_selector("img.nitk-logo").text)

@@ -11,7 +11,7 @@ class PharmaTests(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
-        self.base_url = "http://localhost:5000/"
+        self.base_url = "http://localhost:5000"
         self.verificationErrors = []
         self.accept_next_alert = True
     
@@ -19,6 +19,7 @@ class PharmaTests(unittest.TestCase):
         driver = self.driver
         driver.get(self.base_url + "/auth/login/pharma")
         driver.find_element_by_name("PASSWORD").send_keys("password")
+        driver.find_element_by_name("PASSWORD").send_keys(Keys.ENTER)
         # ERROR: Caught exception [ERROR: Unsupported command [keyPress | name=PASSWORD | \13]]
         self.assertTrue(self.is_element_present(By.LINK_TEXT, "Pharmacist"))
         self.assertEqual("Pharmacist", driver.find_element_by_link_text("Pharmacist").text)
