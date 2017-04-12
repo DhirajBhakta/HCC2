@@ -81,7 +81,7 @@ def retrieveBookedAppointments():
 	category = request.args.get('CATEGORY')
 	print(date)
 	print(category)
-	bookedAppointments=Appointment.retrieveBookedAppointments(cursor,[date,category],"ADMIN")
+	bookedAppointments=Appointment.getBookedAppointments(cursor,[date,category],"ADMIN")
 	json_string = json.dumps([obj.__dict__ for obj in bookedAppointments])
 	return json_string
 
@@ -141,3 +141,13 @@ def appointments():
 		return render_template('admin/appointment.html')
 		
 		
+@admin.route('/deleteBookedAppointment',methods=['POST'])
+@specific_login_required("ADMIN")
+def deleteBookedAppointment():
+	slotID = request.form.get('SLOTID')
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	print ("deleting appointment {}".format(slotID))
+	Appointment.deleteBookedAppointment(cursor,slotID)
+	conn.commit()
+	return "true"

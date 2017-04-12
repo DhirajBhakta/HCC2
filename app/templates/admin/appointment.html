@@ -228,6 +228,8 @@
 			    
 			       console.log(date);
 			       $.get("/admin/retrieveBookedAppointments",{DATE:date,CATEGORY:selectedCategory},function(data){
+			       		$("#booked-appointments-list").empty()
+			       		console.log(data)
   						if(data && data!="")
   							{
   							 console.log(data);
@@ -340,9 +342,11 @@
       	return str[0]+":"+str[1];
     }
  function deleteAppointment(btn){
+ 			console.log("Deleting appointment")
   			slotID = btn.value;
   			btn = $(btn);
-  			$.post('/student/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
+  			$.post('/admin/deleteBookedAppointment',{ SLOTID:slotID},function(boolData){
+  				console.log(boolData)
   				if(boolData == "true")
   				{
   					li_item = btn.parent();
