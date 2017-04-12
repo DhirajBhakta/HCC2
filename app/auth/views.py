@@ -28,9 +28,9 @@ def login():
                     return redirect(url_for('patient.switchUser'))
                 return  redirect(url_for('patient.showPatientProfile'))
             else:
-                flash('Invalid UserName or Password.')
+                flash('Please check your password again!')
         else:
-            flash('Invalid UserName or Password. user object is None')
+            flash('Invalid username! Please check your username again. ')
     return render_template('auth/login.html',form=form)
 
 
