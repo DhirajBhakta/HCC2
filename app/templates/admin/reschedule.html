@@ -204,8 +204,8 @@ li.replacement-item{
             	liNew = btn.parent();
             	date = liNew.children('#replacement-datepicker').datepicker('getDate');
             	date = formatDate(date)
-				startTime = liNew.children('#replacement-startTime').attr('value');
-            	endTime = liNew.children('#replacement-endTime').attr('value');
+				startTime = liNew.children('#replacement-startTime')[0].value;
+            	endTime = liNew.children('#replacement-endTime')[0].value;
 
             	$.post('/admin/modifyCalendarSchedule',{CALENDARID:calendarID,DATE:date,STIME:startTime,ETIME:endTime},function(boolData){
   				if(boolData == "true")

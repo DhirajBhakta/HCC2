@@ -738,6 +738,7 @@ class Schedule():
 		return schedules
 
 	def replace(cursor,calendarID,date,startTime,endTime):
+		print(calendarID, date, startTime, endTime)
 		cursor.execute('UPDATE Appointment_calendar SET date=%s ,start_time=%s ,end_time=%s WHERE calendar_id=%s',(date,startTime,endTime,calendarID))
 		return True
 
