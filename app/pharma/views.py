@@ -32,12 +32,36 @@ def stockUpdate():
 			drugList.append(drug)
 		print(drugList)
 		DRUG.stockUpdate(cursor,drugList)
-		conn.commit()	
-		return json.dumps({"success" : "true"}), 200	
-	
+		conn.commit()
+		return json.dumps({"success" : "true"}), 200
+
 	druglist = DRUG.retrieveDBdrugs(cursor)
 	druglist = [""]+druglist
 	return render_template('pharma/stockUpdate.html',druglist=druglist)
+
+
+@pharma.route("/inventory",methods=['GET'])
+@specific_login_required("PHARMA")
+def inventory():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	return render_template('pharma/inventory.html',rack_ids=[1,2,3,4,5,6,7])
+
+@pharma.route("/inventory/addNewDrug",methods=['POST'])
+@specific_login_required("PHARMA")
+def addNewDrug():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+
+	trade_name = request.form.get('trade_name')
+	generic_name = request.form.get('generic_name')
+	rack_id = request.form.get('rack_id')
+	DRUG.addNewDrug(cursor, trade_name,generic_name,rack_id)
+	conn.commit()
+	return 'true'
+
+
+
 
 
 
