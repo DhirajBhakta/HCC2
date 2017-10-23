@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import UserMixin
-from . import login_manager 
+from . import login_manager
 from flask import current_app
 from . import mysql
 import datetime
@@ -47,7 +47,7 @@ class USER(UserMixin):
 		self.passwordHash = None
 		self.userType     = None #{DOCTOR,PHARMA,ADMIN,STUDENT,EMPLOYEE}  'ppl who can log in'
 		self.userRole     = None #{PATIENT,STAFF}   'Broader category'
-		   
+
 	def get_utype(self):
 		return str(self.userType)
 
@@ -67,7 +67,7 @@ class USER(UserMixin):
 		loggedInUser = USER()
 		loggedInUser.storeTuple(cursor,"id",ID)
 		return loggedInUser
-	
+
     #----token related--------------------------------------------------
 	def generate_confirmation_token(self, expiration=3600):
 		s = Serializer(current_app.config['SECRET_KEY'], expiration)
@@ -76,22 +76,22 @@ class USER(UserMixin):
 	def confirm(self, token,cursor):
 		s = Serializer(current_app.config['SECRET_KEY'])
 		data = s.loads(token)
-		USER.confirmUser(self,cursor) 
+		USER.confirmUser(self,cursor)
 
 	def getUserIDFromToken(token):
 		s = Serializer(current_app.config['SECRET_KEY'])
 		data = s.loads(token)
 		return data.get('confirm')
-	#-------------------------------------------------------------------	
+	#-------------------------------------------------------------------
 
 	#data stored into object to be later put into Database
 	def storeData(self,name,id,email,password,usertype):
 		self.name = name
 		self.ID = id
 		self.emailID = email
-		self.userType = usertype		
+		self.userType = usertype
 		self.passwordHash =  generate_password_hash(password)
-	    
+
 
 	#Database to object
 	def storeTuple(self,cursor,column,value):
@@ -113,7 +113,7 @@ class USER(UserMixin):
 		if(patientType=='STUDENT'):
 			cursor.execute("SELECT * FROM Student WHERE rollno=%s AND email_id=%s",(id,email))
 		else:
-			cursor.execute("SELECT * FROM Employee WHERE emp_id=%s AND email_id=%s",(id,email))	
+			cursor.execute("SELECT * FROM Employee WHERE emp_id=%s AND email_id=%s",(id,email))
 		return cursor.fetchone()
 
 
@@ -122,7 +122,7 @@ class USER(UserMixin):
 		if (userIfPresent is not None) and (not userIfPresent.isConfirmed(cursor)):
 			cursor.execute("DELETE FROM User WHERE id=%s",(userIfPresent.ID,))
 		cursor.execute("INSERT INTO User VALUES(%s,%s,%s,%s,%s)",(self.ID,self.passwordHash,self.emailID,"NO",self.userType))
-	
+
 	def checkIfIDExists(cursor,id):
 		user = USER()
 		if user.storeTuple(cursor,"id",id):
@@ -196,7 +196,7 @@ class STUDENT(JsonSerializable):
 	def storeTuple(self,cursor,colname,value):
 		cursor.execute("SELECT * FROM Student WHERE "+colname+"=%s",(value,))
 		tuple = cursor.fetchone()
-		
+
 		self.rollno 	  = tuple[0]
 		self.name   	  = tuple[1]
 		self.DOB		  = tuple[2]
@@ -207,7 +207,7 @@ class STUDENT(JsonSerializable):
 		self.locAddr      = str(tuple[7])
 		self.permAddr	  = str(tuple[8])
 		self.patientID    = tuple[9]
-		
+
 		cursor.execute("SELECT dept_name FROM Department WHERE dept_id='"+str(tuple[10])+"'")
 		tupledept   = cursor.fetchone()
 		cursor.execute("SELECT course_name FROM Course WHERE course_id='"+str(tuple[11])+"'")
@@ -243,7 +243,7 @@ class EMPLOYEE(JsonSerializable):
 	def storeTuple(self,cursor,colname,value):
 		cursor.execute("SELECT * FROM Employee WHERE "+colname+"=%s",(value,))
 		tuple = cursor.fetchone()
-		
+
 		self.empID 	      = tuple[0]
 		self.name   	  = tuple[1]
 		self.DOB		  = tuple[2]
@@ -255,13 +255,13 @@ class EMPLOYEE(JsonSerializable):
 		self.workStatus   = tuple[8]
 		self.designation  = tuple[9]
 		self.patientID    = tuple[10]
-		
+
 		cursor.execute("SELECT dept_name FROM Department WHERE dept_id='"+str(tuple[11])+"'")
 		tupledept         = cursor.fetchone()
 
 		self.dept   	  = tupledept[0]
 		self.blood  	  = tuple[12]
-		self.dependants   = DEPENDANT.getAllDependants(cursor,self.empID) 
+		self.dependants   = DEPENDANT.getAllDependants(cursor,self.empID)
 
 
 	def checkIfExistsInDB(cursor,empID):
@@ -362,7 +362,7 @@ class DOCTOR(JsonSerializable):
 
 	def updateTreatmentCount(self,cursor):
 		cursor.execute("SELECT COUNT(*) FROM Prescription WHERE doctor_id=%s",self.doctorID)
-		self.treatmentCount = cursor.fetchone()[0] 
+		self.treatmentCount = cursor.fetchone()[0]
 
 	def retrievePatientDetails(cursor,patientID):
 		cursor.execute("SELECT patient_type FROM Patient WHERE patient_id=%s",patientID)
@@ -429,7 +429,7 @@ class PRESCRIPTION(JsonSerializable):
 	def addDrug(self,drug):
 		self.prescriptionDrugs.append(drug)
 
-	#Database to object	
+	#Database to object
 	def storeTuple(self,cursor,prescID, view = "OTHER"):
 		cursor.execute("SELECT * FROM Prescription WHERE prescription_id=%s ",(prescID,))
 		tuple = cursor.fetchone()
@@ -441,7 +441,7 @@ class PRESCRIPTION(JsonSerializable):
 		self.doctor.storeTuple(cursor,"doctor_id",tuple[2])
 
 		#convention : Employees Patient ID always <9999....
-		#			  Dependants :10000 - 99999	
+		#			  Dependants :10000 - 99999
 		#			  Students :  99999 - ...
 		if(int(self.patientID) > 9999):
 			#student
@@ -468,14 +468,14 @@ class PRESCRIPTION(JsonSerializable):
 			cursor.execute("SELECT trade_name FROM Drug WHERE drug_id=%s",(drugtuple[1]))
 			drugName = cursor.fetchone()[0]
 			prescriptionDrug = PrescriptionDrug()
-			if view == "PHARMA": 
+			if view == "PHARMA":
 				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4], int(drugtuple[5]))
 			else:
 				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4])
 			self.prescriptionDrugs.append(prescriptionDrug)
 
 	def modInventory(cursor, prescID):
-		cursor.execute("SELECT drug_id, qty FROM Prescription_drug_map WHERE prescription_id = {} ".format(prescID))	
+		cursor.execute("SELECT drug_id, qty FROM Prescription_drug_map WHERE prescription_id = {} ".format(prescID))
 		drugIDList = cursor.fetchall()
 		remaining = []
 		for (drugID, drugQty) in drugIDList:
@@ -485,8 +485,8 @@ class PRESCRIPTION(JsonSerializable):
 			for batch in batchList:
 				batchNo = batch[0]
 				batchQty = int(batch[2])
-				if batchQty >= drugQty: 
-					cursor.execute("UPDATE Batch SET qty = %s WHERE batch_no = %s ", (batchQty - drugQty, batchNo, )) 
+				if batchQty >= drugQty:
+					cursor.execute("UPDATE Batch SET qty = %s WHERE batch_no = %s ", (batchQty - drugQty, batchNo, ))
 					break
 				else:
 					drugQty = drugQty - batchQty
@@ -514,7 +514,7 @@ class PRESCRIPTION(JsonSerializable):
 			drugID = tuple[0]
 			cursor.execute("INSERT INTO Prescription_drug_map VALUES(%s,%s,%s,%s,%s)",(self.prescriptionID,drugID,drug.drugQty,drug.drugSchedule,drug.drugComments))
 		self.pushNotification(cursor)
-		conn.commit()		
+		conn.commit()
 
 	def pushNotification(self,cursor):
 		cursor.execute("INSERT INTO Notification_buffer VALUES(%s,%s)",(self.prescriptionID,"NOT_SENT",))
@@ -544,7 +544,7 @@ class PRESCRIPTION(JsonSerializable):
 			cursor.execute("SELECT prescription_id FROM Prescription WHERE DATE(date_time)=%s",(value,))
 		elif(mode=="BY_PATIENTID"):
 			cursor.execute("SELECT prescription_id FROM Prescription WHERE patient_id = %s",(value,))
-			
+
 		prescIDtuples = cursor.fetchall()
 		for prescIDtuple in prescIDtuples:
 			prescription = PRESCRIPTION()
@@ -569,6 +569,24 @@ class DRUG(JsonSerializable):
 		for drugName in drugNames:
 			drugNamesList.append(drugName[0])
 		return drugNamesList
+
+	def addNewDrug(cursor, trade_name, generic_name, rack_id):
+		drugID = None
+		cursor.execute("SELECT  drug_id FROM Drug WHERE trade_name=%s",trade_name)
+		tuple = cursor.fetchone()
+		if tuple == None:
+			cursor.execute("SELECT MAX(drug_id) FROM Drug")
+			drugID = cursor.fetchone()[0] + 1
+		else:
+			return
+		print("drug id is :",drugID)
+		print("genname is :",generic_name)
+		print("trade_name:",trade_name)
+		print("rack id :",rack_id)
+
+		cursor.execute("INSERT INTO Drug VALUES(%s,%s,%s,%s,%s)",(drugID, generic_name, trade_name,"0", rack_id))
+
+
 
 	def stockUpdate(cursor,drugList):
 		for drug in drugList:
@@ -696,7 +714,7 @@ class Appointment():
 					appointment.courseName = stu[2]
 				appointments.append(appointment)
 
-			
+
 		return appointments
 
 
@@ -741,31 +759,3 @@ class Schedule():
 		print(calendarID, date, startTime, endTime)
 		cursor.execute('UPDATE Appointment_calendar SET date=%s ,start_time=%s ,end_time=%s WHERE calendar_id=%s',(date,startTime,endTime,calendarID))
 		return True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
