@@ -40,7 +40,7 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-   
+
 
     {% block head %}
     <style>
@@ -67,49 +67,49 @@
             font-family: 'My Custom Font' , sans-serif;
         }
 
-        .customfont { 
+        .customfont {
             font-family: 'Open Sans', sans-serif, Verdana, Tahoma; }
-        .robotofont { 
+        .robotofont {
             font-family: 'Roboto';
         }
         .robotocondensed{
             font-family: 'Roboto Condensed', sans-serif;
         }
 
-        .semibold{ 
+        .semibold{
             font-family: "My Custom Font2", Verdana, Tahoma;
         }
-        
-        
+
+
      ::-webkit-input-placeholder {
         font-style: italic;
         font-size: 15px;
      }
      :-moz-placeholder {
-        font-style: italic;  
+        font-style: italic;
         font-size: 15px;
      }
      ::-moz-placeholder {
-        font-style: italic;  
+        font-style: italic;
         font-size: 15px;
      }
-     :-ms-input-placeholder {  
-        font-style: italic; 
+     :-ms-input-placeholder {
+        font-style: italic;
         font-size: 15px;
-     } 
+     }
 
     .profile-header{
-     padding: 20px; 
+     padding: 20px;
      margin-left:20px;
-     color:white;   
+     color:white;
      box-shadow:2px 0px 4px black;
      margin-top:0px;
      margin-bottom:0px;
-    }    
+    }
     .newcolor{
     background-color:rgb(20,200,100)
     }
-    
+
     .first-navbar{
         border-color: rgb(15,62,115);
     }
@@ -132,7 +132,7 @@
      }
 
 
-     
+
     .lightercolor{
     background-color:rgb(92, 142, 197);
     }
@@ -165,7 +165,7 @@
         font-weight: bold;
         font-size:20px;
         text-transform: uppercase;
-        
+
     }
     ul.darkestcolor > li> a:hover{
         background-color:rgb(25,72,125);
@@ -174,15 +174,26 @@
     ul.darkestcolor{
         float:right;
     }
-    
+
     .roundedborder{
         border-radius:40px;
     }
     .pad-down{
         padding-bottom: 400px;
     }
+    .center{
+      text-align: center;
+    }
     .whitecolor{
         color:white;
+    }
+
+    .red-label{
+      padding:10px;
+      font-size: 20px;
+      color:white;
+      background-color:#d9534f;
+      border-radius:2px;
     }
     .responsive-menu:link{
         color:white;
@@ -209,8 +220,8 @@
     .mytoggle:hover, .mytoggle:visited{
         background-color: rgb(15,62,115) !important;
     }
-       
-  
+
+
 
     </style>
     {% endblock %}
@@ -220,9 +231,9 @@
 
 <body class="robotofont">
 
-    
+
     <div class="lightestcolor">
-      
+
 
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top darkestcolor first-navbar " role="navigation"  >
@@ -235,12 +246,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button><h2 class="white titlefont" >&nbsp;&nbsp;NITK-HCC</h2>
-                
+
             </div>
-            
-            
-       
-           
+
+
+
+
 
             <!-- Top Menu Items -->
             <ul class="nav navbar-right top-nav customfont">
@@ -249,9 +260,9 @@
                     <a href="#" class="dropdown-toggle mytoggle" data-toggle="dropdown"><i class="fa fa-user"></i> {%block profilename %}  {% endblock %}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                           {% block dropdownmenuitems %}
-                        
+
                           {% endblock%}
-                        
+
                         <li class="divider"></li>
                         <li>
                             <a href="{{url_for('auth.logout')}}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
@@ -259,7 +270,7 @@
                     </ul>
                 </li>
             </ul>
-            
+
 
        </nav>
 
@@ -267,9 +278,9 @@
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse" >
                 <ul class="darkestcolor nav navbar-nav  ">
-                  {% block sidenavbar %} 
-                   
-                  {% endblock %} 
+                  {% block sidenavbar %}
+
+                  {% endblock %}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -278,11 +289,11 @@
 
 
                 <!-- Page Heading -->
-                        
-                        
+
+
                 <!-- /.row -->
 
-                
+
                   <div class="pad-down container">
                   <h1 class="page-header">
                            {% block pageheader %}
@@ -293,8 +304,8 @@
 
                     {% endblock %}
                   </div>
-                
-                
+
+
             <!-- /.container-fluid -->
 
         <!-- /#page-wrapper -->
