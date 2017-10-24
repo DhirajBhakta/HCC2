@@ -47,6 +47,18 @@ def inventory():
 	cursor = conn.cursor()
 	return render_template('pharma/inventory.html',rack_ids=[1,2,3,4,5,6,7])
 
+@pharma.route("/inventory/loadInventory",methods=['GET'])
+@specific_login_required("PHARMA")
+def loadInventory():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	druglist = DRUG.loadFullInventory(cursor)
+	json_string = json.dumps(druglist)
+	return json_string
+
+
+
+
 @pharma.route("/inventory/addNewDrug",methods=['POST'])
 @specific_login_required("PHARMA")
 def addNewDrug():

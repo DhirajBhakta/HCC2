@@ -5,6 +5,7 @@ from . import login_manager
 from flask import current_app
 from . import mysql
 import datetime
+from itertools import groupby
 
 
 
@@ -561,6 +562,7 @@ class DRUG(JsonSerializable):
 		self.quantity = None
 		self.batchNumber = None
 		self.expiryDate = None
+		self.rackID = None
 
 	def retrieveDBdrugs(cursor):
 		drugNamesList = list()
@@ -605,6 +607,34 @@ class DRUG(JsonSerializable):
 				cursor.execute("INSERT INTO Batch VALUES(%s,%s,%s,%s)",(drug.batchNumber,drugID,drug.quantity,drug.expiryDate.strftime('%Y-%m-%d')))
 			else:
 				cursor.execute("UPDATE Batch SET qty = qty + {} WHERE drug_id = {}".format(int(drug.quantity), drugID,))
+
+
+	def loadFullInventory(cursor):
+		_druglist = []
+		cursor.execute("select * from View_drug_batch_inventory")
+		tuples = cursor.fetchall()
+		for tuple in tuples:
+			_drug = {}
+			_drug["drug_id"] = tuple[0]
+			_drug["generic_name"] = tuple[1]
+			_drug["trade_name"] = tuple[2]
+			_drug["rack_id"] = tuple[3]
+			_drug["batch_no"] = tuple[4]
+			_drug["qty"] = tuple[5]
+			_drug["exp_date"] = str(tuple[6])
+			_druglist.append(_drug)
+
+		druglist = {}
+		for _drug in _druglist:
+			if(_drug["drug_id"] not in druglist):
+				druglist[_drug["drug_id"]] = {"generic_name": _drug["generic_name"],
+											  "trade_name"  : _drug["trade_name"],
+											  "rack_id"     : _drug["rack_id"],
+											  "batches": []}
+			druglist[_drug["drug_id"]]["batches"].append({"batch_number":_drug["batch_no"],
+														  "qty"         :_drug["qty"],
+														  "exp_date"    :_drug["exp_date"]})
+		return druglist
 
 
 

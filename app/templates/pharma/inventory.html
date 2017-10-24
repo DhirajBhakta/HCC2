@@ -1,17 +1,23 @@
-{% extends "pharma/basePharmaTemplate.html" %}
-
-{% block head %}
-{{super()}}
+{% extends "pharma/basePharmaTemplate.html" %} {% block head %} {{super()}}
+<link href="{{url_for('static',filename='css/select2.min.css') }}" rel="stylesheet" />
+<script src="{{ url_for('static',filename='js/select2.full.min.js') }}"></script>
 <style>
-.autocompl_drugname{
-  width:100%;
-}
-.tablehead th{
-  color:white;
-}
-.error {
-  background-color : #faa;
-}
+  .autocompl_drugname {
+    width: 100%;
+  }
+
+  .tablehead th {
+    color: white;
+  }
+
+  .error {
+    background-color: #faa;
+  }
+
+  .card {
+    padding: 20px;
+    margin: 40px;
+  }
 </style>
 {% endblock %}
 
@@ -21,28 +27,66 @@
 
 <!--body-->
 {% block emptyspace %}
-<form onsubmit="send_new_drug_details(); return false;">
-  <h1>Add a new Drug</h1>
-  <div class="form-group">
-    <label for="trade_name">Trade Name</label>
-    <input type="text" class="form-control" id="trade_name" placeholder="Enter Trade Name of the new drug">
-  </div>
-  <div class="form-group">
-    <label for="generic_name">Generic Name</label>
-    <input type="text" class="form-control" id="generic_name" placeholder="Enter Generic Name of the new drug">
-  </div>
-  <div class="form-group">
-    <label for="rack_id">Rack</label>
-    <select id="rack_id" class="custom-select">
-      <option selected>Select rack ID</option>
-        {% for rack_id in rack_ids %}
-           <option  value="{{ rack_id }}">{{ rack_id }}</option>
-        {% endfor %}
-  </select>
-  </div>
+<div class="lightestcolor2 card">
+  <form onsubmit="send_new_drug_details(); return false;">
+    <Row>
+      <h1>Add a new Drug</h1>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" id="trade_name" placeholder="Trade Name">
+      </div>
+      <div class="form-group col-md-3">
+        <input type="text" class="form-control" id="generic_name" placeholder="Generic Name">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="rack_id">Rack</label>
+        <select id="rack_id" class="custom-select">
+          <option selected>Select rack ID</option>
+          {% for rack_id in rack_ids %}
+            <option value="{{ rack_id }}">{{ rack_id }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-danger">Submit</button>
+    </Row>
+  </form>
+</div>
+<!-- end of addNewDrug card -->
+<hr/>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<div class="row center">
+    <h1> Inventory </h1>
+    <select class="drug-selector" onchange="filter_drug_cards(this);">
+      <option value=""></option>
+    </select>
+</div>
+
+<div id="inventory">
+  <!-- output of searchbar (default show all ) -->
+</div>
+
+
+<template id="drug-details-card-template">
+  <div class="lightestcolor2 card">
+    <Row>
+      <div class="col-md-6">
+        <h3 class="details-trade_name"></h3>
+        <h4 class="details-generic_name"></h4>
+        </div>
+        <div class="col-md-6">
+          <label class="details-rack_id red-label">Rack:</label>
+        </div>
+      </Row>
+      <table class="table">
+        <thead>
+          <th>Batch no.</th>
+          <th>Quantity left</th>
+          <th>Expiry Date</th>
+        </thead>
+        <tbody class="details-batches">
+        </tbody>
+      </table>
+    </div>
+  </template>
 
 {% endblock %}
 
@@ -50,43 +94,74 @@
 {% block extrascripts %}
 <script type="text/javascript" src="/static/js/date.js"></script>
 <script>
-//The Recieved JSON drugList
-var druglist=[];
+  //The Recieved JSON drugList
+  var druglist = [];
 
-//On Load
-$(document).ready(function() {
-
-  // //Get drug list from server
-  // $.get("/pharma/getDruglist",function (data){
-  // 	 data = $.parseJSON(data);
-  //    for(var i=0;i<data.length;i++)
-  //      druglist[i] = data[i];
-  //   });
-  //
-  // //Add the trigger to first input
-  // first_input = $('.autocompl_drugname')[0];
-  // input_eventlistener_adder(first_input);
-  // $(first_input).autocomplete({
-  //   source:druglist
-  // });
-  //
-  // //First input is required
-  // $(first_input).attr('required','true')
+  //On Load
+  $(document).ready(function() {
+    //Get drug_batches list from server
 
 
+    $.get("/pharma/inventory/loadInventory", function(data) {
+      druglist = $.parseJSON(data);
+      $(".drug-selector").select2({
+        data: dataGenFromDict_for_select2(druglist, "trade_name"),
+        placeholder:"Select a Drug"
+      });
 
-});
+      for (var key in druglist) {
+        if (druglist.hasOwnProperty(key))
+          prepare_inventory_card_for_one_drug(druglist[key]);
+      }
+    });
+  });
 
-function send_new_drug_details(){
-  trade_name = $('#trade_name').val();
-  generic_name = $('#generic_name').val();
-  rack_id = $('#rack_id').val();
-  $.post("/pharma/inventory/addNewDrug",{generic_name:generic_name, trade_name: trade_name, rack_id:rack_id});
+  function filter_drug_cards(selected_option){
+     var drug_id = selected_option.value;
+     $('#inventory').empty();
+     prepare_inventory_card_for_one_drug(druglist[drug_id]);
+  }
 
-}
+  function dataGenFromDict_for_select2(dict, text) {
+    data = [];
+    for (var key in dict) {
+      if (dict.hasOwnProperty(key)) {
+        let temp = {}
+        temp["id"] = key;
+        temp["text"] = dict[key][text];
+        data.push(temp);
+      }
+    }
+    return data;
+  }
 
 
+  function send_new_drug_details() {
+    trade_name = $('#trade_name').val();
+    generic_name = $('#generic_name').val();
+    rack_id = $('#rack_id').val();
+    $.post("/pharma/inventory/addNewDrug", {
+      generic_name: generic_name,
+      trade_name: trade_name,
+      rack_id: rack_id
+    });
+  }
 
+  function prepare_inventory_card_for_one_drug(drug) {
+    var drug_card = document.getElementById('drug-details-card-template').content.cloneNode(true);
+    drug_card.querySelector('.details-trade_name').innerText = drug.trade_name;
+    drug_card.querySelector('.details-generic_name').innerText = drug.generic_name;
+    drug_card.querySelector('.details-rack_id').innerText = "RACK :" + drug.rack_id;
+    var table = $(drug_card.querySelector('.details-batches'));
+    for (var i = 0; i < drug.batches.length; i++) {
+      table.append("<tr>\
+                      <td>" + drug.batches[i].batch_number + "</td>\
+                      <td>" + drug.batches[i].qty + "</td>\
+                      <td>" + drug.batches[i].exp_date + "</td>\
+                   </tr>");
+    }
+    document.getElementById('inventory').appendChild(drug_card);
+  }
 </script>
 
 
