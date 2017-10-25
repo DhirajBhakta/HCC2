@@ -64,13 +64,13 @@ def addPrescription():
 	doctorID  = request.form.get('DOCTORID')
 	patientID = request.form.get('PATIENTID')
 	indication = request.form.get('INDICATION')
-	
+
 	for row in range(5):
 		DRUG_NAME = "DRUG_NAME"+str(row)
 		DRUG_QTY="DRUG_QTY"+str(row)
-		DRUG_SCHEDULE="DRUG_SCHEDULE"+str(row) 
+		DRUG_SCHEDULE="DRUG_SCHEDULE"+str(row)
 		DRUG_COMMENTS="DRUG_COMMENTS"+str(row)
-		
+
 		drugName = request.form.get(DRUG_NAME)
 		if not drugName:
 			break
@@ -78,8 +78,8 @@ def addPrescription():
 		drugSchedule = request.form.get(DRUG_SCHEDULE)
 		drugComments = request.form.get(DRUG_COMMENTS)
 
-		thisDrug = PrescriptionDrug() 
-		thisDrug.storeData(drugName,drugQty,drugSchedule,drugComments)
+		thisDrug = PrescriptionDrug()
+		thisDrug.storeData(0,drugName,drugQty,drugSchedule,drugComments)
 		prescription.addDrug(thisDrug)
 	prescription.insertIntoDB(DB.conn,doctorID,patientID,indication)
 	DB.conn.commit()
@@ -95,7 +95,7 @@ def addPrescription():
 def viewPatientProfile(patientID):
 	doctor = getCurrentDoctor()
 	patient = DOCTOR.retrievePatientDetails(DB.cursor,patientID)
-	prescriptionList = PRESCRIPTION.getPrescriptionList(DB.cursor,"BY_PATIENTID",patientID)	
+	prescriptionList = PRESCRIPTION.getPrescriptionList(DB.cursor,"BY_PATIENTID",patientID)
 	return render_template("doctor/patientprofile.html",patient=patient,prescriptionList=prescriptionList,doctorUser=doctor)
 
 
@@ -107,7 +107,7 @@ def showDoctorProfile():
 
 
 
-	
+
 
 
 @doctor.route('/viewHistory',methods=['GET','POST'])
@@ -133,7 +133,7 @@ def showHistory():
 def showUpcomingAppointments():
 	doctor = getCurrentDoctor()
 	bookedApps 	 = Appointment.getBookedAppointments(DB.cursor,doctor.doctorID,"DOCTOR")
-	bookedAppsOrdered = sorted(bookedApps,key=lambda x:x.date ,reverse=True) 
+	bookedAppsOrdered = sorted(bookedApps,key=lambda x:x.date ,reverse=True)
 	print(bookedApps)
 	if bookedApps == []:
 		pass
@@ -152,7 +152,7 @@ def showUpcomingAppointments():
 
 	return render_template('doctor/viewAppointments.html',doctorUser=doctor,bookedAppointments=bookedAppsOrdered)
 
-	
+
 
 
 @doctor.route('/success')
@@ -160,6 +160,3 @@ def showUpcomingAppointments():
 def success():
 	doctor = getCurrentDoctor()
 	return render_template("doctor/success.html",doctorUser=doctor)
-
-
-

@@ -123,6 +123,30 @@ def getACK():
 	json_string = json.dumps([obj.getJSON() for obj in presclist[:10]])
 	return json_string
 
+
+
+@pharma.route("/getPrescriptionDrugBatches",methods=['GET'])
+@specific_login_required("PHARMA")
+def getPrescriptionDrugBatches():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	prescID = request.args.get('prescriptionID')
+	print("prescription is :",prescID)
+	drug_batch_map = PRESCRIPTION.getPrescriptionDrugBatches(cursor,prescID)
+	json_string = json.dumps(drug_batch_map)
+	return json_string
+
+@pharma.route("/postSelectedPrescriptionDrugBatches",methods=['POST'])
+@specific_login_required("PHARMA")
+def postSelectedPrescriptionDrugBatches():
+	conn = mysql.connect()
+	cursor = conn.cursor()
+	selections = json.loads(request.form.get('selections'))
+	DRUG.subtractFromInventory(cursor, conn, selections)
+	print("selection are:",selections)
+	return "true"
+
+
 @pharma.route("/setACK", methods=['POST'])
 @specific_login_required("PHARMA")
 def setACK():

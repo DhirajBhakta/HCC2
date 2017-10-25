@@ -32,7 +32,7 @@ CREATE TABLE `Appointment_calendar` (
   PRIMARY KEY (`calendar_id`),
   KEY `doctor_id` (`doctor_id`),
   CONSTRAINT `Appointment_calendar_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `Doctor` (`doctor_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=571 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,7 +61,7 @@ CREATE TABLE `Appointment_slot` (
   KEY `calendar_id` (`calendar_id`),
   CONSTRAINT `Appointment_slot_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `Appointment_slot_ibfk_2` FOREIGN KEY (`calendar_id`) REFERENCES `Appointment_calendar` (`calendar_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +150,7 @@ CREATE TABLE `Batch` (
 
 LOCK TABLES `Batch` WRITE;
 /*!40000 ALTER TABLE `Batch` DISABLE KEYS */;
-INSERT INTO `Batch` VALUES ('121212121erer',11,451,'0000-00-00'),('121212qw',11,1212,'2019-02-12'),('121212qwqw',455,12,NULL),('121212wwescxf',9,2332,'2019-11-11'),('1212awqw',241,12,'2019-12-12'),('qwqw1212',1,12,'2019-12-12');
+INSERT INTO `Batch` VALUES ('121212121erer',11,446,'0000-00-00'),('121212qw',11,1209,'2019-02-12'),('121212qwqw',455,12,NULL),('121212wwescxf',9,2332,'2019-11-11'),('1212awqw',241,12,'2019-12-12'),('batch1',3,127,'2016-11-01'),('batch2',1,85,'2016-11-01'),('new_batch_bolax1',1,178,'2014-11-01'),('qwqw1212',1,0,'2019-12-12');
 /*!40000 ALTER TABLE `Batch` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,7 +404,7 @@ CREATE TABLE `Notification_buffer` (
 
 LOCK TABLES `Notification_buffer` WRITE;
 /*!40000 ALTER TABLE `Notification_buffer` DISABLE KEYS */;
-INSERT INTO `Notification_buffer` VALUES (49,'SENT'),(50,'SENT');
+INSERT INTO `Notification_buffer` VALUES (49,'SENT'),(50,'SENT'),(51,'SENT'),(52,'SENT'),(53,'SENT'),(54,'SENT'),(55,'SENT'),(56,'SENT'),(57,'SENT');
 /*!40000 ALTER TABLE `Notification_buffer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -450,7 +450,7 @@ CREATE TABLE `Prescription` (
   KEY `patient_id` (`patient_id`),
   CONSTRAINT `Prescription_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `Doctor` (`doctor_id`),
   CONSTRAINT `Prescription_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `Patient` (`patient_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -459,7 +459,7 @@ CREATE TABLE `Prescription` (
 
 LOCK TABLES `Prescription` WRITE;
 /*!40000 ALTER TABLE `Prescription` DISABLE KEYS */;
-INSERT INTO `Prescription` VALUES (37,'2016-10-26 08:56:41',99,100037,'Cough and Cold'),(38,'2016-10-26 09:24:05',99,100037,'headache'),(39,'2016-10-26 09:24:05',99,100009,'Viral Fever'),(40,'2016-10-26 09:24:05',99,100009,'Leg Sprain '),(41,'2016-10-26 09:24:05',99,100035,'Cough and Cold'),(42,'2016-10-26 09:24:05',99,100035,'Back-ache'),(43,'2016-11-07 13:38:05',1,100009,'Fever'),(44,'2016-11-08 12:29:41',1,100009,'Fever'),(45,'2016-11-11 17:05:42',1,100009,'Fever'),(46,'2016-11-12 22:08:54',1,100009,'Head pain'),(47,'2016-12-02 11:24:48',1,100009,'leg pain'),(48,'2017-01-10 15:54:54',0,100035,'Fever'),(49,'2017-01-13 07:55:08',1,100009,'back ache'),(50,'2017-01-13 08:36:09',1,100009,'leg pain');
+INSERT INTO `Prescription` VALUES (37,'2016-10-26 08:56:41',99,100037,'Cough and Cold'),(38,'2016-10-26 09:24:05',99,100037,'headache'),(39,'2016-10-26 09:24:05',99,100009,'Viral Fever'),(40,'2016-10-26 09:24:05',99,100009,'Leg Sprain '),(41,'2016-10-26 09:24:05',99,100035,'Cough and Cold'),(42,'2016-10-26 09:24:05',99,100035,'Back-ache'),(43,'2016-11-07 13:38:05',1,100009,'Fever'),(44,'2016-11-08 12:29:41',1,100009,'Fever'),(45,'2016-11-11 17:05:42',1,100009,'Fever'),(46,'2016-11-12 22:08:54',1,100009,'Head pain'),(47,'2016-12-02 11:24:48',1,100009,'leg pain'),(48,'2017-01-10 15:54:54',0,100035,'Fever'),(49,'2017-01-13 07:55:08',1,100009,'back ache'),(50,'2017-01-13 08:36:09',1,100009,'leg pain'),(51,'2017-10-24 23:37:14',1,100009,'viral fever'),(52,'2017-10-25 00:13:22',1,100009,'joint pain'),(53,'2017-10-25 01:35:38',1,100009,'d'),(54,'2017-10-25 01:36:12',1,100009,'asdf'),(55,'2017-10-26 00:10:02',1,100009,'asfasdfadf'),(56,'2017-10-26 00:13:06',1,100009,'hea pain'),(57,'2017-10-26 00:13:51',1,100010,'beard pain');
 /*!40000 ALTER TABLE `Prescription` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -489,7 +489,7 @@ CREATE TABLE `Prescription_drug_map` (
 
 LOCK TABLES `Prescription_drug_map` WRITE;
 /*!40000 ALTER TABLE `Prescription_drug_map` DISABLE KEYS */;
-INSERT INTO `Prescription_drug_map` VALUES (37,11111,'10','1-1-1','Before Food'),(37,12445,'3','1-0-1','Sleep well , dont take more than 2 daily'),(38,11111,'3','1-1-1','dont overuse this drug'),(39,11111,'5','1 after food daily','-'),(39,12445,'3','1-0-1','Take rest'),(40,12121,'1','apply twice a day',' --'),(41,12445,'12','1-0-1','use after food only'),(42,22222,'1','apply twice a day','--'),(43,3,'1','0-0-1-','Carefully'),(43,5,'3','1-0-1','Take after food'),(43,12445,'2','1-0-1','104FM'),(44,5,'12','1-0-1','Take rest'),(45,2,'3','1-0-1','take daily'),(45,3,'1','1 after food daily','--'),(46,12445,'2','2-0-9','--'),(47,2,'1','1-0-1','take lot of rest'),(48,102,'1','1-0-1','take daily or death'),(49,3,'12','1-0-1','none'),(49,6,'1','0-0-1','none'),(50,6,'2','1-0-1','apply daily'),(50,7,'5','1-0-1','---');
+INSERT INTO `Prescription_drug_map` VALUES (37,11111,'10','1-1-1','Before Food'),(37,12445,'3','1-0-1','Sleep well , dont take more than 2 daily'),(38,11111,'3','1-1-1','dont overuse this drug'),(39,11111,'5','1 after food daily','-'),(39,12445,'3','1-0-1','Take rest'),(40,12121,'1','apply twice a day',' --'),(41,12445,'12','1-0-1','use after food only'),(42,22222,'1','apply twice a day','--'),(43,3,'1','0-0-1-','Carefully'),(43,5,'3','1-0-1','Take after food'),(43,12445,'2','1-0-1','104FM'),(44,5,'12','1-0-1','Take rest'),(45,2,'3','1-0-1','take daily'),(45,3,'1','1 after food daily','--'),(46,12445,'2','2-0-9','--'),(47,2,'1','1-0-1','take lot of rest'),(48,102,'1','1-0-1','take daily or death'),(49,3,'12','1-0-1','none'),(49,6,'1','0-0-1','none'),(50,6,'2','1-0-1','apply daily'),(50,7,'5','1-0-1','---'),(51,1,'10','1-0-1','nothing'),(52,11,'4','23','ntn'),(53,2,'12','sdf','sdf'),(54,1,'1','1','1'),(54,11,'2','2','2'),(55,1,'5','adsf','asfd'),(55,11,'1','asdf','asdf'),(56,1,'1','1-1-1-','sdfsdf'),(56,2,'2','11sdf','sdf'),(56,3,'3','adsf','adsf'),(57,1,'2','adsf','asdf'),(57,2,'3','asdf','asdf'),(57,3,'4','asdf','asdf');
 /*!40000 ALTER TABLE `Prescription_drug_map` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -676,6 +676,26 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary table structure for view `View_prescription_drugs_available_batches`
+--
+
+DROP TABLE IF EXISTS `View_prescription_drugs_available_batches`;
+/*!50001 DROP VIEW IF EXISTS `View_prescription_drugs_available_batches`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `View_prescription_drugs_available_batches` (
+  `prescription_id` tinyint NOT NULL,
+  `trade_name` tinyint NOT NULL,
+  `drug_id` tinyint NOT NULL,
+  `quantity_specified` tinyint NOT NULL,
+  `rack_id` tinyint NOT NULL,
+  `batch_no` tinyint NOT NULL,
+  `quantity_available` tinyint NOT NULL,
+  `exp_date` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `View_schedule`
 --
 
@@ -790,6 +810,25 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `View_prescription_drugs_available_batches`
+--
+
+/*!50001 DROP TABLE IF EXISTS `View_prescription_drugs_available_batches`*/;
+/*!50001 DROP VIEW IF EXISTS `View_prescription_drugs_available_batches`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`mysql`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_prescription_drugs_available_batches` AS select `map`.`prescription_id` AS `prescription_id`,`drug`.`trade_name` AS `trade_name`,`map`.`drug_id` AS `drug_id`,`map`.`qty` AS `quantity_specified`,`drug`.`rack_id` AS `rack_id`,`batch`.`batch_no` AS `batch_no`,`batch`.`qty` AS `quantity_available`,`batch`.`exp_date` AS `exp_date` from ((`Drug` `drug` join `Batch` `batch`) join `Prescription_drug_map` `map` on(((`drug`.`drug_id` = `batch`.`drug_id`) and (`map`.`drug_id` = `batch`.`drug_id`)))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `View_schedule`
 --
 
@@ -817,4 +856,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-10-24  2:06:30
+-- Dump completed on 2017-10-26  0:59:55
