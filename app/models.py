@@ -398,13 +398,15 @@ class DOCTOR(JsonSerializable):
 
 class PrescriptionDrug(JsonSerializable):
 	def __init__(self):
+		self.drugID = None
 		self.drugName = None
 		self.drugQty  = None
 		self.drugSchedule = None
 		self.drugComments = None
 		self.drugInventory = None
 
-	def storeData(self, drugName, drugQty, drugSchedule, drugComments, drugInventory = None):
+	def storeData(self, drugID, drugName, drugQty, drugSchedule, drugComments, drugInventory = None):
+		self.drugID = drugID
 		self.drugName 	  = drugName
 		self.drugQty  	  = drugQty
 		self.drugSchedule = drugSchedule
@@ -470,9 +472,9 @@ class PRESCRIPTION(JsonSerializable):
 			drugName = cursor.fetchone()[0]
 			prescriptionDrug = PrescriptionDrug()
 			if view == "PHARMA":
-				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4], int(drugtuple[5]))
+				prescriptionDrug.storeData(drugtuple[1],drugName,drugtuple[2],drugtuple[3],drugtuple[4], int(drugtuple[5]))
 			else:
-				prescriptionDrug.storeData(drugName,drugtuple[2],drugtuple[3],drugtuple[4])
+				prescriptionDrug.storeData(drugtuple[1],drugName,drugtuple[2],drugtuple[3],drugtuple[4])
 			self.prescriptionDrugs.append(prescriptionDrug)
 
 	def modInventory(cursor, prescID):
@@ -552,6 +554,26 @@ class PRESCRIPTION(JsonSerializable):
 			prescription.storeTuple(cursor,prescIDtuple[0])
 			prescriptionList.append(prescription)
 		return prescriptionList
+
+	def getPrescriptionDrugBatches(cursor, prescriptionID):
+		cursor.execute("SELECT * from View_prescription_drugs_available_batches WHERE prescription_id=%s",prescriptionID)
+		tuples = cursor.fetchall()
+		drug_batch_map ={}
+		for tuple in tuples:
+			drug_id = tuple[2]
+			if(drug_id not in drug_batch_map):
+				drug_batch_map[drug_id]={
+					"drug_name":tuple[1],
+					"quantity_specified":tuple[3],
+					"rack_id":tuple[4],
+					"batches":[]
+				}
+			drug_batch_map[drug_id]["batches"].append({
+					"batch_no":tuple[5],
+					"quantity_available":tuple[6],
+					"exp_date":str(tuple[7])
+			})
+		return drug_batch_map
 
 
 
@@ -636,6 +658,12 @@ class DRUG(JsonSerializable):
 														  "exp_date"    :_drug["exp_date"]})
 		return druglist
 
+	def subtractFromInventory(cursor, conn, selections):
+		print('\n\n\nmindfucked selections:',selections)
+		for drug_id, selection_info in selections.items():
+			print('mindfucked drug:',drug_id,'  qty selcted:',selection_info['quantity_specified'])
+			cursor.execute("UPDATE Batch SET qty=qty-%s WHERE drug_id=%s AND batch_no=%s",(selection_info['quantity_specified'], drug_id, selection_info['batch_no']))
+			conn.commit()
 
 
 
