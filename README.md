@@ -9,6 +9,18 @@ protocol to be strictly followed in pharma:
 --> All batch numbers of the SAME drug must be kept on the SAME RACK! (no excuses)
 
 
+#TODOs
+1) clean up css
+2) try to separate all CSS into maybe one-two separate globally accessible files...or put everything in base2.html
+3) clean up JS. make it more readable
+4) clean up models.py.  too many redundancy currently. Think of better SQL queries than current ones. try to incorporate business logic within sql queries rather than extracting raw data and doing it in python.
+5) VIEWS.PY  creating conn, and cursor way too much. think of alternatives, reusable conn, cursors (see if they can actually be re-used. permitted or not?)
+6) create separate config files for DEV, TEST, and PRODUCTION
+7) go through entire models.py and fix security issues.
+8) client side security issues.
+9) back button after logging in.
+
+
 #List of possible bugs
 1) if pharmacist selects a batch_no which has say 20 qty left , and the requirement was 25
 2) batch_numbers whose qty has gone below 0 , are not yet deleted i guess (I GUESS).
