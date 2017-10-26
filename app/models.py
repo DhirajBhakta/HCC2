@@ -477,31 +477,6 @@ class PRESCRIPTION(JsonSerializable):
 				prescriptionDrug.storeData(drugtuple[1],drugName,drugtuple[2],drugtuple[3],drugtuple[4])
 			self.prescriptionDrugs.append(prescriptionDrug)
 
-	def modInventory(cursor, prescID):
-		cursor.execute("SELECT drug_id, qty FROM Prescription_drug_map WHERE prescription_id = {} ".format(prescID))
-		drugIDList = cursor.fetchall()
-		remaining = []
-		for (drugID, drugQty) in drugIDList:
-			drugQty = int(drugQty)
-			cursor.execute("SELECT * FROM Batch WHERE drug_id = {} ORDER BY exp_date ASC".format(drugID))
-			batchList = cursor.fetchall()
-			for batch in batchList:
-				batchNo = batch[0]
-				batchQty = int(batch[2])
-				if batchQty >= drugQty:
-					cursor.execute("UPDATE Batch SET qty = %s WHERE batch_no = %s ", (batchQty - drugQty, batchNo, ))
-					break
-				else:
-					drugQty = drugQty - batchQty
-					cursor.execute("UPDATE Batch SET qty = 0 WHERE batch_no = %s ", (batchNo,))
-			remaining.append(drugQty)
-		return remaining
-
-
-
-
-
-
 	def insertIntoDB(self,conn,docID,patientID,indication):
 		cursor = conn.cursor()
 		self.doctor.storeTuple(cursor,"doctor_id",docID)
@@ -538,7 +513,6 @@ class PRESCRIPTION(JsonSerializable):
 
 
 	def setPrescriptionAck(cursor, presId , ackType = "ACK"):
-		PRESCRIPTION.modInventory(cursor, presId)
 		cursor.execute("UPDATE Notification_buffer SET status = %s WHERE prescription_id = %s", ( ackType, presId, ))
 
 	def getPrescriptionList(cursor,mode,value):
