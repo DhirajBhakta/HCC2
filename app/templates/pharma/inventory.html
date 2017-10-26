@@ -27,6 +27,8 @@
 
 <!--body-->
 {% block emptyspace %}
+
+
 <div class="lightestcolor2 card">
   <form onsubmit="send_new_drug_details(); return false;">
     <Row>
@@ -144,6 +146,10 @@
       generic_name: generic_name,
       trade_name: trade_name,
       rack_id: rack_id
+    },function(){
+      $('#trade_name').val('');
+      $('#generic_name').val('');
+      $('#rack_id').val('');  
     });
   }
 

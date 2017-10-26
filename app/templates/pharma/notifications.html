@@ -192,7 +192,7 @@
         contentType: 'application/json',
         success: function(data) {
           $(cardToDelete).hide('slow', function() {
-            $(cardToDelete).remove();
+          $(cardToDelete).remove();
           });
         }
       });
@@ -259,9 +259,10 @@
             drug_batch_map = JSON.parse(data);
             $('#batch-selector-table-body').empty();
             populateModalTable(drug_batch_map);
-            //attach click listener on submit
+            //remove any previous listeners and attach click listener on submit
+            $('#dispense').off();
             $('#dispense').click(function() {
-              $.post('/pharma/postSelectedPrescriptionDrugBatches',{selections:JSON.stringify(notifications_globals.pharmacists_selections)}, createSetAck(latestCard,prescriptionID));
+              $.post('/pharma/postSelectedPrescriptionDrugBatches',{selections:JSON.stringify(notifications_globals.pharmacists_selections)}, createSetAck(cardToDelete,prescriptionID));
             });
             $("#batch-selector-modal").modal("show");
           });
@@ -361,8 +362,6 @@
       complete: function() {
         setTimeout(requestForNOT_SENT, 5000);
       }
-
-
     });
   }
 </script>
