@@ -7,3 +7,4 @@ app/pharma/__pycache__/
 app/*/__pycache__/
 config.py
 *.pyc
+*.sql
